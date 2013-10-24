@@ -178,7 +178,7 @@ COMPASS <- function(data, treatment, control, subset=NULL,
   .generate_categories <- function(data) {
     ## i'm sorry
     tmp <- unique( as.data.table( lapply( lapply( as.data.table( do.call( rbind, data ) ), as.logical ), as.integer ) ) )
-    tmp[, Counts := apply(.SD, 1, sum)]
+    tmp[, c("Counts") := apply(.SD, 1, sum)]
     setkeyv(tmp, c("Counts", rev(names(tmp))))
     output <- as.matrix(tmp)
     output<-output[output[,"Counts"]>0,]
@@ -200,7 +200,7 @@ COMPASS <- function(data, treatment, control, subset=NULL,
       return(tmp)
     })))
     
-    m <- .Call("MIMOSA_cell_counts", y, combos, PACKAGE="MIMOSA")
+    m <- .Call("COMPASS_cell_counts", y, combos, PACKAGE="COMPASS")
     rownames(m) <- names(y)
     
     ## set the last column to be the 'null'

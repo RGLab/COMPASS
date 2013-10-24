@@ -8,7 +8,7 @@ using namespace Rcpp;
 
 // cell_counts
 IntegerMatrix cell_counts(List x, List combos);
-RcppExport SEXP MIMOSA_cell_counts(SEXP xSEXP, SEXP combosSEXP) {
+RcppExport SEXP COMPASS_cell_counts(SEXP xSEXP, SEXP combosSEXP) {
 BEGIN_RCPP
     SEXP __sexp_result;
     {

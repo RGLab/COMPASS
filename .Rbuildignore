@@ -2,4 +2,7 @@
 ^\.Rproj\.user$
 .travis.yml
 data/.*.rds
+incubator
 refactor
+.Rhistory
+.gitignore

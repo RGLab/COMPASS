@@ -359,7 +359,7 @@
     pb2 = pb2,lambda_s = lambda_s, var_1 = varp_s1,var_2 = varp_s2,p_var = pvar_s, p_vars = pvar_mus,var_1s = sqrt_mus1, var_2s=sqrt_mus2,m_s=m_s,Sigma_s =Sigma_s,
     p_varu=pvar_muu,var_1u=sqrt_muu1,var_2u=sqrt_muu2,m_u=m_u, Sigma_u=Sigma_u,p_vara=pvar_alpha, var_1a=sqrt_alpha1,var_2a=sqrt_alpha2,sig_alpha1=sig_alpha1,alpha1=alpha1,
     p_varb=pvar_beta,var_1b=sqrt_beta1,var_2b=sqrt_beta2,sig_beta1 = sig_beta1, beta1= beta1, A_alphau=A_alphau,A_alphas=A_alphas, A_gm=A_gm, A_mus=A_mus, A_muu=A_muu,  
-    A_alpha=A_alpha,A_beta=A_beta, Tune = as.integer(1), pgamma = 0.4)
+    A_alpha=A_alpha,A_beta=A_beta, Tune = as.integer(1), pgamma = 0.4, PACKAGE="COMPASS")
   proc.time() - ptm
   Istar = result$Istar
   mk = result$mk
@@ -382,7 +382,7 @@
       pb2 = pb2,lambda_s = lambda_s, var_1 = varp_s1,var_2 = varp_s2,p_var = pvar_s, p_vars = pvar_mus,var_1s = sqrt_mus1, var_2s=sqrt_mus2,m_s=m_s,Sigma_s =Sigma_s,
       p_varu=pvar_muu,var_1u=sqrt_muu1,var_2u=sqrt_muu2,m_u=m_u, Sigma_u=Sigma_u,p_vara=pvar_alpha, var_1a=sqrt_alpha1,var_2a=sqrt_alpha2,sig_alpha1=sig_alpha1,alpha1=alpha1,
       p_varb=pvar_beta,var_1b=sqrt_beta1,var_2b=sqrt_beta2,sig_beta1 = sig_beta1, beta1= beta1, A_alphau=A_alphau,A_alphas=A_alphas, A_gm=A_gm, A_mus=A_mus, A_muu=A_muu,  
-      A_alpha=A_alpha,A_beta=A_beta, Tune = as.integer(0),pgamma = 0.5)
+      A_alpha=A_alpha,A_beta=A_beta, Tune = as.integer(0),pgamma = 0.5, PACKAGE="COMPASS")
     #if (stt == sTT) {break}
     Istar = result$Istar
     mk = result$mk

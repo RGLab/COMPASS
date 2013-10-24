@@ -1,5 +1,7 @@
+\docType{package}
 \name{COMPASS}
 \alias{COMPASS}
+\alias{COMPASS-package}
 \title{Fit the COMPASS Model}
 \usage{
   COMPASS(data, treatment, control, subset = NULL,
@@ -88,6 +90,9 @@
 }
 \description{
   This function fits the \code{COMPASS} model.
+
+  This package implements a model for the analysis of
+  polyfunctionality in single-cell experiments.
 }
 \section{Category Filter}{
   The category filter is used to exclude categories

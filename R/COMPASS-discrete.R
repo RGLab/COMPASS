@@ -71,12 +71,12 @@
     if (tt %% 1000 == 0) vmessage("Iteration ", tt, " of ", iterations, ".")
     
     # update alphau
-    res2 <- .Call("updatealphau_noPu_Exp", alphaut = alpha_u[tt-1,],n_s = n_s,n_u=n_u, I=I, K=K, lambda_u = lambda_u, var_p = varp_u, ttt = ttt,gammat =gamma[,,tt-1])
+    res2 <- .Call(PACKAGE="COMPASS", "updatealphau_noPu_Exp", alphaut = alpha_u[tt-1,],n_s = n_s,n_u=n_u, I=I, K=K, lambda_u = lambda_u, var_p = varp_u, ttt = ttt,gammat =gamma[,,tt-1])
     alpha_u[tt,] = res2$alphau_tt;
     A_alphau[,tt] = res2$Aalphau;
     
     #update gamma
-    res1 <- .Call("updategammak_noPu",n_s = n_s,n_u=n_u,gammat = gamma[,,tt-1],I=I,K=K,SS = SS,alphau = alpha_u[tt,],alphas = alpha_s[tt-1,],alpha=1,mk=mk,Istar = Istar,
+    res1 <- .Call(PACKAGE="COMPASS", "updategammak_noPu",n_s = n_s,n_u=n_u,gammat = gamma[,,tt-1],I=I,K=K,SS = SS,alphau = alpha_u[tt,],alphas = alpha_s[tt-1,],alpha=1,mk=mk,Istar = Istar,
       mKstar = mKstar,pp=pp, pb1 = pb1, pb2 = pb2, indi=indi)
     gamma[,,tt] = res1$gamma_tt;
     A_gm[,tt] = res1$Ag;
@@ -85,7 +85,7 @@
     mKstar = res1$mKstar;
     
     # update alphas
-    res3 <- .Call("updatealphas_Exp", alphast = alpha_s[tt-1,], n_s = n_s,  K=K, I=I, lambda_s = lambda_s, gammat =gamma[,,tt], var_1 = varp_s1,var_2 = varp_s2,p_var = pvar_s,ttt = ttt)
+    res3 <- .Call(PACKAGE="COMPASS", "updatealphas_Exp", alphast = alpha_s[tt-1,], n_s = n_s,  K=K, I=I, lambda_s = lambda_s, gammat =gamma[,,tt], var_1 = varp_s1,var_2 = varp_s2,p_var = pvar_s,ttt = ttt)
     alpha_s[tt,] = res3$alphas_tt;
     A_alphas[,tt] = res3$Aalphas;
     ####
@@ -128,12 +128,12 @@
     vmessage("Running replication ", stt, " of ", sTT, "...")
     for (tt in 2:T) {
       # update alphau
-      res2 <- .Call("updatealphau_noPu_Exp", alphaut = alpha_u[tt-1,],n_s = n_s,n_u=n_u, I=I, K=K, lambda_u = lambda_u, var_p = varp_u, ttt = ttt,gammat =gamma[,,tt-1])
+      res2 <- .Call(PACKAGE="COMPASS", "updatealphau_noPu_Exp", alphaut = alpha_u[tt-1,],n_s = n_s,n_u=n_u, I=I, K=K, lambda_u = lambda_u, var_p = varp_u, ttt = ttt,gammat =gamma[,,tt-1])
       alpha_u[tt,] = res2$alphau_tt;
       A_alphau[,tt] = res2$Aalphau;
       
       #update gamma
-      res1 <- .Call("updategammak_noPu",n_s = n_s,n_u=n_u,gammat = gamma[,,tt-1],I=I,K=K,SS = SS,alphau = alpha_u[tt,],alphas = alpha_s[tt-1,],alpha=1,mk=mk,Istar = Istar,
+      res1 <- .Call(PACKAGE="COMPASS", "updategammak_noPu",n_s = n_s,n_u=n_u,gammat = gamma[,,tt-1],I=I,K=K,SS = SS,alphau = alpha_u[tt,],alphas = alpha_s[tt-1,],alpha=1,mk=mk,Istar = Istar,
         mKstar = mKstar,pp=pp, pb1 = pb1, pb2 = pb2, indi=indi)
       gamma[,,tt] = res1$gamma_tt;
       A_gm[,tt] = res1$Ag;
@@ -142,7 +142,7 @@
       mKstar = res1$mKstar;
       
       # update alphas
-      res3 <- .Call("updatealphas_Exp", alphast = alpha_s[tt-1,], n_s = n_s,  K=K, I=I, lambda_s = lambda_s, gammat =gamma[,,tt], var_1 = varp_s1,var_2 = varp_s2,p_var = pvar_s,ttt = ttt)
+      res3 <- .Call(PACKAGE="COMPASS", "updatealphas_Exp", alphast = alpha_s[tt-1,], n_s = n_s,  K=K, I=I, lambda_s = lambda_s, gammat =gamma[,,tt], var_1 = varp_s1,var_2 = varp_s2,p_var = pvar_s,ttt = ttt)
       alpha_s[tt,] = res3$alphas_tt;
       A_alphas[,tt] = res3$Aalphas;
       if (tt %% 1000 == 0) vmessage("Iteration ", tt, " of ", iterations, ".")

@@ -2,6 +2,6 @@
 # Generator token: 10BE3573-1514-4C36-9D1C-5A225CD40393
 
 cell_counts <- function(x, combos) {
-    .Call('MIMOSA_cell_counts', PACKAGE = 'MIMOSA', x, combos)
+    .Call('COMPASS_cell_counts', PACKAGE = 'COMPASS', x, combos)
 }
 
