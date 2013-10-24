@@ -1,0 +1,22 @@
+MIMOSA 0.9.9
+============
+* Bug Fixes
+** Filtered out empty categories on the conditioning variables.
+** Support for parallel as well as multicore
+
+* News
+** multicore support (via the multicore package) will be phased out in favor of the parallel package.
+
+MIMOSA 0.8.0
+============
+* Model fitting via the 'MIMOSA' function
+* Data represented via an ExpressionSet
+* Formula interface support
+* Removed old code, including ICS class, and dependencies upon it.
+* New documentation
+
+MIMOSA 0.7.0
+============
+* First beta release of MIMOSA
+* model fitting via MCMC through the .fitMCMC function
+

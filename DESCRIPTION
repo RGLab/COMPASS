@@ -1,0 +1,39 @@
+Package: COMPASS
+Type: Package
+Title: Combinatorial Polyfunctionality Analysis of Single Cells
+Version: 0.90
+Date: 2013-10-24
+Author: Lynn Lin <llin@fhcrc.org>
+Maintainer: Kevin Ushey <kushey@fhcrc.org>, Greg Finak <gfinak@fhcrc.org>
+Description: Implements Combinatorial polyfunctionality analysis of
+    single-cells (COMPASS)
+License: GPL (>= 3)
+VignetteBuilder: knitr
+Depends:
+    R (>= 3.0.1)
+LinkingTo: Rcpp, RcppArmadillo
+Imports:
+    Biobase,
+    MASS,
+    methods,
+    Formula,
+    data.table
+Enhances: compiler
+Suggests:
+    ggplot2,
+    multicore,
+    parallel,
+    knitr,
+    plyr,
+    reshape
+Collate:
+    'repmat.R'
+    'COMPASS-continuous.R'
+    'COMPASS.R'
+    'RcppExports.R'
+    'COMPASS-discrete.R'
+    'COMPASSContainer.R'
+    'utils.R'
+    'Scores.R'
+LazyLoad: yes
+LazyData: yes

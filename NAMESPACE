@@ -1,0 +1,6 @@
+export(COMPASS)
+export(COMPASSContainer)
+export(FunctionalityScore)
+export(PolyfunctionalityScore)
+S3method(print,COMPASSContainer)
+S3method(summary,COMPASSContainer)
