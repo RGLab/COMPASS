@@ -1,4 +1,5 @@
-=======
+[![Build Status](https://travis-ci.org/RGLab/COMPASS.png?branch=master)](https://travis-ci.org/RGLab/COMPASS)
+
 COMPASS
 =======
 

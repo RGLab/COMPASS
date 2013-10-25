@@ -16,7 +16,7 @@ install:
   - R --version
   - R -e '.libPaths(); sessionInfo()'
   - Rscript -e 'install.packages("devtools", dep = TRUE, repos = c("http://rforge.net", "http://cran.rstudio.org"))'
-  - Rscript -e 'library(methods);library(devtools);library(utils);chooseCRANmirror(ind=87);source("http://www.bioconductor.org/biocLite.R");biocLite("Biobase",ask=FALSE); install_github("COMPASS", "RGLab");'
+  - Rscript -e 'library(methods);library(devtools);library(utils);chooseCRANmirror(ind=87);source("http://www.bioconductor.org/biocLite.R");biocLite("Biobase",ask=FALSE);install.packages("data.table");library(data.table);install_github("COMPASS", "RGLab");'
 
 script:
   - Rscript -e 'require(COMPASS)'
