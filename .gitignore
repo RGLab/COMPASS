@@ -8,3 +8,4 @@ inst/.DS_Store
 data/*.rds
 .Rhistory
 refactor/*.rds
+.cproject
