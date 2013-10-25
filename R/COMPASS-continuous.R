@@ -1,9 +1,5 @@
-.COMPASS.continuous <- function(y_s, y_u, n_s, n_u, categories, lambda, 
-  lambda_s, lambda_u, a, b, m_s, m_u, Sigma_s, Sigma_u,
+.COMPASS.continuous <- function(y_s, y_u, n_s, n_u, categories,
   iterations, replications, verbose=TRUE, ...) {
-  
-  .estimate_m_s <- is.null(m_s)
-  .estimate_m_u <- is.null(m_u)
   
   vmessage <- function(...)
     if (verbose) message(...) else invisible(NULL)
@@ -33,14 +29,8 @@
   indi = matrix(as.integer(indi), nrow=I)
   
   #####################find empirical ground mean and variance ##########
-  if (.estimate_m_s) {
-    m_s = array(0, dim = c(M,1)); #hyper prior mean for mu_s
-  }
-  
-  if (.estimate_m_u) {
-    m_u = array(0, dim = c(M,1)); 
-  }
-  
+  m_s = array(0, dim = c(M,1)); #hyper prior mean for mu_s
+  m_u = array(0, dim = c(M,1)); 
   grand_m = m_u; grand_sd = m_u;
   
   for ( mm in 1:M) {
@@ -52,33 +42,20 @@
     ys_mm = ys_mm[-which(ys_mm==0)]
     yu_mm = yu_mm[-which(yu_mm==0)]
     
-    if (.estimate_m_s) {
-      m_s[mm] = mean(ys_mm);
-    }
-    
-    if (.estimate_m_u) {
-      m_u[mm] = mean(yu_mm);
-    }
+    m_s[mm] = mean(ys_mm);
+    m_u[mm] = mean(yu_mm);
     
     grand_m[mm] = mean(c(ys_mm,yu_mm))
     grand_sd[mm] =mad(c(ys_mm,yu_mm))
   }
   
-  if (.estimate_m_s) {
-    m_s = m_u + 500;
-  }
+  m_s = m_u + 500;
   
   mu_s = array(0, dim=c(T,M)); mu_s[1,] = m_s;
   mu_u = array(0, dim=c(T,M)); mu_u[1,] = m_u;
   
-  if (is.null(Sigma_s)) {
-    Sigma_s <- grand_sd ## hyper prior std for mu_s
-  }
-  
-  if (is.null(Sigma_u)) {
-    Sigma_u <- grand_sd
-  }
-  
+  Sigma_s <- grand_sd ## hyper prior std for mu_s
+  Sigma_u <- grand_sd
   
   
   
@@ -86,6 +63,9 @@
   mk = array(0, dim = c(1,K-1));
   Istar = 0;
   mKstar = 0;
+  
+  a =1; # prior for gamma
+  b =1;
   
   #lambda = lambda_true;
   gamma = array(0, dim=c(I,K,T));
@@ -106,8 +86,8 @@
   pb1 <- clamp( 1.5 / median( indi[, K] ), 0, 0.9 )
   pb2 <- clamp( 5.0 / median( indi[, K] ), 0, 0.9 )
   
-  #lambda_s=array(100000, dim=c(1,K)); lambda_s[K] =150000; #upper bound for alpha_s
-  #lambda_u=lambda_s;
+  lambda_s=array(100000, dim=c(1,K)); lambda_s[K] =150000; #upper bound for alpha_s
+  lambda_u=lambda_s;
   
   alpha_u[1,1:(K-1)] =10; alpha_u[1,K] = 100; 
   alpha_s[1,1:(K-1)] =10; alpha_s[1,K] = 150;
@@ -202,9 +182,7 @@
   sig_alpha1 = mad(alpha1)*15
   sig_beta1 = mad(beta1)*3
   
-  if (is.null(lambda)) {
-    lambda <- mean(temp_var/(mean_sig)^2)
-  }
+  lambda <- mean(temp_var/(mean_sig)^2)
   
   alpha = array(5, dim = c(T,1))
   beta = array(5, dim = c(T,1))

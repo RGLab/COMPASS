@@ -8,10 +8,9 @@
     category_filter = function(x) colSums(x > 5) > 2,
     filter_lowest_frequency = 0,
     filter_specific_markers = NULL,
-    model = c("discrete", "continuous"), lambda = NULL,
-    lambda_s = NULL, lambda_u = NULL, iterations = 40000,
-    replications = 8, a = 1, b = 1, m_s = NULL, m_u = NULL,
-    Sigma_s = NULL, Sigma_u = NULL, verbose = TRUE, ...)
+    model = c("discrete", "continuous"),
+    iterations = 40000, replications = 8, verbose = TRUE,
+    ...)
 }
 \arguments{
   \item{data}{An object of class \code{COMPASSData}.}
@@ -51,33 +50,8 @@
   \code{COMPASS} model, while \code{"continuous"} indicates
   we should fit the continuous \code{COMPASS} model.}
 
-  \item{lambda}{A hyperparameter. Only used for the
-  continuous model.}
-
-  \item{lambda_s}{A vector of hyperparameters.}
-
-  \item{lambda_u}{A vector of hyperparameters.}
-
-  \item{a}{Hyperparameter for prior of gamma. Only used for
-  the continuous model.}
-
-  \item{b}{Hyperparameter for prior of gamma. Only used for
-  the continuous model.}
-
-  \item{m_s}{hyperparam cont only est from data}
-
-  \item{m_u}{hyperparam cont only est from data}
-
-  \item{Sigma_s}{hyperparam continuous, if null estimated
-  from data}
-
-  \item{Sigma_u}{hyperparam continuous, if null estimated
-  from data}
-
-  \item{iterations}{The number of iterations to perform
-  when running the model.  Note that the model is run a
-  total of \code{iterations x replications} times, but we
-  only keep estimates from the last set of iterations.}
+  \item{iterations}{The number of iterations (per
+  'replication') to perform.}
 
   \item{replications}{The number of 'replications' to
   perform. In order to conserve memory, we only keep the

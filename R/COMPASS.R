@@ -38,20 +38,7 @@
 ##'   indicates we should fit the discrete \code{COMPASS} model, while
 ##'   \code{"continuous"} indicates we should fit the continuous
 ##'   \code{COMPASS} model.
-##' @param lambda A hyperparameter. Only used for the continuous model.
-##' @param lambda_s A vector of hyperparameters.
-##' @param lambda_u A vector of hyperparameters.
-##' @param a Hyperparameter for prior of gamma. Only used for the continuous
-##'   model.
-##' @param b Hyperparameter for prior of gamma. Only used for the continuous
-##'   model.
-##' @param m_s hyperparam cont only est from data
-##' @param m_u hyperparam cont only est from data
-##' @param Sigma_s hyperparam continuous, if null estimated from data
-##' @param Sigma_u hyperparam continuous, if null estimated from data
-##' @param iterations The number of iterations to perform when running the model.
-##'   Note that the model is run a total of \code{iterations x replications}
-##'   times, but we only keep estimates from the last set of iterations.
+##' @param iterations The number of iterations (per 'replication') to perform.
 ##' @param replications The number of 'replications' to perform. In order to
 ##'   conserve memory, we only keep the model estimates from the last replication.
 ##' @param verbose Boolean; if \code{TRUE} we output progress information.
@@ -65,8 +52,8 @@ COMPASS <- function(data, treatment, control, subset=NULL,
   category_filter=function(x) colSums(x > 5) > 2,
   filter_lowest_frequency=0, filter_specific_markers=NULL, 
   model=c("discrete", "continuous"), 
-  lambda=NULL, lambda_s=NULL, lambda_u=NULL, iterations=40000, replications=8,
-  a=1, b=1, m_s=NULL, m_u=NULL, Sigma_s=NULL, Sigma_u=NULL, verbose=TRUE, ...) {
+  iterations=40000, replications=8,
+  verbose=TRUE, ...) {
   
   if (class(data) != "COMPASSContainer") {
     stop("'data' must be an object of class 'COMPASSContainer'; see the ",
@@ -302,15 +289,6 @@ COMPASS <- function(data, treatment, control, subset=NULL,
   
   vmessage("There are a total of ", nrow(categories), " categories to be tested.")
   
-  ## set the lambda parameters
-  l <- length(keep_markers) - 1
-  
-  if (is.null(lambda_s))
-    lambda_s <- matrix( c(rep(1E5, l-1), 1.5E5), nrow=1 )
-  
-  if (is.null(lambda_u))
-    lambda_u <- matrix( c(rep(1E5, l-1), 1.5E5), nrow=1 )
-  
   model <- match.arg(model)
   
   ## go to the model fitting processes
@@ -319,7 +297,6 @@ COMPASS <- function(data, treatment, control, subset=NULL,
       vmessage("Fitting discrete COMPASS model.")
       output <- list(
         fit=.COMPASS.discrete(n_s=n_s, n_u=n_u, categories=categories,
-          lambda_s=lambda_s, lambda_u=lambda_u, 
           iterations=iterations, replications=replications, verbose=verbose, ...),
         data=list(n_s=n_s, n_u=n_u, counts_s=counts_s, counts_u=counts_u,
           categories=categories)
@@ -329,9 +306,7 @@ COMPASS <- function(data, treatment, control, subset=NULL,
       vmessage("Fitting continuous COMPASS model.")
       output <- list(
         fit=.COMPASS.continuous(y_s=y_s, y_u=y_u, n_s=n_s, n_u=n_u,
-          categories=categories,
-          lambda=lambda, lambda_s=lambda_s, lambda_u=lambda_u, a=a, b=b,
-          m_s=m_s, m_u=m_u, Sigma_s=Sigma_s, Sigma_u=Sigma_u, 
+          categories=categories, 
           iterations=iterations, replications=replications, verbose=verbose, ...),
         data=list(y_s=y_s, y_u=y_u, n_s=n_s, n_u=n_u, 
           counts_s=counts_s, counts_u=counts_u, categories=categories)
