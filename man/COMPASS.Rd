@@ -62,6 +62,13 @@
 
   \item{...}{Other arguments; currently unused.}
 }
+\value{
+  A \code{list} with class \code{COMPASSResult} with two
+  components, the \code{fit} containing parameter estimates
+  and parameter acceptance rates, and \code{data}
+  containing the generated data used as input for the
+  model.
+}
 \description{
   This function fits the \code{COMPASS} model.
 

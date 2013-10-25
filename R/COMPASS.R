@@ -46,7 +46,10 @@
 ##' 
 ##' @seealso \code{\link{COMPASSContainer}}, for constructing the data object
 ##'   required by \code{COMPASS}.
-##' 
+##' @return A \code{list} with class \code{COMPASSResult} with two components,
+##'   the \code{fit} containing parameter estimates and parameter acceptance
+##'   rates, and \code{data} containing the generated data used as input for
+##'   the model.
 ##' @export
 COMPASS <- function(data, treatment, control, subset=NULL, 
   category_filter=function(x) colSums(x > 5) > 2,

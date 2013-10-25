@@ -29,4 +29,7 @@
   and retrieve it as a \code{COMPASSContainer}, suitable
   for ##' modelling with \code{COMPASS}.
 }
+\seealso{
+  \code{\link{COMPASSContainer}}
+}
 

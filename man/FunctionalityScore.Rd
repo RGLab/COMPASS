@@ -2,17 +2,17 @@
 \alias{FunctionalityScore}
 \title{Compute the Functionality Score for each subject fit in a COMPASS model}
 \usage{
-  FunctionalityScore(fit)
+  FunctionalityScore(CR)
 }
 \arguments{
-  \item{fit}{is a \code{COMPASSFit} object from either the
-  discrete or continuous COMPASS model.}
+  \item{CR}{An object of class \code{COMPASSResult}, as
+  returned by \code{\link{COMPASS}}.}
 }
 \value{
-  a \code{vector} of functionality scores.
+  A numeric vector of functionality scores.
 }
 \description{
-  Computes the Functionality score for each observation
+  Computes the functionality score for each observation
   from the gamma matrix of a COMPASS model fit.
 }
 

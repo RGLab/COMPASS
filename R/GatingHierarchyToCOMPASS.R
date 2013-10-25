@@ -14,6 +14,7 @@
 ##' @param sample_id The name of the vector in \code{meta} that denotes the samples.
 ##'   This vector should contain all of the names in the \code{data} input.
 ##' @export
+##' @seealso \code{\link{COMPASSContainer}}
 GatingSetToCOMPASS <- function(gs, node, meta, individual_id, sample_id) {
   
   if (require(flowWorkspace)) {

@@ -2,14 +2,14 @@
 \alias{PolyfunctionalityScore}
 \title{Compute the Polyfunctionality Score for each subject fit in a COMPASS model}
 \usage{
-  PolyfunctionalityScore(fit,
+  PolyfunctionalityScore(CR,
     normalization = c("all", "observed"))
 }
 \arguments{
-  \item{fit}{is a \code{COMPASSFit} object from either the
-  discrete or continuous COMPASS model.}
+  \item{CR}{An object of class \code{COMPASSResult}, as
+  returned by \code{\link{COMPASS}}.}
 
-  \item{normalization}{a \code{character} vector specifying
+  \item{normalization}{A \code{character} vector specifying
   how the score is to be normalized. Either using
   \code{"all"} possible categories, or just the
   \code{"observed"} categories. Defaults to \code{"all"}

@@ -1,14 +1,14 @@
 ##' Compute the Functionality Score for each subject fit in a COMPASS model
 ##' 
-##' Computes the Functionality score for each observation from the gamma matrix
+##' Computes the functionality score for each observation from the gamma matrix
 ##' of a COMPASS model fit.
 ##' 
-##' @param fit is a \code{COMPASSFit} object from either the discrete or 
-##'   continuous COMPASS model.
-##' @return a \code{vector} of functionality scores.
+##' @param CR An object of class \code{COMPASSResult}, as returned by
+##'   \code{\link{COMPASS}}.
+##' @return A numeric vector of functionality scores.
 ##' @export
-FunctionalityScore <- function(fit) {
-  M <- fit$mean_gamma
+FunctionalityScore <- function(CR) {
+  M <- CR$fit$mean_gamma
   Fscore <- rowMeans(M[, -c(ncol(M))])
   return(Fscore)
 }
@@ -18,20 +18,23 @@ FunctionalityScore <- function(fit) {
 ##' Computes the Polyfunctionality score for each observation from the 
 ##' gamma matrix of a COMPASS model fit.
 ##' 
-##' @param fit is a \code{COMPASSFit} object from either the discrete or 
-##'   continuous COMPASS model.
-##' @param normalization a \code{character} vector specifying how the score
+##' @param CR An object of class \code{COMPASSResult}, as returned by
+##'   \code{\link{COMPASS}}.
+##' @param normalization A \code{character} vector specifying how the score
 ##'  is to be normalized. Either using \code{"all"} possible categories, or 
 ##'  just the \code{"observed"} categories. Defaults to \code{"all"} categories.
 ##' @return a \code{vector} of polyfunctionality scores.
 ##' @export
-PolyfunctionalityScore <- function(fit,normalization=c("all","observed")) {
-  M <- fit$mean_gamma
-  degree <- rev(rev(fit$categories[,ncol(fit$categories)])[-1L])
-  normalization<-match.arg(arg=normalization,choices=c("all","observed"))
+PolyfunctionalityScore <- function(CR, normalization=c("all","observed")) {
+  M <- CR$fit$mean_gamma
+  degree <- rev(rev(CR$fit$categories[,ncol(CR$fit$categories)])[-1L])
+  normalization <- match.arg(arg=normalization,choices=c("all","observed"))
   switch(normalization,
     all = {
-      norm <- choose(ncol(fit$categories)-1,1:(ncol(fit$categories)-1))
+      norm <- choose(
+        ncol(CR$fit$categories)-1, 
+        1:(ncol(CR$fit$categories)-1)
+      )
     },
     observed = {
       norm <- table(degree)[degree]
@@ -39,5 +42,6 @@ PolyfunctionalityScore <- function(fit,normalization=c("all","observed")) {
   )
   degree <- degree / norm[degree]
   PFscore <- M[,-ncol(M)] %*% degree
+  PFscore <- setNames( as.numeric(PFscore), rownames(PFscore) )
   return(PFscore)
 }

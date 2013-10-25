@@ -1,13 +1,13 @@
-library(MIMOSA)
+library(COMPASS)
 
 ## source Lynn's code to get y_s, y_u, cd4_counts, meta
-CC <- COMPASSContainer(
-  data=res,
-  counts=cd4_counts, 
-  meta=meta, 
-  sample="name", 
-  indiv="PTID"
-)
+# CC <- COMPASSContainer(
+#   data=res,
+#   counts=cd4_counts, 
+#   meta=meta, 
+#   sample="name", 
+#   indiv="PTID"
+# )
 
 ## flowWorkspaceToSingleCell?
 
@@ -34,6 +34,9 @@ discrete <- COMPASS(
   iterations=10
 )
 
+FunctionalityScore(discrete)
+PolyfunctionalityScore(discrete)
+
 ## test unpaired sample removal
 CC_sub <- CC
 CC_sub$data <- CC_sub$data[1:520]
@@ -51,5 +54,9 @@ continuous <- COMPASS(
   treatment=Stim == "92TH023 Env",
   control=Stim == "negctrl 1",
   model="continuous", 
-  iterations=200
+  iterations=10
 )
+
+FunctionalityScore(continuous)
+PolyfunctionalityScore(continuous)
+plot( FunctionalityScore(continuous) ~ PolyfunctionalityScore(continuous) )
