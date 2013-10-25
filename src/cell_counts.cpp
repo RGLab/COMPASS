@@ -47,9 +47,7 @@ IntegerMatrix cell_counts(List x, List combos) {
         #define abs_c (c_combo_abs[p])
           
         for (int p=0; p < n_c; ++p) {
-          if (c > 0 && row[abs_c-1] <= 0) {
-            goto false_case;
-          } else if (c < 0 && row[abs_c-1] > 0) {
+          if ((c > 0 && row[abs_c-1] <= 0) || (c < 0 && row[abs_c-1] > 0)) {
             goto false_case;
           }
         }
@@ -59,12 +57,9 @@ IntegerMatrix cell_counts(List x, List combos) {
         
         // if we reached here, we matched all of our conditions
         ++num;
-        continue;
         
-        // we use this goto to skip the 'num' addition
-        false_case: {
-          continue;
-        }
+        // false case allows us to skip incrementing num
+        false_case: {}
         
       }
       
