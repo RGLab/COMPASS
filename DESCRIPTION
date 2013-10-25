@@ -26,5 +26,6 @@ Collate:
     'utils.R'
     'Scores.R'
     'COMPASS-package.R'
+    'GatingHierarchyToCOMPASS.R'
 LazyLoad: yes
 LazyData: yes
