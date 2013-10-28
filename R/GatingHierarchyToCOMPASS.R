@@ -28,7 +28,7 @@ GatingSetToCOMPASS <- function(gs, node, meta, individual_id, sample_id) {
     names(intensities) <- sampleNames(gs)
     counts <- integer( length(gs) )
     for (i in seq_along(counts)) {
-      counts[[i]] <- getTotal( gs[[i]], "root", flowJo=FALSE )
+      counts[[i]] <- getTotal( gs[[i]], node, flowJo=FALSE )
     }
     names(counts) <- sampleNames(gs)
     
