@@ -510,12 +510,12 @@ void updategamma_indi_1(vector<int>& xn_s,vector<int>& xn_u, vector<int>& gamma_
                    lplace1 +=1;
                }
                     
-            int place0_new[lplace0_new];  
-            int place0[lplace0];   
-            int place1[lplace1];   
+            std::vector<int> place0_new(lplace0_new);
+            std::vector<int> place0(lplace0);
+            std::vector<int> place1(lplace1);
             int flag0 = 0; int flag1 = 0;
             int flag0_old = 0; int flag1_old = 0;
-            int place1_new[lplace1_new];
+            std::vector<int> place1_new(lplace1_new);
             for (int k= 0; k < xK; k++) {
                if (gamma_tt[xI*k+i] == 0) {
                   place0_new[flag0] = k;

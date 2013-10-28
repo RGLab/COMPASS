@@ -41,7 +41,7 @@ RcppExport SEXP model(SEXP T, SEXP I, SEXP K, SEXP M, SEXP ttt, SEXP SS, SEXP al
   Rcpp::IntegerVector xmk(mk);
   int xIstar = Rcpp::as<int>(Istar);
   int xmKstar = Rcpp::as<int>(mKstar);    
-  double xpgamma = Rcpp::as<double>(pgamma);
+  // double xpgamma = Rcpp::as<double>(pgamma);
   
   Rcpp::NumericMatrix xybar_s(ybar_s);
   Rcpp::NumericMatrix xybar_u(ybar_u);

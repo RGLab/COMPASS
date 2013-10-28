@@ -29,8 +29,8 @@ RcppExport SEXP updategammak_noPu(SEXP n_s,SEXP n_u, SEXP gammat, SEXP I, SEXP K
     Rcpp::RNGScope scope;
     Rcpp::NumericVector m(1); 
     int K1 = xK-1;
-    vector<int> array1K(K1);
-    vector<int> mik(K1);
+    std::vector<int> array1K(K1);
+    std::vector<int> mik(K1);
     double alphaK = xalpha/xK;
     int xindiK1 = 0;
     
@@ -48,7 +48,7 @@ RcppExport SEXP updategammak_noPu(SEXP n_s,SEXP n_u, SEXP gammat, SEXP I, SEXP K
     int lplace1 = 0;
     for (int i = 0; i < xI; i++) {
         xindiK1 = xindicator(i,K1);
-        vector<int> array1K(xindiK1);
+        std::vector<int> array1K(xindiK1);
         for (int j = 0; j < xK; j++) {
             gamma_old[j] = gamma_tt(i,j);
             
@@ -144,12 +144,12 @@ RcppExport SEXP updategammak_noPu(SEXP n_s,SEXP n_u, SEXP gammat, SEXP I, SEXP K
        
             } 
                     
-            vector<int> place0_new(lplace0_new);  
-            vector<int> place0(lplace0);   
-            vector<int> place1(lplace1);   
+            std::vector<int> place0_new(lplace0_new);  
+            std::vector<int> place0(lplace0);   
+            std::vector<int> place1(lplace1);   
             int flag0 = 0; int flag1 = 0;
             int flag0_old = 0; int flag1_old = 0;
-            vector<int> place1_new(lplace1_new);
+            std::vector<int> place1_new(lplace1_new);
             for (int k= 0; k < xK; k++) {
                if (gamma_tt(i,k) == 0) {
                   place0_new[flag0] = k;

@@ -15,7 +15,7 @@ void updatemus(vector<double>& xmust, vector<double>& xmuut, vector<int>& xn_s, 
                Rcpp::NumericMatrix& xybar_s, Rcpp::NumericMatrix& xybar_u, Rcpp::NumericMatrix& pt1,Rcpp::NumericMatrix& pt3,
                double xlambda, double xbeta, double xalpha, vector<double>& xms,vector<double>& xSigs ,vector<int>& xAmus)
 {  
-    int temp=0;  double delF=0.; double log1=0.; double log2=0.; int nik=0; int xIK=xI*xK;
+    int temp=0;  double delF=0.; double log1=0.; double log2=0.; int nik=0; // int xIK=xI*xK;
     double alpha_np=0.;;  double beta_np=0.;
     
     for ( int p=0; p<xM; p++) {

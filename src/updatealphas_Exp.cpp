@@ -47,7 +47,7 @@ RcppExport SEXP updatealphas_Exp(SEXP alphast,SEXP n_s, SEXP K, SEXP I, SEXP lam
               if (xgammat(i,k) == 1) { lp1 +=1;}       
             }
 
-            vector<int> p1(lp1); flag1 =0;
+            std::vector<int> p1(lp1); flag1 =0;
             flagkk = 0;
             for (int k= 0; k < xK; k++) {
                if (xgammat(i,k) == 1) {
@@ -82,7 +82,7 @@ RcppExport SEXP updatealphas_Exp(SEXP alphast,SEXP n_s, SEXP K, SEXP I, SEXP lam
         else { alpha_s_p = Rcpp::rnorm(1, mean_p, sqrt_var2[kk]);}    
 
         if (alpha_s_p[0]>0.0) {
-           vector<double> alp(xK);
+           std::vector<double> alp(xK);
         
            for (int i = 0; i<xK; i++) {
                alp[i] = xalphast[i];
@@ -96,7 +96,7 @@ RcppExport SEXP updatealphas_Exp(SEXP alphast,SEXP n_s, SEXP K, SEXP I, SEXP lam
                   if (xgammat(i,k) == 1) { lp1 +=1;}       
                }
 
-               vector<int> p1(lp1); flag1 =0;
+               std::vector<int> p1(lp1); flag1 =0;
                flagkk = 0;
                for (int k= 0; k < xK; k++) {
                   if (xgammat(i,k) == 1) {
