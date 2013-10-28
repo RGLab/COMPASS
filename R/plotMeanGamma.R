@@ -57,7 +57,8 @@ plot.COMPASSResult <- function(x, y, subset, row_annotation, ...) {
     row_annotation=rowann,
     cluster_rows=FALSE,
     cluster_cols=FALSE,
-    cytokine_annotation=cats
+    cytokine_annotation=cats,
+    ...
   )
   
 }

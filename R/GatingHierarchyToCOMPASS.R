@@ -26,7 +26,11 @@ GatingSetToCOMPASS <- function(gs, node, meta, individual_id, sample_id) {
     data <- getData(gs, node)
     intensities <- Map(exprs, data)
     names(intensities) <- sampleNames(gs)
-    counts <- unlist(lapply(gs, function(x) getTotal(x, "root", flowJo=FALSE)))
+    counts <- integer( length(gs) )
+    for (i in seq_along(counts)) {
+      counts[[i]] <- getTotal( gs[[i]], "root", flowJo=FALSE )
+    }
+    names(counts) <- sampleNames(gs)
     
     ## try to get the metadata, if available
     if (missing(meta)) {
@@ -43,6 +47,8 @@ GatingSetToCOMPASS <- function(gs, node, meta, individual_id, sample_id) {
       individual_id=individual_id,
       sample_id=sample_id
     )
+    
+    return(CC)
     
   } else {
     stop("This function requires 'flowWorkspace' to be installed; ",
