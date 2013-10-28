@@ -96,7 +96,7 @@ RcppExport SEXP updatealphas_Exp(SEXP alphast,SEXP n_s, SEXP K, SEXP I, SEXP lam
                   if (xgammat(i,k) == 1) { lp1 +=1;}       
                }
 
-               vector<int> p1(lp1); flag1 =0;
+               int p1[lp1]; flag1 =0;
                flagkk = 0;
                for (int k= 0; k < xK; k++) {
                   if (xgammat(i,k) == 1) {

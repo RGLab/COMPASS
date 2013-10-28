@@ -51,8 +51,8 @@ RcppExport SEXP updatealphau_noPu_Exp(SEXP alphaut, SEXP n_s, SEXP n_u, SEXP I, 
               if (xgammat(i,k) == 1) { lp1 +=1;}       
             }
             lp0 = xK-lp1;
-            int p1[lp1]; flag1 = 0;
-            int p0[lp0]; flag0 = 0;
+            vector<int> p1(lp1); flag1 = 0;
+            vector<int> p0(lp0); flag0 = 0;
             flagkk = 0; // whether gamma_k = 1
            
             for (int k= 0; k < xK; k++) {
@@ -100,7 +100,7 @@ RcppExport SEXP updatealphau_noPu_Exp(SEXP alphaut, SEXP n_s, SEXP n_u, SEXP I, 
         double mean_p = std::max(0.01, xalphaut[kk]+delF/xtt);
         Rcpp::NumericVector alpha_u_p = Rcpp::rnorm(1, mean_p, sqrt_var[kk]);
         if (alpha_u_p[0]>0.0) {
-            double alp[xK];
+            vector<double> alp(xK);
             for (int i = 0; i<xK; i++) {
                alp[i] = xalphaut[i];
             }
@@ -119,8 +119,8 @@ RcppExport SEXP updatealphau_noPu_Exp(SEXP alphaut, SEXP n_s, SEXP n_u, SEXP I, 
                     if (xgammat(i,k) == 1) { lp1 +=1;}       
                  }
                  lp0 = xK-lp1;
-                 int p1[lp1];  flag1 = 0;
-                 int p0[lp0];  flag0 = 0;
+                 vector<int> p1(lp1);  flag1 = 0;
+                 vector<int> p0(lp0);  flag0 = 0;
                  flagkk = 0; // whether gamma_k = 1
            
                  for (int k= 0; k < xK; k++) {

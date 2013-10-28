@@ -43,8 +43,8 @@ void updatealphau_RW(vector<double>& xalphaut, vector<int>& xn_s, vector<int>& x
               if (xgammat[xI*k+i] == 1) { lp1 +=1;}       
             }
             lp0 = xK-lp1;
-            vector<int> p1(lp1); flag1 = 0;
-            vector<int> p0(lp0);  flag0 = 0;
+            int p1[lp1];  flag1 = 0;
+            int p0[lp0];  flag0 = 0;
             flagkk = 0; // whether gamma_k = 1
            
             for (int k= 0; k < xK; k++) {
