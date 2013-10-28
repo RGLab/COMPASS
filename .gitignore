@@ -9,3 +9,4 @@ data/*.rds
 .Rhistory
 refactor/*.rds
 .cproject
+*~
