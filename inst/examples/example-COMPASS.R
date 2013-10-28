@@ -31,8 +31,10 @@ discrete <- COMPASS(
   treatment=Stim == "92TH023 Env",
   control=Stim == "negctrl 1",
   model="discrete",
-  iterations=10
+  iterations=4000
 )
+
+saveRDS(discrete, file="data/RV144_CD4_results_discrete.rds")
 
 FunctionalityScore(discrete)
 PolyfunctionalityScore(discrete)

@@ -1,7 +1,7 @@
 Package: COMPASS
 Type: Package
 Title: Combinatorial Polyfunctionality Analysis of Single Cells
-Version: 0.90
+Version: 0.91
 Date: 2013-10-24
 Author: Lynn Lin <llin@fhcrc.org>
 Maintainer: Kevin Ushey <kushey@fhcrc.org>, Greg Finak <gfinak@fhcrc.org>
@@ -13,7 +13,8 @@ Depends:
     R (>= 3.0.1)
 LinkingTo: Rcpp, RcppArmadillo
 Imports:
-    data.table
+    data.table,
+    pheatmap
 Suggests:
     flowWorkspace
 Collate:
@@ -27,5 +28,6 @@ Collate:
     'Scores.R'
     'COMPASS-package.R'
     'GatingHierarchyToCOMPASS.R'
+    'plotMeanGamma.R'
 LazyLoad: yes
 LazyData: yes
