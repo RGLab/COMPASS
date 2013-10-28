@@ -31,7 +31,7 @@ void updatealphas(vector<double>& xalphast,vector<int>& xn_s, int xK, int xI, ve
             for (int k = 0; k < xK; k++) {
               if (xgammat[i+xI*k] == 1) { lp1 +=1;}
             }
-            int p1[lp1]; flag1=0; flagkk=0;
+            vector<int> p1(lp1); flag1=0; flagkk=0;
             for (int k = 0; k < xK; k++) {
               if (xgammat[i+xI*k] == 1) { 
                 p1[flag1] = k;
@@ -64,7 +64,7 @@ void updatealphas(vector<double>& xalphast,vector<int>& xn_s, int xK, int xI, ve
         else { alpha_s_p = Rcpp::rnorm(1, mean_p, sqrt_var2[kk]);}
         
         if (alpha_s_p[0]>0.0 && alpha_s_p[0]<=xlambda_s[kk]) {
-           double alp[xK];
+           vector<double> alp(xK);
         
            for (int i = 0; i<xK; i++) {
                alp[i] = xalphast[i];
@@ -79,7 +79,7 @@ void updatealphas(vector<double>& xalphast,vector<int>& xn_s, int xK, int xI, ve
                   if (xgammat[i+xI*k] == 1) { lp1 +=1;}       
                }
 
-              int p1[lp1]; flag1 =0; flagkk = 0;
+              vector<int> p1(lp1); flag1 =0; flagkk = 0;
                for (int k = 0; k < xK; k++) {
                   if (xgammat[i+xI*k] == 1) { 
                     p1[flag1] = k;
