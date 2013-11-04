@@ -1,0 +1,19 @@
+\name{transpose_list}
+\alias{transpose_list}
+\title{Transpose a List}
+\usage{
+  transpose_list(x)
+}
+\arguments{
+  \item{x}{An \R list.}
+}
+\description{
+  Transpose a matrix-like list.
+}
+\examples{
+l <- list( 1:3, 4:6, 7:9 )
+stopifnot( identical(
+  transpose_list( transpose_list(l) ), l
+) )
+}
+

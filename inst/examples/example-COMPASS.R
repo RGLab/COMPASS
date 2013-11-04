@@ -35,7 +35,8 @@ discrete <- COMPASS(
 )
 
 saveRDS(discrete, file="data/RV144_CD4_results_discrete.rds")
-
+discrete <- readRDS("data/RV144_CD4_results_discrete.rds")
+plot(discrete, "vaccine")
 FunctionalityScore(discrete)
 PolyfunctionalityScore(discrete)
 

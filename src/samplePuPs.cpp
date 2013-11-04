@@ -112,8 +112,4 @@ RcppExport SEXP samplePuPs(SEXP alphau, SEXP alphas, SEXP gammat,  SEXP T, SEXP 
     return Rcpp::List::create(Rcpp::Named("diff") = DIFF, Rcpp::Named("logd") = LogD);
     END_RCPP
 
-
 }
-
-
-

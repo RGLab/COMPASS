@@ -1,12 +1,19 @@
 \name{PolyfunctionalityScore}
 \alias{PolyfunctionalityScore}
+\alias{PolyfunctionalityScore.COMPASSResult}
+\alias{PolyfunctionalityScore.default}
 \title{Compute the Polyfunctionality Score for each subject fit in a COMPASS model}
 \usage{
-  PolyfunctionalityScore(CR,
-    normalization = c("all", "observed"))
+  PolyfunctionalityScore(x, degree, normalization)
+
+  \method{PolyfunctionalityScore}{COMPASSResult} (x,
+    degree, normalization = "all")
+
+  \method{PolyfunctionalityScore}{COMPASSResult} (x,
+    degree, normalization)
 }
 \arguments{
-  \item{CR}{An object of class \code{COMPASSResult}, as
+  \item{x}{An object of class \code{COMPASSResult}, as
   returned by \code{\link{COMPASS}}.}
 
   \item{normalization}{A \code{character} vector specifying

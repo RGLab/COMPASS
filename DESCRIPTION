@@ -5,16 +5,18 @@ Version: 0.91
 Date: 2013-10-24
 Author: Lynn Lin <llin@fhcrc.org>
 Maintainer: Kevin Ushey <kushey@fhcrc.org>, Greg Finak <gfinak@fhcrc.org>
-Description: Implements Combinatorial polyfunctionality analysis of
+Description: Combinatorial polyfunctionality analysis of
     single-cells (COMPASS)
 License: Artistic-2.0
+BugReports: https://github.com/RGLab/COMPASS/issues
 VignetteBuilder: knitr
 Depends:
     R (>= 3.0.1)
 LinkingTo: Rcpp, RcppArmadillo
 Imports:
     data.table,
-    pheatmap
+    RColorBrewer,
+    grid
 Suggests:
     flowWorkspace
 Collate:
@@ -27,7 +29,13 @@ Collate:
     'utils.R'
     'Scores.R'
     'COMPASS-package.R'
-    'GatingHierarchyToCOMPASS.R'
     'plotMeanGamma.R'
+    'discrete_combinations.R'
+    'shinyCOMPASS.R'
+    'swap.R'
+    'transpose_list.R'
+    'GatingSetToCOMPASS.R'
+    'Posterior.R'
+    'pheatmap.R'
 LazyLoad: yes
 LazyData: yes

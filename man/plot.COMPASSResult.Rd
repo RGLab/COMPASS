@@ -3,7 +3,8 @@
 \title{Plot a Heatmap of the Mean Gammas}
 \usage{
   \method{plot}{COMPASSResult} (x, y, subset,
-    row_annotation, ...)
+    row_annotation, palette = brewer.pal(n = 9, "Blues"),
+    show_rownames = FALSE, show_colnames = FALSE, ...)
 }
 \arguments{
   \item{x}{An object of class \code{COMPASSResult}.}
@@ -18,6 +19,8 @@
 
   \item{row_annotation}{A vector of names, pulled from the
   metadata, to be used for row annotation.}
+
+  \item{palette}{The colour palette to be used.}
 
   \item{...}{Optional arguments passed to \code{pheatmap}.}
 }

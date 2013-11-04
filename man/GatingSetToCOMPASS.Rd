@@ -2,13 +2,23 @@
 \alias{GatingSetToCOMPASS}
 \title{Extract A flowWorkspace Node to a COMPASSContainer}
 \usage{
-  GatingSetToCOMPASS(gs, node, meta, individual_id,
-    sample_id)
+  GatingSetToCOMPASS(gs, node, children, meta,
+    individual_id, sample_id)
 }
 \arguments{
   \item{gs}{A \code{GatingSet} object.}
 
-  \item{node}{The name of the node.}
+  \item{node}{The name of the node. We extract all children
+  of that node, under the assumption that the markers of
+  interest have been gated at the chosen node.}
+
+  \item{children}{A character vector, or list, giving the
+  names of the children of \code{node} that we wish to
+  extract. If unspecified, we take all children of that
+  node. If the character vector passed is named, we map
+  from value to name; e.g. if a node is named \code{154}
+  but we prefer the name \code{CD154+}, we could pass
+  \code{`CD154+`="154"}.}
 
   \item{meta}{A \code{data.frame} of meta data. If it is
   missing, we attempt to pull the metadata from the
