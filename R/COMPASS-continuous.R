@@ -396,6 +396,10 @@
   
   vmessage("Done!")
   
+  colnames(Mgamma) <- apply(categories[, -ncol(categories)], 1, function(x) {
+    paste0(x, collapse="")
+  })
+  
   output <- list(
     alpha_s=alpha_s,
     A_alphas=rowMeans(A_alphas),

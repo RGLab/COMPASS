@@ -164,6 +164,10 @@
   
   vmessage("Done!")
   
+  colnames(Mgamma) <- apply(categories[, -ncol(categories)], 1, function(x) {
+    paste0(x, collapse="")
+  })
+  
   ## set names on the output
   output <- list(
     alpha_s=alpha_s,
