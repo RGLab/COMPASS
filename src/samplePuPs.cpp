@@ -1,5 +1,4 @@
 #include <Rcpp.h>
-#include <stdio.h>
 
 // cpp codes for generate posterior ps and pu for each subject i
 RcppExport SEXP samplePuPs(SEXP alphau, SEXP alphas, SEXP gammat,  SEXP T, SEXP K , SEXP nsi, SEXP nui, SEXP d, SEXP M)
@@ -13,7 +12,7 @@ RcppExport SEXP samplePuPs(SEXP alphau, SEXP alphas, SEXP gammat,  SEXP T, SEXP 
     Rcpp::IntegerMatrix xgammat(gammat); // posterior samples for gamma_i
     Rcpp::IntegerMatrix xd(d); //cytokine combination indicator matrix
     
-    int xM = Rcpp::as<int>(M); // # markers
+    // int xM = Rcpp::as<int>(M); // # markers
     int xT = Rcpp::as<int>(T); // # MCMC iterations used
     int xK = Rcpp::as<int>(K); // # Categories
     int K1 = xK-1; 
@@ -25,13 +24,13 @@ RcppExport SEXP samplePuPs(SEXP alphau, SEXP alphas, SEXP gammat,  SEXP T, SEXP 
       
   
     int sum = 0;
-    double alpha_u[xK];
-    double alpha_s[xK];
+    std::vector<double> alpha_u(xK);
+    std::vector<double> alpha_s(xK);
     
     Rcpp::NumericMatrix psi(xT,xK);
     Rcpp::NumericMatrix pui(xT,xK);
-    double diff[xK];
-    double logd[xK];
+    std::vector<double> diff(xK);
+    std::vector<double> logd(xK);
     double tmp = 0.;
     Rcpp::RNGScope scope;
     double sau = 0.;
@@ -68,8 +67,8 @@ RcppExport SEXP samplePuPs(SEXP alphau, SEXP alphas, SEXP gammat,  SEXP T, SEXP 
         }
       }else{
         int l0 = xK-sum;
-        int place0[l0];   
-        int place1[sum];
+        std::vector<int> place0(l0);   
+        std::vector<int> place1(sum);
         int flag0 = 0; int flag1 = 0;
         for ( int j=0; j<xK; j++){
           if (xgammat(j,tt) == 0) {
@@ -88,7 +87,7 @@ RcppExport SEXP samplePuPs(SEXP alphau, SEXP alphas, SEXP gammat,  SEXP T, SEXP 
           logd[place0[j]] = 0;
           
         }
-        double as[sum];
+        std::vector<double> as(sum);
         sass = 0.;
         for (int j=0; j<sum;j++){
        
