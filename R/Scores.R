@@ -34,6 +34,7 @@ FunctionalityScore.default <- function(x) {
 ##' 
 ##' @param x An object of class \code{COMPASSResult}, as returned by
 ##'   \code{\link{COMPASS}}.
+##' @param degree TODO
 ##' @param normalization A \code{character} vector specifying how the score
 ##'  is to be normalized. Either using \code{"all"} possible categories, or 
 ##'  just the \code{"observed"} categories. Defaults to \code{"all"} categories.

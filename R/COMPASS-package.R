@@ -7,4 +7,5 @@
 ##' @name COMPASS
 ##' @useDynLib COMPASS
 ##' @import data.table
+##' @import grid
 NULL

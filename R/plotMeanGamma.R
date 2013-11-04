@@ -12,8 +12,11 @@
 ##' @param row_annotation A vector of names, pulled from the metadata, to be
 ##'   used for row annotation.
 ##' @param palette The colour palette to be used.
+##' @param show_rownames Boolean; if \code{TRUE} we display row names (ie,
+##'   the individual ids).
+##' @param show_colnames Boolean; if \code{TRUE} we display column names
+##'   (ie, the column name associated with a cytokine; typically not needed)
 ##' @param ... Optional arguments passed to \code{pheatmap}.
-##' @importFrom grid grid.pretty
 ##' @importFrom RColorBrewer brewer.pal
 plot.COMPASSResult <- function(x, y, subset, row_annotation,
   palette=brewer.pal(n=9, "Blues"), show_rownames=FALSE, 

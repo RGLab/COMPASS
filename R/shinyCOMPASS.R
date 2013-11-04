@@ -30,6 +30,7 @@ shinyCOMPASS <- function(x, dir=NULL,
   counts <- x$orig$counts
   Mgamma <- x$fit$mean_gamma
   categories <- x$fit$categories
+  markers <- unname(colnames(x$orig$data[[1]]))
   
   colnames(Mgamma) <- apply(categories[, -ncol(categories)], 1, function(x) {
     paste0( swap(x, c("0", "1"), c("-", "+")), collapse="")
@@ -49,13 +50,13 @@ shinyCOMPASS <- function(x, dir=NULL,
   setnames(meta_, "name", "Sample")
   
   ## Melt and Merge
-  m <- data.table(melt(d_counts))
+  m <- data.table(melt_(d_counts))
   setnames(m, c("Sample", "Cytokine", "Counts"))
   
   ## Generate columns for the markers
   ## 1 == on, 0 == off
   m[, (markers) := {
-    t(lapply(strsplit( as.character(Cytokine), "", fixed=TRUE), function(x) {
+    transpose_list(lapply(strsplit( as.character(Cytokine), "", fixed=TRUE), function(x) {
       as.numeric(swap(x, c("+", "-"), c("1", "0")))
     }))
   }]
@@ -67,7 +68,6 @@ shinyCOMPASS <- function(x, dir=NULL,
   
   ## Compute the Log Fold Change
   stim <- x$orig$stimulation_id
-  factor_to_char(d, inplace=TRUE)
   d[, LogFoldChange := log2(
     (Counts+1) / (Counts[ .SD[[stim]] == unstimulated ] + 1)
   ), by=list(PTID, Cytokine)]
@@ -94,12 +94,16 @@ shinyCOMPASS <- function(x, dir=NULL,
   setkeyv(M, c("PTID", "Cytokine"))
   d <- M[d]
   
+  dir.create(dir, showWarnings=FALSE)
   dir.create( file.path(dir, "data") )
   saveRDS(d, file=file.path(dir, "data", "data.rds"))
+  
+  ## Copy the ui.R, server.R used for starting the Shiny app
   file.copy( 
     system.file("shiny", "ui.R", package="COMPASS"),
     file.path(dir, "ui.R")
   )
+  
   file.copy(
     system.file("shiny", "server.R", package="COMPASS"),
     file.path(dir, "server.R")

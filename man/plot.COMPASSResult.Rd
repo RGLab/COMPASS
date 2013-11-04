@@ -22,6 +22,13 @@
 
   \item{palette}{The colour palette to be used.}
 
+  \item{show_rownames}{Boolean; if \code{TRUE} we display
+  row names (ie, the individual ids).}
+
+  \item{show_colnames}{Boolean; if \code{TRUE} we display
+  column names (ie, the column name associated with a
+  cytokine; typically not needed)}
+
   \item{...}{Optional arguments passed to \code{pheatmap}.}
 }
 \description{

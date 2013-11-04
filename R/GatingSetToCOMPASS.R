@@ -37,6 +37,10 @@ GatingSetToCOMPASS <- function(gs, node, children,
       stop("'gs' must be an object of class 'GatingSet'")
     }
     
+    if (missing(children)) {
+      children <- getChildren(gs[[1]])
+    }
+    
     doWarn <- FALSE
     .children <- getChildren(gs[[1]], node, isPath=TRUE)
     for (i in 1:length(gs)) {

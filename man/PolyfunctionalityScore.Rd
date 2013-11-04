@@ -16,6 +16,8 @@
   \item{x}{An object of class \code{COMPASSResult}, as
   returned by \code{\link{COMPASS}}.}
 
+  \item{degree}{TODO}
+
   \item{normalization}{A \code{character} vector specifying
   how the score is to be normalized. Either using
   \code{"all"} possible categories, or just the
