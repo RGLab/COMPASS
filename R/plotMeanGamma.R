@@ -11,9 +11,13 @@
 ##'   determine which individuals should be kept.
 ##' @param row_annotation A vector of names, pulled from the metadata, to be
 ##'   used for row annotation.
+##' @param palette The colour palette to be used.
 ##' @param ... Optional arguments passed to \code{pheatmap}.
-##' @importFrom pheatmap pheatmap
-plot.COMPASSResult <- function(x, y, subset, row_annotation, ...) {
+##' @importFrom grid grid.pretty
+##' @importFrom RColorBrewer brewer.pal
+plot.COMPASSResult <- function(x, y, subset, row_annotation,
+  palette=brewer.pal(n=9, "Blues"), show_rownames=FALSE, 
+  show_colnames=FALSE, ...) {
   
   subset_expr <- match.call()$subset
   
@@ -39,7 +43,10 @@ plot.COMPASSResult <- function(x, y, subset, row_annotation, ...) {
   
   cats <- x$fit$categories[-nc,]
   cats <- data.frame(cats)
-  cats <- data.frame(sapply(cats,factor))[,1:(ncol(cats)-1)]
+  cats <- cats[,1:(ncol(cats)-1)]
+  cats <- as.data.frame( lapply(cats, function(x) {
+    swap(x, 0, -1)
+  }))
   colnames(M) <- rownames(cats)
   
   ## handle subsetting
@@ -53,7 +60,9 @@ plot.COMPASSResult <- function(x, y, subset, row_annotation, ...) {
   o <- do.call(order, as.list(rowann[row_annotation]))
   
   pheatmap(M[o,],
-    show_rownames=TRUE,
+    color=palette,
+    show_rownames=show_rownames,
+    show_colnames=show_colnames,
     row_annotation=rowann,
     cluster_rows=FALSE,
     cluster_cols=FALSE,
