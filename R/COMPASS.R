@@ -303,7 +303,8 @@ COMPASS <- function(data, treatment, control, subset=NULL,
           iterations=iterations, replications=replications, verbose=verbose, ...),
         data=list(n_s=n_s, n_u=n_u, counts_s=counts_s, counts_u=counts_u,
           categories=categories, meta=data$meta, sample_id=data$sample_id,
-          individual_id=data$individual_id)
+          individual_id=data$individual_id),
+        orig=data
       )
     },
     continuous={
@@ -314,7 +315,8 @@ COMPASS <- function(data, treatment, control, subset=NULL,
           iterations=iterations, replications=replications, verbose=verbose, ...),
         data=list(y_s=y_s, y_u=y_u, n_s=n_s, n_u=n_u, 
           counts_s=counts_s, counts_u=counts_u, categories=categories, 
-          meta=data$meta, sample_id=data$sample_id, individual_id=data$individual_id)
+          meta=data$meta, sample_id=data$sample_id, individual_id=data$individual_id),
+        orig=data
       )
     }
   )
