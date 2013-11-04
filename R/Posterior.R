@@ -4,8 +4,15 @@
 ##' 
 ##' @param x An object of class \code{COMPASSResult}.
 ##' @export
-Posterior <- function(x) {
+Posterior <- function(x) {  
+  if (!inherits(x, "COMPASSResult")) {
+    stop("'x' must be an object of class 'COMPASSResult'")
+  }
   
+  return(x$fit$posterior)
+}
+
+compute_posterior <- function(x) {
   output <- lapply( 1:nrow(x$data$n_s), function(i) {
     .Call( "samplePuPs",
       x$fit$alpha_u,
@@ -22,5 +29,4 @@ Posterior <- function(x) {
   
   names(output) <- rownames(x$data$n_s)
   return(output)
-  
 }

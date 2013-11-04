@@ -197,7 +197,7 @@ RcppExport SEXP model(SEXP T, SEXP I, SEXP K, SEXP M, SEXP ttt, SEXP SS, SEXP al
                 
    if (xTune==1){
      // parameter tuning
-    if ((tt+1)>4000 & ((tt+1) % 4000)==0) {
+    if ( ((tt+1)>4000) & (((tt+1) % 4000)==0)) {
       int sec1 = tt-4000+1; int sec2 = tt;
       for (int kk = 0; kk<xK; kk++){
         double Au =0.; double As = 0.;

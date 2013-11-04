@@ -321,6 +321,11 @@ COMPASS <- function(data, treatment, control, subset=NULL,
     }
   )
   
+  ## Compute the posterior ps-pu; log(ps)-log(pu)
+  vmessage("Computing the posterior difference in proportions, posterior log ratio...")
+  output$fit$posterior <- compute_posterior(output)
+  vmessage("Done!")
+  
   class(output) <- "COMPASSResult"
   return(output)
   
