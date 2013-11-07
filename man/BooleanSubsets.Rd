@@ -1,15 +1,8 @@
 \name{BooleanSubsets}
 \alias{BooleanSubsets}
-\alias{BooleanSubsets.COMPASSContainer}
-\alias{BooleanSubsets.default}
-\title{Generate all Boolean Subsets}
+\title{Generate Boolean Subsets}
 \usage{
   BooleanSubsets(x, as.matrix)
-
-  \method{BooleanSubsets}{COMPASSContainer} (x,
-    as.matrix = FALSE)
-
-  \method{BooleanSubsets}{default} (x, as.matrix = FALSE)
 }
 \arguments{
   \item{x}{A \code{COMPASSContainer}.}
@@ -19,6 +12,13 @@
   a list.}
 }
 \description{
-  TODO
+  See the S3 dispatch methods for more information.
+}
+\details{
+  \itemize{
+  \item{\code{\link{BooleanSubsets.COMPASSContainer}}}{ for
+  a \code{COMPASSContainer}},
+  \item{\code{\link{BooleanSubsets.default}}}{ for the
+  default method} }
 }
 
