@@ -111,6 +111,10 @@ shinyCOMPASS <- function(x, dir=NULL,
     (Counts+1) / (Counts[ .SD[[stim]] == unstimulated ] + 1)
   ), by=c(iid, "Marker")]
   
+  ## Compute the difference in proportions
+  d[, PropDiff := Proportion - Proportion[ .SD[[stim]] == unstimulated ],
+    by=c(iid, "Marker")]
+  
   ## Merge in the MeanGamma
   ## we want to fill Mgamma with zeroes for the cytokines not included
   n_markers <- ncol(x$orig$data[[1]])
