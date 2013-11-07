@@ -1,13 +1,18 @@
 library(COMPASS)
 
 ## source Lynn's code to get y_s, y_u, cd4_counts, meta
+# setwd("refactor")
+# ## source first part of master4model_cpp.R
 # CC <- COMPASSContainer(
 #   data=res,
 #   counts=cd4_counts, 
 #   meta=meta, 
+#   stim="Stim",
 #   sample="name", 
 #   indiv="PTID"
 # )
+# saveRDS(CC, file="COMPASS.rds")
+# setwd("../")
 
 ## flowWorkspaceToSingleCell?
 
@@ -39,6 +44,8 @@ discrete <- readRDS("data/RV144_CD4_results_discrete.rds")
 plot(discrete, "vaccine")
 FunctionalityScore(discrete)
 PolyfunctionalityScore(discrete)
+plot( PolyfunctionalityScore)
+shinyCOMPASS(discrete, unstimulated="negctrl 1", stimulated="92TH023 Env")
 
 ## test unpaired sample removal
 CC_sub <- CC

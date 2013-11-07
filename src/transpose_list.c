@@ -30,6 +30,9 @@ SEXP transpose_list(SEXP x) {
   case INTSXP: HANDLE_CASE(INTSXP, int, INTEGER);
   case REALSXP: HANDLE_CASE(REALSXP, double, REAL);
   case STRSXP: HANDLE_CASE(STRSXP, SEXP, STRING_PTR);
+  default: {
+    Rf_error("Can't transpose a list with elements of type '%s'", CHAR(type2str(type)));
+  }
   }
   
   UNPROTECT(1);

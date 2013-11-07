@@ -16,15 +16,15 @@
 ##'   in the experiment. Each row in \code{meta} should correspond to a row
 ##'   in \code{data}. There should be one row for each sample;
 ##'   i.e., one row for each element of \code{data}.
-##' @param stimulation_id The name of the vector in \code{meta} that denotes
-##'   the type of stimulation each sample received.
 ##' @param individual_id The name of the vector in \code{meta} that denotes the
 ##'   individuals from which samples were drawn. 
 ##' @param sample_id The name of the vector in \code{meta} that denotes the samples.
 ##'   This vector should contain all of the names in the \code{data} input.
+##' @param stimulation_id The name of the vector in \code{meta} that denotes
+##'   the type of stimulation each sample received.
 ##' @export
 COMPASSContainer <- function(data, counts, meta, 
-  stimulation_id, individual_id, sample_id) {
+  individual_id, sample_id, stimulation_id) {
   
   ## check names
   if (is.null(names(data)))

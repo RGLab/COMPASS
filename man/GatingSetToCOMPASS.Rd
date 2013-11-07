@@ -1,6 +1,6 @@
 \name{GatingSetToCOMPASS}
 \alias{GatingSetToCOMPASS}
-\title{Extract A flowWorkspace Node to a COMPASSContainer}
+\title{Extract A GatingSet Node to a COMPASSContainer}
 \usage{
   GatingSetToCOMPASS(gs, node, children, meta,
     individual_id, sample_id)

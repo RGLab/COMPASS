@@ -4,7 +4,7 @@ if (FALSE) {
   gs <- load_gs("../shinyGate/gs/LoveLab-Gated")
 }
 
-##' Extract A flowWorkspace Node to a COMPASSContainer
+##' Extract A GatingSet Node to a COMPASSContainer
 ##' 
 ##' This function can be used to take gated data from a \code{flowWorkspace}
 ##' object (e.g., a \code{GatingSet}), and retrieve it as a 

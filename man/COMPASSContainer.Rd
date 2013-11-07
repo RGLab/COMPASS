@@ -2,8 +2,8 @@
 \alias{COMPASSContainer}
 \title{Generate the Data Object used by COMPASS}
 \usage{
-  COMPASSContainer(data, counts, meta, stimulation_id,
-    individual_id, sample_id)
+  COMPASSContainer(data, counts, meta, individual_id,
+    sample_id, stimulation_id)
 }
 \arguments{
   \item{data}{A list of matrices. Each matrix \code{M_i} is
@@ -24,10 +24,6 @@
   There should be one row for each sample; i.e., one row
   for each element of \code{data}.}
 
-  \item{stimulation_id}{The name of the vector in
-  \code{meta} that denotes the type of stimulation each
-  sample received.}
-
   \item{individual_id}{The name of the vector in
   \code{meta} that denotes the individuals from which
   samples were drawn.}
@@ -35,6 +31,10 @@
   \item{sample_id}{The name of the vector in \code{meta}
   that denotes the samples.  This vector should contain all
   of the names in the \code{data} input.}
+
+  \item{stimulation_id}{The name of the vector in
+  \code{meta} that denotes the type of stimulation each
+  sample received.}
 }
 \description{
   This function generates the data container suitable for

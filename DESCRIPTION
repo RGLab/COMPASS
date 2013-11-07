@@ -38,5 +38,6 @@ Collate:
     'Posterior.R'
     'pheatmap.R'
     'melt_.R'
+    'BooleanSubsets.R'
 LazyLoad: yes
 LazyData: yes

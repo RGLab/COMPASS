@@ -1,0 +1,122 @@
+.overflow-auto {
+  width: 100%;
+  overflow: auto;
+}
+
+select {
+  width: 95%;
+}
+
+input {
+  width: 90%;
+}
+
+.gridster {
+  width: 1400px;
+  margin: 0 auto;
+}
+
+.gridster ul li {
+  background-color: #FAFAFF !important;
+  border-radius: 10px;
+}
+
+.blur {
+  opacity: 0.25;
+}
+
+.gridster > * {
+  margin: 0 auto;
+}
+
+#markers {
+  min-height: 200px;
+}
+
+#markers .checkbox,
+#markers_marginalize .checkbox,
+#markers_to_marginalize_over .checkbox {
+  font-family: monospace;
+  float: left;
+  margin: 5px;
+}
+
+.fancybox {
+    position: fixed;
+    left: 0px;
+    top: 0px;
+    width: 400px;
+    height: 300px;
+    border-radius: 10px;
+    background-color: #FAFAFF;
+}
+
+table.data {
+  background-color: white;
+}
+
+div.controls  > * {
+  float: left;
+}
+
+#controls-container {
+  display: none; /* Will be controlled by user */
+}
+
+#stats {
+  height: 290px !important;
+  margin: 0 auto;
+  overflow: auto;
+}
+
+#icon-zoom-in {
+  position: relative;
+  right: 10px;
+  bottom: 10px;
+}
+
+.rChart {
+  width: auto !important;
+  height: 620px !important;
+}
+
+#gridster-control {
+  margin-bottom: 10px;
+}
+
+#gridster-control-hide {
+  float: right;
+}
+
+#gridster-control-container {
+  z-index: 1000;
+  height: 25px;
+  width: 400px;
+  min-width: 120px;
+  position: fixed;
+  padding: 10px;
+  right: 1%;
+  bottom: 0px;
+  background-color: white;
+  box-shadow: 0 0 2px 2px #888;
+  border-radius: 10px 10px 0 0;
+}
+
+#splom-container {
+  width: inherit;
+}
+
+#splom {
+  width: 620px; 
+  height: 620px; 
+  margin: 0 auto;
+}
+
+button.ui-multiselect {
+  width: 380px !important;
+}
+
+/* align the checkboxes */
+.ui-corner-all input {
+  margin-bottom: 8px;
+}

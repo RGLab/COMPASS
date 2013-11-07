@@ -81,6 +81,7 @@ data <- replicate(10, simplify=FALSE, {
   m[m < 2500] <- 0
   return(m)
 })
+
 combos <- list(1, 2, 3, 4, 5, 6) ## marginal cell counts
 cc <- cell_counts(data, combos)
 f <- function(data) {
