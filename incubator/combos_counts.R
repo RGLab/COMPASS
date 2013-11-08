@@ -1,5 +1,5 @@
 ## first, we generate the 'combinations' vector, which is in a specific
-## format used by the C++ code 'cell_counts'; see 'cell_counts.cpp'
+## format used by the C++ code 'CellCounts'; see 'CellCounts.cpp'
 ## for details
 combos <- as.list( as.data.frame( apply(categories, 1, function(x) {
   tmp <- c( which(x == 1), -which(x == 0) )
@@ -13,7 +13,7 @@ combos <- as.list( as.data.frame( apply(categories, 1, function(x) {
       yyy > 0
     })
   })
-  m <- .Call("MIMOSA_cell_counts", y, combos, PACKAGE="MIMOSA")
+  m <- .Call("MIMOSA_CellCounts", y, combos, PACKAGE="MIMOSA")
   
   ## set the last column to be the 'null'
   m[, ncol(m)] <- counts[ names(y) ] - apply(m[,-ncol(m), drop=FALSE], 1, sum)

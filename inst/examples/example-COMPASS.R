@@ -3,14 +3,15 @@ library(COMPASS)
 ## source Lynn's code to get y_s, y_u, cd4_counts, meta
 # setwd("refactor")
 # ## source first part of master4model_cpp.R
-# CC <- COMPASSContainer(
-#   data=res,
-#   counts=cd4_counts, 
-#   meta=meta, 
-#   stim="Stim",
-#   sample="name", 
-#   indiv="PTID"
-# )
+CC <- COMPASSContainer(
+  data=res,
+  counts=cd4_counts, 
+  meta=meta, 
+  stim="Stim",
+  sample="name", 
+  indiv="PTID"
+)
+
 # saveRDS(CC, file="COMPASS.rds")
 # setwd("../")
 
@@ -33,10 +34,11 @@ verbose <- TRUE
 ## An example call
 discrete <- COMPASS(
   data=CC,
-  treatment=Stim == "92TH023 Env",
-  control=Stim == "negctrl 1",
+  treatment="92TH023 Env",
+  control="negctrl 1",
   model="discrete",
-  iterations=400
+  iterations=100,
+  replications=8
 )
 
 saveRDS(discrete, file="data/RV144_CD4_results_discrete.rds")

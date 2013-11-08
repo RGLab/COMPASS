@@ -27,11 +27,11 @@ meta <- DATA$meta
 counts <- DATA$counts
 sid <- DATA$COMPASS$data$sample_id
 iid <- DATA$COMPASS$data$individual_id
-cell_counts <- data.frame(
+CellCounts <- data.frame(
   names(counts),
   counts
 )
-names(cell_counts) <- c(sid, "counts")
+names(CellCounts) <- c(sid, "counts")
 
 source("common_functions.R")
 
@@ -106,10 +106,14 @@ customFilter <- function(dat, expr) {
 
 ## filter a function based on levels of a factor
 filter1 <- function(dat, var, levels) {
-  if( var == "None" ) {
+  if (var == "None") {
     return(dat)
   } else {
-    return( dat[ dat[[var]] %in% levels, ] )
+    if (is.null(levels) || levels == "") {
+      return(dat)
+    } else {
+      return(dat[ dat[[var]] %in% levels, ])
+    }
   }
 }
 
@@ -423,7 +427,7 @@ shinyServer( function(input, output, session) {
       row_annot[[sid]] <- as.character(row_annot[[sid]])
       row_annot <- row_annot[ match( rownames(m), row_annot[[sid]] ), ]
       rownames(row_annot) <- row_annot[[sid]]
-      row_annot[, (sid) := NULL]
+      row_annot[[sid]] <- NULL
       
       row_order <- do.call(order, row_annot[ c(facet1, facet2, facet3) ])
       
@@ -563,7 +567,7 @@ shinyServer( function(input, output, session) {
       list(counts=counts, order=names(counts))
     }, by=ind]
     ## merge in cell counts
-    dof <- merge.data.frame( samples_dof, cell_counts, by.x="ind", by.y=sid, all.x=TRUE )
+    dof <- merge.data.frame( samples_dof, CellCounts, by.x="ind", by.y=sid, all.x=TRUE )
     dof$prop <- dof$counts.x / dof$counts.y
     
     ## merge in meta-info

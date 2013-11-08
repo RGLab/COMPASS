@@ -6,16 +6,16 @@
 
 using namespace Rcpp;
 
-// cell_counts
-IntegerMatrix cell_counts(List x, List combos);
-RcppExport SEXP COMPASS_cell_counts(SEXP xSEXP, SEXP combosSEXP) {
+// CellCounts
+IntegerMatrix CellCounts(List x, List combos);
+RcppExport SEXP COMPASS_CellCounts(SEXP xSEXP, SEXP combosSEXP) {
 BEGIN_RCPP
     SEXP __sexp_result;
     {
         Rcpp::RNGScope __rngScope;
         Rcpp::traits::input_parameter< List >::type x(xSEXP );
         Rcpp::traits::input_parameter< List >::type combos(combosSEXP );
-        IntegerMatrix __result = cell_counts(x, combos);
+        IntegerMatrix __result = CellCounts(x, combos);
         PROTECT(__sexp_result = Rcpp::wrap(__result));
     }
     UNPROTECT(1);

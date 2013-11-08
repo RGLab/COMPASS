@@ -39,5 +39,6 @@ Collate:
     'pheatmap.R'
     'melt_.R'
     'BooleanSubsets.R'
+    'CellCounts.R'
 LazyLoad: yes
 LazyData: yes

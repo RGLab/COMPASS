@@ -1,6 +1,9 @@
 #include <Rcpp.h>
 using namespace Rcpp;
 
+#define rownames(x) as<CharacterVector>(VECTOR_ELT( x.attr("dimnames"), 0 ))
+#define colnames(x) as<CharacterVector>(VECTOR_ELT( x.attr("dimnames"), 1 ))
+
 // x is a list of logical matrices, corresponding to 'expressed' or 'unexpressed'
 // with rows as cells and columns as cytokines
 
@@ -14,7 +17,7 @@ using namespace Rcpp;
 // to get counts that are CD4+TNFa-
 
 // [[Rcpp::export]]
-IntegerMatrix cell_counts(List x, List combos) {
+IntegerMatrix CellCounts(List x, List combos) {
   
   int x_n = x.size();
   int combos_n = combos.size();
@@ -69,6 +72,16 @@ IntegerMatrix cell_counts(List x, List combos) {
     }
   }
   
+  // set row, column names from the data if possible
+  output.attr("dimnames") = List(2);
+  if (!Rf_isNull(x.attr("names"))) {
+    SET_VECTOR_ELT(output.attr("dimnames"), 0, Rf_duplicate(x.attr("names")));
+  }
+  
+  if (!Rf_isNull(combos.attr("names"))) {
+    SET_VECTOR_ELT(output.attr("dimnames"), 1, Rf_duplicate(combos.attr("names")));
+  }
+  
   return output;
   
 }
@@ -81,6 +94,7 @@ data <- replicate(10, simplify=FALSE, {
   m[m < 2500] <- 0
   return(m)
 })
+names(data) <- sample(letters, 10)
 
 combos <- list(1, 2, 3, 4, 5, 6) ## marginal cell counts
 cc <- cell_counts(data, combos)

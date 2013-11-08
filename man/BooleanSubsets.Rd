@@ -1,18 +1,27 @@
 \name{BooleanSubsets}
 \alias{BooleanSubsets}
+\alias{BooleanSubsets.COMPASSContainer}
+\alias{BooleanSubsets.default}
 \title{Generate Boolean Subsets}
 \usage{
   BooleanSubsets(x, as.matrix)
+
+  \method{BooleanSubsets}{COMPASSContainer} (x,
+    as.matrix = FALSE)
+
+  \method{BooleanSubsets}{default} (x, as.matrix = FALSE)
 }
 \arguments{
-  \item{x}{A \code{COMPASSContainer}.}
+  \item{x}{Either a \code{COMPASSContainer}, or a list of
+  matrices.}
 
   \item{as.matrix}{Boolean; if \code{TRUE} we return
   results as a matrix; otherwise, we return the results as
   a list.}
 }
 \description{
-  See the S3 dispatch methods for more information.
+  Generate all possible boolean subsets (that is, unique
+  rows by index).
 }
 \details{
   \itemize{

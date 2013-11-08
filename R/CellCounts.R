@@ -1,0 +1,29 @@
+##' Compute Number of Cells Positive for Certain Cytokine Combinations
+##' 
+##' This function takes a list of cell expression matrices, each matrix \code{i} 
+##' of dimension \code{N_i cells} by \code{K} common markers.
+##' 
+##' @param data A list of matrices. Each matrix \code{i} is
+##'   of dimension \code{N_i cells} by \code{K} common markers.
+##' @param combinations A list of 'combinations' == integer vectors,
+##'   which is used to denote the subsets. See the examples.
+##' @export
+##' @examples
+##' K <- 6 ## number of markers
+##' data <- replicate(10, simplify=FALSE, {
+##'   m <- matrix( rnorm(1E4 * K, 2000, 1000 ), ncol=K )
+##'   m[m < 2500] <- 0
+##'   return(m)
+##' })
+##' names(data) <- sample(letters, 10)
+##' 
+##' combos <- list(1, 2, 3, 4, 5, 6) ## marginal cell counts
+##' cc <- CellCounts(data, combos)
+##' f <- function(data) {
+##'   do.call(rbind, lapply(data, function(x) apply(x, 2, function(x) sum(x > 0))))
+##' }
+##' cc2 <- f(data)
+##' identical(cc, cc2)
+CellCounts <- function(data, combinations) {
+  return( .Call("COMPASS_CellCounts", as.list(data), as.list(combinations), PACKAGE="COMPASS") )
+}

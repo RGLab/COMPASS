@@ -1,4 +1,4 @@
-## generate discrete combinations, as used for the cell_counts
+## generate discrete combinations, as used for the CellCounts
 ## function
 discrete_combinations <- function(n) {
   values <- do.call(expand.grid, replicate(n, c(1, -1), simplify=FALSE))

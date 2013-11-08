@@ -66,12 +66,25 @@ COMPASS <- function(data, treatment, control, subset=NULL,
   ## used for brevity in later parts of code
   sid <- data$sample_id
   iid <- data$individual_id
+  stid <- data$stimulation_id
   
   vmessage <- function(...) if (verbose) message(...) else invisible(NULL)
   
   call <- match.call()
+  
+  ## We allow the user to either pass just a character vector of
+  ## names (with the understanding that it's pulled from the stimulation vector
+  ## in the meta-data), or we allow them to pass an expression
   treatment <- call$treatment
+  if (is.symbol(treatment) || is.character(treatment)) {
+    treatment <- substitute(x %in% treatment, list(x=as.name(stid), treatment=treatment))
+  }
+  
   control <- call$control
+  if (is.symbol(control) || is.character(control)) {
+    control <- substitute(x %in% control, list(x=as.name(stid), control=control))
+  }
+  
   subset <- call$subset
   
   ## subset the data
@@ -190,8 +203,16 @@ COMPASS <- function(data, treatment, control, subset=NULL,
       return(tmp)
     })))
     
-    m <- .Call("COMPASS_cell_counts", y, combos, PACKAGE="COMPASS")
-    rownames(m) <- names(y)
+    ## generate nice names for the combos
+    names(combos) <- unname(sapply(combos, function(x) {
+      n <- length(x)
+      paste0( sep='', collapse='|', 
+        swap(x, c(-n:-1, 1:n), c( rep("!", n), rep("", n) ) ),
+        colnames(categories)[-ncol(categories)]
+      )
+    }))
+    
+    m <- .Call("COMPASS_CellCounts", y, combos, PACKAGE="COMPASS")
     
     ## set the last column to be the 'null'
     m[, ncol(m)] <- counts[ names(y) ] - apply(m[,-ncol(m), drop=FALSE], 1, sum)
@@ -201,7 +222,7 @@ COMPASS <- function(data, treatment, control, subset=NULL,
   
   ## we have to regenerate cell count totals (by individual) to account
   ## for aggregation
-  .update_total_cell_counts <- function(counts, individuals, expr) {
+  .update_total_CellCounts <- function(counts, individuals, expr) {
     which <- eval(expr, data$meta)
     new_counts <- sapply(individuals, function(ind) {
       ## get the samples corresponding to the current individual, expr
@@ -215,8 +236,8 @@ COMPASS <- function(data, treatment, control, subset=NULL,
     
   }
   
-  counts_s <- .update_total_cell_counts(data$counts, names(y_s), treatment)
-  counts_u <- .update_total_cell_counts(data$counts, names(y_u), control)
+  counts_s <- .update_total_CellCounts(data$counts, names(y_s), treatment)
+  counts_u <- .update_total_CellCounts(data$counts, names(y_u), control)
   
   n_s <- .counts(y_s, categories, counts_s)
   n_u <- .counts(y_u, categories, counts_u)

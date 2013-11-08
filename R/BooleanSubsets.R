@@ -1,13 +1,13 @@
 ##' Generate Boolean Subsets
 ##' 
-##' See the S3 dispatch methods for more information.
+##' Generate all possible boolean subsets (that is, unique rows by index).
 ##' 
 ##' \itemize{
 ##'   \item{\code{\link{BooleanSubsets.COMPASSContainer}}}{ for a \code{COMPASSContainer}},
 ##'   \item{\code{\link{BooleanSubsets.default}}}{ for the default method}
 ##' }
 ##' 
-##' @param x A \code{COMPASSContainer}.
+##' @param x Either a \code{COMPASSContainer}, or a list of matrices.
 ##' @param as.matrix Boolean; if \code{TRUE} we return results as a matrix;
 ##'   otherwise, we return the results as a list.
 ##' @export
@@ -15,12 +15,7 @@ BooleanSubsets <- function(x, as.matrix) {
   UseMethod("BooleanSubsets")
 }
 
-##' Generate all available Boolean Subsets for a COMPASSContainer
-##' 
-##' Given a \code{COMPASSContainer}, we can generate all boolean
-##' combinations of markers available in the data.
-##' 
-##' @rdname BooleanSubsets-COMPASSContainer
+##' @rdname BooleanSubsets
 ##' @method BooleanSubsets COMPASSContainer
 ##' @S3method BooleanSubsets COMPASSContainer
 BooleanSubsets.COMPASSContainer <- function(x, as.matrix=FALSE) {
@@ -28,12 +23,7 @@ BooleanSubsets.COMPASSContainer <- function(x, as.matrix=FALSE) {
   NextMethod("BooleanSubsets")
 }
 
-##' Generate all available Boolean Subsets
-##' 
-##' Given a list of matrices, each with the same number of columns,
-##' we generate all possible boolean subsets present in the data.
-##' 
-##' @rdname BooleanSubsets-default
+##' @rdname BooleanSubsets
 ##' @method BooleanSubsets default
 ##' @S3method BooleanSubsets default
 BooleanSubsets.default <- function(x, as.matrix=FALSE) {

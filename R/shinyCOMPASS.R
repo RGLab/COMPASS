@@ -58,13 +58,13 @@ shinyCOMPASS <- function(x, dir=NULL,
   stid <- x$orig$stimulation_id
   
   colnames(Mgamma) <- apply(categories[, -ncol(categories)], 1, function(x) {
-    paste0( COMPASS:::swap(x, c("0", "1"), c("-", "+")), collapse="")
+    paste0( swap(x, c("0", "1"), c("-", "+")), collapse="")
   })
   
   ## Compute the joint distribution of counts
-  combos <- COMPASS:::discrete_combinations( length(markers) )
+  combos <- discrete_combinations( length(markers) )
   
-  d_counts <- COMPASS:::cell_counts(dat, combos)
+  d_counts <- CellCounts(dat, combos)
   rownames(d_counts) <- names(dat)
   colnames(d_counts) <- sapply(combos, function(x) {
     paste0( swap(x, c(1:6, -1:-6), c(rep("+", 6), rep("-", 6))), collapse="" )
@@ -114,6 +114,13 @@ shinyCOMPASS <- function(x, dir=NULL,
   ## Compute the difference in proportions
   d[, PropDiff := Proportion - Proportion[ .SD[[stim]] == unstimulated ],
     by=c(iid, "Marker")]
+  
+  ## Compute the degree (== number of positive markers)
+  d[, Degree := apply(.SD, 1, sum), .SDcols=markers]
+  
+  ## Compute the degree of functionality as the sum of 
+  ## ps-pu over subsets of the same degree.
+  d[, DOF := sum(PropDiff), by=c(iid, "Degree")]
   
   ## Merge in the MeanGamma
   ## we want to fill Mgamma with zeroes for the cytokines not included
@@ -175,16 +182,14 @@ shinyCOMPASS <- function(x, dir=NULL,
     ]
   
   dir.create(dir, showWarnings=FALSE)
-  
-  ## Copy the Shiny infrastructure to the directory
   file.copy(
-    file.path(system.file(package="COMPASS"), "shiny"),
+    file.path( system.file(package="COMPASS"), "shiny/." ),
     file.path(dir),
     recursive=TRUE
   )
   
   ## Copy the data
-  dir.create( file.path(dir, "shiny", "data"), showWarnings=FALSE )
+  dir.create( file.path(dir, "data"), showWarnings=FALSE )
   output <- list(
     data=d, 
     meta=meta_, 
@@ -195,9 +200,9 @@ shinyCOMPASS <- function(x, dir=NULL,
     stimulated=stimulated,
     unstimulated=unstimulated
   )
-  saveRDS(output, file=file.path(dir, "shiny", "data", "data.rds"))
+  saveRDS(output, file=file.path(dir, "data", "data.rds"))
   
   message("Starting the Shiny application...")
-  shiny::runApp( file.path(dir, "shiny") )
+  runApp( file.path(dir) )
   
 }
