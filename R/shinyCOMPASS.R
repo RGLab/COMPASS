@@ -24,6 +24,10 @@ if (FALSE) {
 shinyCOMPASS <- function(x, dir=NULL,
   stimulated, unstimulated) {
   
+  if (!require(shiny)) {
+    stop("You must have 'shiny' installed to run the Shiny application -- try 'install.packages(\"shiny\")'.")
+  }
+  
   if (missing(stimulated)) {
     stop("'stimulated' must be supplied; it is necessary for calculations of ",
       "Log Fold Change and other variables used in the Shiny application")

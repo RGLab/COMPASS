@@ -25,5 +25,41 @@
 ##' cc2 <- f(data)
 ##' identical(cc, cc2)
 CellCounts <- function(data, combinations) {
-  return( .Call("COMPASS_CellCounts", as.list(data), as.list(combinations), PACKAGE="COMPASS") )
+  if (inherits(data, "COMPASSContainer")) {
+    data <- data$data
+  }
+  
+  if (missing(combinations)) {
+    combinations <- BooleanSubsets.default(data)
+  }
+  
+  if (!is.list(combinations)) {
+    combinations <- list(combinations)
+  }
+  
+  cn <- colnames(data[[1]])
+  
+  combinations <- lapply(combinations, function(combo) {
+    if (is.character(combo)) {
+      splat <- unlist( strsplit(combo, "|", fixed=TRUE) )
+      return( sapply(splat, function(y) {
+        if (substring(y, 1, 1) == "!") {
+          return( match( substring(y, 2, nchar(y)), cn ) )
+        } else {
+          return( match(y, cn) )
+        }
+      }))
+    } else {
+      return(combo)
+    }
+  })
+  
+  names(combinations) <- sapply(combinations, function(x) {
+    nm <- cn[ abs(x) ]
+    nm[ x < 0 ] <- paste0("!", nm[x < 0])
+    return( paste(nm[ order(abs(x)) ], collapse="|") )
+  })
+  
+  return( .Call("COMPASS_CellCounts", as.list(data), lapply(combinations, as.integer), PACKAGE="COMPASS") )
+  
 }

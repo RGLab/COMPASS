@@ -66,7 +66,7 @@ COMPASSContainer <- function(data, counts, meta,
   .reorder_columns <- function(y) {
     nm <- colnames(y[[1]])
     for (i in seq_along(y)[-1]) {
-      y[[i]] <- y[[i]][, match(colnames(y[[i]]), nm)]
+      y[[i]] <- y[[i]][, match(colnames(y[[i]]), nm), drop=FALSE]
     }
     return(y)
   }

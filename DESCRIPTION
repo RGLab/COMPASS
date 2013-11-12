@@ -18,7 +18,8 @@ Imports:
     RColorBrewer,
     grid
 Suggests:
-    flowWorkspace
+    flowWorkspace,
+    shiny
 Collate:
     'repmat.R'
     'COMPASS-continuous.R'
@@ -40,5 +41,6 @@ Collate:
     'melt_.R'
     'BooleanSubsets.R'
     'CellCounts.R'
+    'subset-COMPASSContainer.R'
 LazyLoad: yes
 LazyData: yes

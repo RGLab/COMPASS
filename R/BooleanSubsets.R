@@ -40,7 +40,7 @@ BooleanSubsets.default <- function(x, as.matrix=FALSE) {
   
   combinations[, c("Counts") := apply(.SD, 1, sum)]
   setkeyv(combinations, c("Counts", rev(names(combinations))))
-  combinations[, Counts := NULL]
+  combinations[, "Counts" := NULL]
   if (as.matrix) {
     combinations <- as.matrix(combinations)
   } else {
@@ -50,5 +50,17 @@ BooleanSubsets.default <- function(x, as.matrix=FALSE) {
       return(combinations)
     })))
   }
+  
+  ## set informative names
+  n <- ncol( x[[1]] )
+  cn <- colnames( x[[1]] )
+  nm <- unname(unlist(lapply(combinations, function(combo) {
+    paste0(
+      swap(combo, c(-n:-1, 1:n), c( rep("!", n), rep("", n) )),
+      cn,
+      collapse="|"
+    )
+  })))
+  names(combinations) <- nm
   return(combinations)
 }
