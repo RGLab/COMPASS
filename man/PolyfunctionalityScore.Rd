@@ -9,8 +9,8 @@
   \method{PolyfunctionalityScore}{COMPASSResult} (x,
     degree, normalization = "all")
 
-  \method{PolyfunctionalityScore}{COMPASSResult} (x,
-    degree, normalization)
+  \method{PolyfunctionalityScore}{default} (x, degree,
+    normalization)
 }
 \arguments{
   \item{x}{An object of class \code{COMPASSResult}, as

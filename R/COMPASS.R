@@ -41,6 +41,8 @@
 ##' @param iterations The number of iterations (per 'replication') to perform.
 ##' @param replications The number of 'replications' to perform. In order to
 ##'   conserve memory, we only keep the model estimates from the last replication.
+##' @param keep_original_data Keep the original \code{COMPASSContainer} 
+##'   as part of the \code{COMPASS} output?
 ##' @param verbose Boolean; if \code{TRUE} we output progress information.
 ##' @param ... Other arguments; currently unused.
 ##' 
@@ -56,6 +58,7 @@ COMPASS <- function(data, treatment, control, subset=NULL,
   filter_lowest_frequency=0, filter_specific_markers=NULL, 
   model=c("discrete", "continuous"), 
   iterations=40000, replications=8,
+  keep_original_data=FALSE,
   verbose=TRUE, ...) {
   
   if (class(data) != "COMPASSContainer") {
@@ -324,8 +327,7 @@ COMPASS <- function(data, treatment, control, subset=NULL,
           iterations=iterations, replications=replications, verbose=verbose, ...),
         data=list(n_s=n_s, n_u=n_u, counts_s=counts_s, counts_u=counts_u,
           categories=categories, meta=data$meta, sample_id=data$sample_id,
-          individual_id=data$individual_id),
-        orig=data
+          individual_id=data$individual_id)     
       )
     },
     continuous={
@@ -336,16 +338,21 @@ COMPASS <- function(data, treatment, control, subset=NULL,
           iterations=iterations, replications=replications, verbose=verbose, ...),
         data=list(y_s=y_s, y_u=y_u, n_s=n_s, n_u=n_u, 
           counts_s=counts_s, counts_u=counts_u, categories=categories, 
-          meta=data$meta, sample_id=data$sample_id, individual_id=data$individual_id),
-        orig=data
+          meta=data$meta, sample_id=data$sample_id, individual_id=data$individual_id)
       )
     }
   )
+  
+  if (keep_original_data) {
+    output$orig <- data
+  }
   
   ## Compute the posterior ps-pu; log(ps)-log(pu)
   vmessage("Computing the posterior difference in proportions, posterior log ratio...")
   output$fit$posterior <- compute_posterior(output)
   vmessage("Done!")
+  
+  output$fit$call <- match.call()
   
   class(output) <- "COMPASSResult"
   return(output)

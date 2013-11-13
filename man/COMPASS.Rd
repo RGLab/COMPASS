@@ -9,8 +9,8 @@
     filter_lowest_frequency = 0,
     filter_specific_markers = NULL,
     model = c("discrete", "continuous"),
-    iterations = 40000, replications = 8, verbose = TRUE,
-    ...)
+    iterations = 40000, replications = 8,
+    keep_original_data = FALSE, verbose = TRUE, ...)
 }
 \arguments{
   \item{data}{An object of class \code{COMPASSData}.}
@@ -56,6 +56,10 @@
   \item{replications}{The number of 'replications' to
   perform. In order to conserve memory, we only keep the
   model estimates from the last replication.}
+
+  \item{keep_original_data}{Keep the original
+  \code{COMPASSContainer} as part of the \code{COMPASS}
+  output?}
 
   \item{verbose}{Boolean; if \code{TRUE} we output progress
   information.}

@@ -42,5 +42,6 @@ Collate:
     'BooleanSubsets.R'
     'CellCounts.R'
     'subset-COMPASSContainer.R'
+    'COMPASSResult-methods.R'
 LazyLoad: yes
 LazyData: yes
