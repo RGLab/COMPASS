@@ -114,7 +114,7 @@ lo = function(rown, coln, nrow, ncol, cellheight = NA, cellwidth = NA, treeheigh
   }
   else{
     matheight = unit(cellheight * nrow, "bigpts")
-  }  
+  }        
   
   
   # Produce layout()
@@ -209,7 +209,7 @@ draw_colnames = function(coln, ...){
 draw_rownames = function(rown, ...){
   n = length(rown)
   y = 1 - ((1:n)/n - 1/2/n)
-  grid.text(rown, x = unit(0.04, "npc"), y = y, vjust = 0.5, hjust = 0, gp = gpar(...))	
+  grid.text(rown, x = unit(0.04, "npc"), y = y, vjust = 0.5, hjust = 0, gp = gpar(...))        
 }
 
 draw_legend = function(color, breaks, legend, ...){
@@ -223,21 +223,33 @@ draw_legend = function(color, breaks, legend, ...){
   upViewport()
 }
 
-convert_cytokine_annotations = function(annotation){
-  ck_degree<-apply(annotation,1,function(x)sum(as.numeric(as.character(x))))
-  mdegree<-max(ck_degree)
-  udegrees<-unique(setdiff(ck_degree,0))
-  new_annotation<-matrix("#FFFFFF",ncol=ncol(annotation),nrow=nrow(annotation))
-  pal<-brewer.pal("Paired",n=mdegree)
-  for(i in udegrees){
-    ind<-which(annotation==1,TRUE)[,1]%in%which(ck_degree%in%i)
-    for(j in which(ind)){
-      new_annotation[which(annotation==1,TRUE)[j,1],which(annotation==1,TRUE)[j,2]]<-pal[i]
+convert_cytokine_annotations = function(annotation) {
+  
+  new_annotation <- as.matrix(annotation)
+  
+  ## generate the colors
+  cols <- brewer.pal(name="Paired", n=ncol(annotation)*2)
+  
+  ## compute DOF
+  dof <- apply(new_annotation, 1, function(x) {
+    sum( as.numeric( as.character(x) ) == 1) + 1
+  })
+  
+  ## swap in colors
+  for (i in seq_along(dof)) {
+    if (dof[i] == 0) {
+      new_annotation[i, ] <- "#FFFFFF"
+    } else {
+      new_annotation[i, ] <- swap( 
+        new_annotation[i, ], 
+        c(-1, 0, 1), 
+        c( cols[dof[i] * 2 - 1], "#FFFFFF", cols[ dof[i] * 2] )
+      )
     }
   }
-  colnames(new_annotation)<-colnames(annotation)
-  rownames(new_annotation)<-rownames(annotation)
-  new_annotation
+  
+  return(new_annotation)
+  
 }
 
 convert_annotations = function(annotation, annotation_colors){
@@ -431,6 +443,7 @@ heatmap_motor = function(matrix, border_color, cellwidth, cellheight, tree_col, 
   #Draw cytokine annotation tracks
   if(!is.na(cytokine_annotation[[1]][1])){
     pushViewport(vplayout(6,2))
+    
     
     converted_cytokine_annotations = convert_cytokine_annotations(cytokine_annotation)
     draw_annotations(converted_cytokine_annotations, border_color)
@@ -648,7 +661,7 @@ kmeans_pheatmap = function(mat, k = min(nrow(mat), 150), sd_limit = NA, ...){
   # Filter data
   if(!is.na(sd_limit)){
     s = apply(mat, 1, sd)
-    mat = mat[s > sd_limit, ]	
+    mat = mat[s > sd_limit, ]        
   }
   
   # Cluster data
@@ -755,9 +768,9 @@ kmeans_pheatmap = function(mat, k = min(nrow(mat), 150), sd_limit = NA, ...){
 #' @return 
 #' Invisibly a list of components 
 #' \itemize{
-#' 	\item \code{tree_row} the clustering of rows as \code{\link{hclust}} object 
-#' 	\item \code{tree_col} the clustering of columns as \code{\link{hclust}} object
-#' 	\item \code{kmeans} the kmeans clustering of rows if parameter \code{kmeans_k} was 
+#'         \item \code{tree_row} the clustering of rows as \code{\link{hclust}} object 
+#'         \item \code{tree_col} the clustering of columns as \code{\link{hclust}} object
+#'         \item \code{kmeans} the kmeans clustering of rows if parameter \code{kmeans_k} was 
 #' specified 
 #' }
 #' 
@@ -846,14 +859,15 @@ pheatmap = function(mat, color = colorRampPalette(rev(brewer.pal(n = 7, name = "
   }
   
   #check that the cytokine annotation (if it exists), is in the right form
-  if(!is.na(cytokine_annotation[[1]][1])){
-    for(i in 1:ncol(cytokine_annotation)){
-      if(!(class(cytokine_annotation[[i]])=="factor" & all(levels(cytokine_annotation[[i]])%in%c(0,1)))){
-        stop("cytokine annotation must be a data frame with categorical factors containing levels 0,1")
-      }else
-        show_colnames<-FALSE
-    }
-  }
+  #   if(!is.na(cytokine_annotation[[1]][1])){
+  #     for(i in 1:ncol(cytokine_annotation)){
+  #       if(!(class(cytokine_annotation[[i]])=="factor" & all(levels(cytokine_annotation[[i]])%in%c(0,1)))){
+  #         stop("cytokine annotation must be a data frame with categorical factors containing levels 0,1")
+  #       }else
+  #         show_colnames<-FALSE
+  #     }
+  #   }
+  
   # Preprocess matrix
   mat = as.matrix(mat)
   if(scale != "none"){
@@ -953,24 +967,6 @@ pheatmap = function(mat, color = colorRampPalette(rev(brewer.pal(n = 7, name = "
     row_annotation_colors = generate_row_annotation_colours(row_annotation,row_annotation_colors, drop = drop_levels)
   }
   
-  #prepare cytokine annotations
-  if(!is.na(cytokine_annotation[[1]][1])){
-    cytokine_annotation = cytokine_annotation[colnames(mat),ncol(cytokine_annotation):1,drop=FALSE]
-    
-    #order the columns by max functionality 
-    cka<-apply(cytokine_annotation,2,function(x)sum(as.numeric(as.character(x))))
-    cytokine_annotation = cytokine_annotation[,order(cka,decreasing=TRUE),drop=FALSE]
-    
-    if(!cluster_cols&is.na(headerplot)){
-      ckr<-apply(cytokine_annotation,1,function(x)sum(as.numeric(as.character(x))))
-      cytokine_annotation = cytokine_annotation[order(ckr),]
-      mat = mat[,rownames(cytokine_annotation)] 
-    }#else if(!is.na(headerplot)){
-    #reorder the cytokine column annotation according to headerplot order
-    #cytokine_annotation<-cytokine_annotation[headerplot$order,]
-    #}
-  }
-  
   if(!show_rownames){
     rownames(mat) = NULL
   }
@@ -984,4 +980,3 @@ pheatmap = function(mat, color = colorRampPalette(rev(brewer.pal(n = 7, name = "
   options("warn"=oldwarn$warn)
   invisible(list(tree_row = tree_row, tree_col = tree_col, kmeans = km))
 }
-

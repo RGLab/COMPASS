@@ -62,7 +62,7 @@ PolyfunctionalityScore.COMPASSResult <- function(x, degree, normalization="all")
     }
   )
   degree <- degree / norm[degree]
-  PFscore <- M[,-ncol(M)] %*% degree
+  PFscore <- M[, -ncol(M)] %*% degree
   PFscore <- setNames( as.numeric(PFscore), rownames(PFscore) )
   
   ## divide by number of markers

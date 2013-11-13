@@ -25,7 +25,7 @@
   categories.}
 }
 \value{
-  a \code{vector} of polyfunctionality scores.
+  A numeric vector of polyfunctionality scores.
 }
 \description{
   Computes the Polyfunctionality score for each observation

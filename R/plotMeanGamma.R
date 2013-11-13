@@ -47,8 +47,11 @@ plot.COMPASSResult <- function(x, y, subset, row_annotation,
   cats <- x$fit$categories[-nc,]
   cats <- data.frame(cats)
   cats <- cats[,1:(ncol(cats)-1)]
+#   cats <- as.data.frame( lapply(cats, function(x) {
+#     swap(x, 0, -1)
+#   }))
   cats <- as.data.frame( lapply(cats, function(x) {
-    swap(x, 0, -1)
+    factor(x, levels=c(0, 1))
   }))
   colnames(M) <- rownames(cats)
   
