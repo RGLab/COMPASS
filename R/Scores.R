@@ -38,7 +38,7 @@ FunctionalityScore.default <- function(x) {
 ##' @param normalization A \code{character} vector specifying how the score
 ##'  is to be normalized. Either using \code{"all"} possible categories, or 
 ##'  just the \code{"observed"} categories. Defaults to \code{"all"} categories.
-##' @return a \code{vector} of polyfunctionality scores.
+##' @return A numeric vector of polyfunctionality scores.
 ##' @export
 PolyfunctionalityScore <- function(x, degree, normalization) {
   UseMethod("PolyfunctionalityScore")
@@ -64,12 +64,15 @@ PolyfunctionalityScore.COMPASSResult <- function(x, degree, normalization="all")
   degree <- degree / norm[degree]
   PFscore <- M[,-ncol(M)] %*% degree
   PFscore <- setNames( as.numeric(PFscore), rownames(PFscore) )
+  
+  ## divide by number of markers
+  PFscore <- PFscore / (ncol(x$data$categories)-1)
   return(PFscore)
 }
 
 ##' @rdname PolyfunctionalityScore
-##' @method PolyfunctionalityScore COMPASSResult
-##' @S3method PolyfunctionalityScore COMPASSResult
+##' @method PolyfunctionalityScore default
+##' @S3method PolyfunctionalityScore default
 PolyfunctionalityScore.default <- function(x, degree, normalization) {
   return( rowMeans(as.matrix(x) * matrix( rep(degree, each=nrow(x)), nrow=nrow(x))) )
 }
