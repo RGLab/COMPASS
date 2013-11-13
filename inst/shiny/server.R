@@ -89,6 +89,12 @@ filter_markers <- function(d, markers,
     output <- output[ Marker %in% keep, ]
   }
   
+  ## if something broke, return the last output
+  if (nrow(output) == 0) {
+    cat("No data left after filtering; returning full data\n")
+    return(d)
+  }
+  
   ## and finally, return
   return(output)
   

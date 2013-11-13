@@ -1,5 +1,7 @@
 S3method(BooleanSubsets,COMPASSContainer)
 S3method(BooleanSubsets,default)
+S3method(CellCounts,COMPASSContainer)
+S3method(CellCounts,default)
 S3method(FunctionalityScore,COMPASSResult)
 S3method(FunctionalityScore,default)
 S3method(PolyfunctionalityScore,COMPASSResult)

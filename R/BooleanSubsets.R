@@ -28,7 +28,7 @@ BooleanSubsets.COMPASSContainer <- function(x, as.matrix=FALSE) {
 ##' @S3method BooleanSubsets default
 BooleanSubsets.default <- function(x, as.matrix=FALSE) {
   
-  combinations <- unique( as.data.table( 
+  combinations <- unique( as.data.table(
     lapply( 
       lapply( 
         as.data.table( do.call( rbind, x ) ), 

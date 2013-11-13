@@ -25,9 +25,19 @@
 ##' cc2 <- f(data)
 ##' identical(cc, cc2)
 CellCounts <- function(data, combinations) {
-  if (inherits(data, "COMPASSContainer")) {
-    data <- data$data
-  }
+  UseMethod("CellCounts")
+}
+
+##' @S3method CellCounts COMPASSContainer
+##' @method CellCounts COMPASSContainer
+CellCounts.COMPASSContainer <- function(data, combinations) {
+  data <- data$data
+  NextMethod("CellCounts")
+}
+
+##' @S3method CellCounts default
+##' @method CellCounts default
+CellCounts.default <- function(data, combinations) {
   
   if (missing(combinations)) {
     combinations <- BooleanSubsets.default(data)
