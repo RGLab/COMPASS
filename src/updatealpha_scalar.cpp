@@ -1,10 +1,4 @@
 #include <Rcpp.h>
-#include <stdio.h>
-#include <gsl/gsl_rng.h>
-#include <gsl/gsl_randist.h>
-#include <math.h>
-#include <R_ext/Utils.h>
-#include <stdlib.h>
 #include <boost/math/special_functions/digamma.hpp>
 using namespace std;
 using namespace Rcpp;
@@ -63,7 +57,13 @@ void updatealpha_scalar(vector<double>& xmust, vector<double>& xmuut, vector<int
     //if(alphap[0][0]>2 && alphap[0][0]<=xlambda_alpha[p]) { uniform prior
 //std::cout <<"log2 = "<< log2 <<" alphap[0] = "<< alphap[0]<< std::endl;
     if(alphap[0]>0) {
-         log2+=log(xp_var*gsl_ran_gaussian_pdf(alphap[0]-mean_p, sqrt_var1)+(1-xp_var)*gsl_ran_gaussian_pdf(alphap[0]-mean_p, sqrt_var2)); 
+      
+         // log2+=log(xp_var*gsl_ran_gaussian_pdf(alphap[0]-mean_p, sqrt_var1)+(1-xp_var)*gsl_ran_gaussian_pdf(alphap[0]-mean_p, sqrt_var2)); 
+        log2 += log( 
+          xp_var * Rf_dnorm4(alphap[0], mean_p, sqrt_var1, 0) +
+          (1 - xp_var) * Rf_dnorm4(alphap[0], mean_p, sqrt_var2, 0)
+        );
+         
          delF = 0.;  double lbetadga = log(xbeta)-boost::math::digamma(alphap[0]); double alblga = xalpha*log(xbeta)-lgamma(alphap[0]);
          for (int p=0; p<xM; p++) {
          for (int i=0; i<xI;i++) {
@@ -102,9 +102,18 @@ void updatealpha_scalar(vector<double>& xmust, vector<double>& xmuut, vector<int
          }
         } }
         mean_p = std::max(0.01, alphap[0]+delF/xtt);
-        log1+=log(xp_var*gsl_ran_gaussian_pdf(xalpha-mean_p, sqrt_var1)+(1-xp_var)*gsl_ran_gaussian_pdf(xalpha-mean_p, sqrt_var2));
-        log2+=log(gsl_ran_gaussian_pdf(xalpha-xalpha1, xsig_alpha1));
-        log1+=log(gsl_ran_gaussian_pdf(alphap[0]-xalpha1, xsig_alpha1));
+        // log1+=log(xp_var*gsl_ran_gaussian_pdf(xalpha-mean_p, sqrt_var1)+(1-xp_var)*gsl_ran_gaussian_pdf(xalpha-mean_p, sqrt_var2));
+        log1 += log( 
+          xp_var * Rf_dnorm4(xalpha, mean_p, sqrt_var1, 0) +
+          (1 - xp_var) * Rf_dnorm4(xalpha, mean_p, sqrt_var2, 0)
+        );
+        
+        // log2+=log(gsl_ran_gaussian_pdf(xalpha-xalpha1, xsig_alpha1));
+        log2 += Rf_dnorm4(xalpha, xalpha1, xsig_alpha1, 1);
+        
+        //log1+=log(gsl_ran_gaussian_pdf(alphap[0]-xalpha1, xsig_alpha1));
+        log1 += Rf_dnorm4(alphap[0], xalpha1, xsig_alpha1, 1);
+        
         //std::cout <<"log1 = "<< log1 <<" log2 = "<< log2 << std::endl;
         if (log(Rcpp::as<double>(Rcpp::runif(1))) <= (log1 - log2)) {
                alpha[tt]= alphap[0];

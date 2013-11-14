@@ -1,12 +1,4 @@
 #include <Rcpp.h>
-#include <stdio.h>
-#include <gsl/gsl_rng.h>
-#include <gsl/gsl_randist.h>
-#include <math.h>
-#include <stdlib.h>
-//#include <time.h>
-
-#include <R_ext/Utils.h>
 #include <boost/math/special_functions/digamma.hpp>
 
 using namespace std;
@@ -92,7 +84,9 @@ void updatealphau(vector<double>& xalphaut, vector<int>& xn_s, vector<int>& xn_u
                alp[i] = xalphaut[i];
             }
             alp[kk] = alpha_u_p[0];
-            log2 += log(gsl_ran_gaussian_pdf(alp[kk]-mean_p, sqrt_var[kk]));
+            // log2 += log(gsl_ran_gaussian_pdf(alp[kk]-mean_p, sqrt_var[kk]));
+            log2 += Rf_dnorm4(alp[kk], mean_p, sqrt_var[kk], 1);
+            
             delF = 0.0; sum_alphau = 0.0;
             for (int s = 0; s < xK; s++) {
                 sum_alphau += alp[s];
@@ -155,7 +149,9 @@ void updatealphau(vector<double>& xalphaut, vector<int>& xn_s, vector<int>& xn_u
                 
             }
             mean_p = std::max(0.01, alp[kk] + delF/xtt);
-            log1 +=log(gsl_ran_gaussian_pdf(xalphaut[kk]-mean_p, sqrt_var[kk]));
+            // log1 +=log(gsl_ran_gaussian_pdf(xalphaut[kk]-mean_p, sqrt_var[kk]));
+            log1 += Rf_dnorm4(xalphaut[kk], mean_p, sqrt_var[kk], 1);
+            
             if (log(Rcpp::as<double>(Rcpp::runif(1)) ) <= (log1 - log2)) {
                 xalphaut[kk] = alp[kk];
                 xAalphau[kk] = 1;

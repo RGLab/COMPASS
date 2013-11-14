@@ -1,7 +1,4 @@
 #include <Rcpp.h>
-#include <gsl/gsl_rng.h>
-#include <gsl/gsl_randist.h>
-#include <stdlib.h>
 #include "model.h"
 #include "updatealphau_RW.h"
 #include "updategamma_indi.h"
@@ -11,7 +8,6 @@
 #include "updatemuu.h"
 #include "updatealpha_RW.h"
 #include "updatebeta_RW.h"
-#include <R_ext/Utils.h>
 
 using namespace Rcpp;
 using namespace std;

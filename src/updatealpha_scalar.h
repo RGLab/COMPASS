@@ -1,11 +1,4 @@
 #include <Rcpp.h>
-#include <stdio.h>
-#include <gsl/gsl_rng.h>
-#include <gsl/gsl_randist.h>
-#include <math.h>
-#include <R_ext/Utils.h>
-#include <stdlib.h>
-#include <boost/math/special_functions/digamma.hpp>
 using std::vector;
 
 void updatealpha_scalar(vector<double>& xmust, vector<double>& xmuut, vector<int>& xn_s, vector<int>& xn_u, int xI, int xK, int xM, int K1, int t1, 

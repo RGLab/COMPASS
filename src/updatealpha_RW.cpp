@@ -1,11 +1,6 @@
 // update alpha using random walk proposal
 #include <Rcpp.h>
 
-#include <gsl/gsl_rng.h>
-#include <gsl/gsl_randist.h>
-
-#include <stdlib.h>
-#include <R_ext/Utils.h>
 using namespace std;
 using namespace Rcpp;
 
@@ -71,8 +66,12 @@ void updatealpha_RW(vector<double>& xmust, vector<double>& xmuut, vector<int>& x
         }
       }
    
-       log2+=log(gsl_ran_gaussian_pdf(xalpha-xalpha1, xsig_alpha1));
-       log1+=log(gsl_ran_gaussian_pdf(alphap[0]-xalpha1, xsig_alpha1));
+       // log2+=log(gsl_ran_gaussian_pdf(xalpha-xalpha1, xsig_alpha1));
+       log2 += Rf_dnorm4(xalpha, xalpha1, xsig_alpha1, 1);
+       
+       // log1+=log(gsl_ran_gaussian_pdf(alphap[0]-xalpha1, xsig_alpha1));
+       log1 += Rf_dnorm4(alphap[0], xalpha1, xsig_alpha1, 1);
+       
         if (log(Rcpp::as<double>(Rcpp::runif(1)) ) <= (log1 - log2)) {
                alpha[tt]= alphap[0];
                xAalpha[tt] = 1;

@@ -1,10 +1,4 @@
 #include <Rcpp.h>
-#include <stdio.h>
-#include <gsl/gsl_rng.h>
-#include <gsl/gsl_randist.h>
-#include <math.h>
-#include <stdlib.h>
-#include <R_ext/Utils.h>
 #include <boost/math/special_functions/digamma.hpp>
 
 
@@ -88,7 +82,11 @@ RcppExport SEXP updatealphas_Exp(SEXP alphast,SEXP n_s, SEXP K, SEXP I, SEXP lam
                alp[i] = xalphast[i];
            }
            alp[kk] = alpha_s_p[0];
-           log2 += log(xp_var[kk]*gsl_ran_gaussian_pdf(alp[kk]-mean_p, sqrt_var1[kk])+(1-xp_var[kk])*gsl_ran_gaussian_pdf(alp[kk]-mean_p, sqrt_var2[kk])); 
+           // log2 += log(xp_var[kk]*gsl_ran_gaussian_pdf(alp[kk]-mean_p, sqrt_var1[kk])+(1-xp_var[kk])*gsl_ran_gaussian_pdf(alp[kk]-mean_p, sqrt_var2[kk])); 
+           log2 += log(
+             xp_var[kk] * Rf_dnorm4(alp[kk], mean_p, sqrt_var1[kk], 0) +
+             (1 - xp_var[kk]) * Rf_dnorm4(alp[kk], mean_p, sqrt_var2[kk], 0)
+           );
            delF = 0.0; psik = boost::math::digamma(alp[kk]);
            for ( int i = 0; i < xI; i++) {
                lp1 = 0; 
@@ -125,9 +123,18 @@ RcppExport SEXP updatealphas_Exp(SEXP alphast,SEXP n_s, SEXP K, SEXP I, SEXP lam
                }
            }
            mean_p = std::max(0.01, alp[kk] + delF/xtt);
-           log1 +=log(xp_var[kk]*gsl_ran_gaussian_pdf(xalphast[kk]-mean_p, sqrt_var1[kk])+(1-xp_var[kk])*gsl_ran_gaussian_pdf(xalphast[kk]-mean_p, sqrt_var2[kk])); 
-           log1 += log(gsl_ran_exponential_pdf(alp[kk],xlambda_s[kk])); //exponential prior
-           log2 += log(gsl_ran_exponential_pdf(xalphast[kk],xlambda_s[kk]));//exponential prior
+           // log1 +=log(xp_var[kk]*gsl_ran_gaussian_pdf(xalphast[kk]-mean_p, sqrt_var1[kk])+(1-xp_var[kk])*gsl_ran_gaussian_pdf(xalphast[kk]-mean_p, sqrt_var2[kk])); 
+           log1 += log(
+             xp_var[kk] * Rf_dnorm4(xalphast[kk], mean_p, sqrt_var1[kk], 0) +
+             (1 - xp_var[kk]) * Rf_dnorm4(xalphast[kk], mean_p, sqrt_var2[kk], 0)
+           );
+           
+           // log1 += log(gsl_ran_exponential_pdf(alp[kk],xlambda_s[kk])); //exponential prior
+           log1 += Rf_dexp(alp[kk], xlambda_s[kk], 1);
+           
+           // log2 += log(gsl_ran_exponential_pdf(xalphast[kk],xlambda_s[kk]));//exponential prior
+           log2 += Rf_dexp(xalphast[kk], xlambda_s[kk], 1);
+           
            //if (alp[kk]<0 || alp[kk]>xlambda_s[kk]) {log1+=log(0);} //Uniform prior
            //if (xalphast[kk]<0 || xalphast[kk]>xlambda_s[kk]) {log2+=log(0);} //Uniform prior
 

@@ -32,7 +32,8 @@ model <- "discrete"
 verbose <- TRUE
 
 ## An example call
-discrete <- COMPASS(
+set.seed(123)
+discrete1 <- COMPASS(
   data=CC,
   treatment="92TH023 Env",
   control="negctrl 1",
@@ -40,6 +41,18 @@ discrete <- COMPASS(
   iterations=100,
   replications=8
 )
+
+set.seed(123)
+discrete2 <- COMPASS(
+  data=CC,
+  treatment="92TH023 Env",
+  control="negctrl 1",
+  model="discrete",
+  iterations=100,
+  replications=8
+)
+
+stopifnot( identical(discrete1, discrete2) )
 
 saveRDS(discrete, file="data/RV144_CD4_results_discrete.rds")
 discrete <- readRDS("data/RV144_CD4_results_discrete.rds")

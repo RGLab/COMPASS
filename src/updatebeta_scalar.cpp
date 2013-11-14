@@ -1,10 +1,4 @@
 #include <Rcpp.h>
-#include <stdio.h>
-#include <gsl/gsl_rng.h>
-#include <gsl/gsl_randist.h>
-#include <math.h>
-#include <R_ext/Utils.h>
-#include <stdlib.h>
 using namespace std;
 using namespace Rcpp;
 
@@ -63,7 +57,13 @@ void updatebeta_scalar(vector<double>& xmust, vector<double>& xmuut, vector<int>
     //if(betap[0][0]>0.0 && betap[0][0]<=xlambda_beta[p]) {
 //std::cout <<"log2 = "<< log2 <<" betap[0] = "<< betap[0]<< std::endl;
     if(betap[0]>0.0) {
-         log2+=log(xp_var*gsl_ran_gaussian_pdf(betap[0]-mean_p, sqrt_var1)+(1-xp_var)*gsl_ran_gaussian_pdf(betap[0]-mean_p, sqrt_var2)); 
+         
+         // log2+=log(xp_var*gsl_ran_gaussian_pdf(betap[0]-mean_p, sqrt_var1)+(1-xp_var)*gsl_ran_gaussian_pdf(betap[0]-mean_p, sqrt_var2)); 
+         log2 += log(
+           xp_var * Rf_dnorm4(betap[0], mean_p, sqrt_var1, 0) +
+           (1 - xp_var) * Rf_dnorm4(betap[0], mean_p, sqrt_var2, 0)
+         );
+         
          delF = 0.; alb= xalpha*log(betap[0]); adb = xalpha/betap[0];
          for (int p=0; p<xM; p++) {
          for (int i=0; i<xI;i++) {
@@ -102,9 +102,19 @@ void updatebeta_scalar(vector<double>& xmust, vector<double>& xmuut, vector<int>
          }
         }}
         mean_p = std::max(0.01, betap[0]+delF/xtt);
-        log1+=log(xp_var*gsl_ran_gaussian_pdf(xbeta-mean_p, sqrt_var1)+(1-xp_var)*gsl_ran_gaussian_pdf(xbeta-mean_p, sqrt_var2));
-        log2+=log(gsl_ran_gaussian_pdf(xbeta-xbeta1, xsig_beta1));
-        log1+=log(gsl_ran_gaussian_pdf(betap[0]-xbeta1, xsig_beta1));
+        
+        // log1+=log(xp_var*gsl_ran_gaussian_pdf(xbeta-mean_p, sqrt_var1)+(1-xp_var)*gsl_ran_gaussian_pdf(xbeta-mean_p, sqrt_var2));
+        log1 += log(
+          xp_var * Rf_dnorm4(xbeta, mean_p, sqrt_var1, 0) +
+          (1 - xp_var) * Rf_dnorm4(xbeta, mean_p, sqrt_var2, 0)
+        );
+        
+        // log2+=log(gsl_ran_gaussian_pdf(xbeta-xbeta1, xsig_beta1));
+        log2 += Rf_dnorm4(xbeta, xbeta1, xsig_beta1, 1);
+        
+        // log1+=log(gsl_ran_gaussian_pdf(betap[0]-xbeta1, xsig_beta1));
+        log1 += Rf_dnorm4(betap[0], xbeta1, xsig_beta1, 1);
+        
         //std::cout <<"log1 = "<< log1 <<" log2 = "<< log2 << std::endl;
         if (log(Rcpp::as<double>(Rcpp::runif(1)) ) <= (log1 - log2)) {
               beta[tt] = betap[0];

@@ -1,12 +1,4 @@
 #include <Rcpp.h>
-#include <stdio.h>
-#include <gsl/gsl_rng.h>
-#include <gsl/gsl_randist.h>
-#include <math.h>
-#include <stdlib.h>
-//#include <time.h>
-
-#include <R_ext/Utils.h>
 #include <boost/math/special_functions/digamma.hpp>
 
 RcppExport SEXP updatealphau_noPu_Exp(SEXP alphaut, SEXP n_s, SEXP n_u, SEXP I, SEXP K, SEXP lambda_u, SEXP var_p, SEXP ttt, SEXP gammat)
@@ -105,7 +97,10 @@ RcppExport SEXP updatealphau_noPu_Exp(SEXP alphaut, SEXP n_s, SEXP n_u, SEXP I, 
                alp[i] = xalphaut[i];
             }
             alp[kk] = alpha_u_p[0];
-            log2 += log(gsl_ran_gaussian_pdf(alp[kk]-mean_p, sqrt_var[kk]));
+            
+            // log2 += log(gsl_ran_gaussian_pdf(alp[kk]-mean_p, sqrt_var[kk]));
+            log2 += Rf_dnorm4(alp[kk], mean_p, sqrt_var[kk], 1);
+            
             delF = 0.0; sum_alphau = 0.0;
             for (int s = 0; s < xK; s++) {
                 sum_alphau += alp[s];
@@ -166,9 +161,16 @@ RcppExport SEXP updatealphau_noPu_Exp(SEXP alphaut, SEXP n_s, SEXP n_u, SEXP I, 
                 
             }
             mean_p = std::max(0.01, alp[kk] + delF/xtt);
-            log1 +=log(gsl_ran_gaussian_pdf(xalphaut[kk]-mean_p, sqrt_var[kk]));
-            log1 += log(gsl_ran_exponential_pdf(alp[kk],xlambda_u[kk])); //exponential prior
-            log2 += log(gsl_ran_exponential_pdf(xalphaut[kk],xlambda_u[kk])); //exponential prior
+            
+            // log1 +=log(gsl_ran_gaussian_pdf(xalphaut[kk]-mean_p, sqrt_var[kk]));
+            log1 += Rf_dnorm4(xalphaut[kk], mean_p, sqrt_var[kk], 1);
+            
+            //log1 += log(gsl_ran_exponential_pdf(alp[kk],xlambda_u[kk])); //exponential prior
+            log1 += Rf_dexp(alp[kk], xlambda_u[kk], 1);
+            
+            // log2 += log(gsl_ran_exponential_pdf(xalphaut[kk],xlambda_u[kk])); //exponential prior
+            log2 += Rf_dexp(xalphaut[kk], xlambda_u[kk], 1);
+            
             //if (alp[kk]<0 || alp[kk]>xlambda_u[kk]) {log1+=log(0);} //Uniform prior
             //if (xalphaut[kk]<0 || xalphaut[kk]>xlambda_u[kk]) {log2+=log(0);} //Uniform prior
             
@@ -187,5 +189,4 @@ RcppExport SEXP updatealphau_noPu_Exp(SEXP alphaut, SEXP n_s, SEXP n_u, SEXP I, 
 
     END_RCPP
 }
-
 

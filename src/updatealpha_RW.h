@@ -1,10 +1,5 @@
 #include <Rcpp.h>
 
-#include <gsl/gsl_rng.h>
-#include <gsl/gsl_randist.h>
-
-#include <stdlib.h>
-#include <R_ext/Utils.h>
 using std::vector;
 
 void updatealpha_RW(vector<double>& xmust, vector<double>& xmuut, vector<int>& xn_s, vector<int>& xn_u, int xI, int xK, int xM, int K1, int t1, 

@@ -1,10 +1,4 @@
 #include <Rcpp.h>
-#include <stdio.h>
-#include <gsl/gsl_rng.h>
-#include <gsl/gsl_randist.h>
-#include <math.h>
-#include <R_ext/Utils.h>
-#include <stdlib.h>
 using namespace std;
 using namespace Rcpp;
 
@@ -58,7 +52,13 @@ for (int p=0; p<xM; p++) {
     else {muu_p = Rcpp::rnorm(1, mean_p, sqrt_var2[p]);}
     
     if(muu_p[0]>0.0) {
-         log2+=log(xp_var[p]*gsl_ran_gaussian_pdf(muu_p[0]-mean_p, sqrt_var1[p])+(1-xp_var[p])*gsl_ran_gaussian_pdf(muu_p[0]-mean_p, sqrt_var2[p])); 
+         
+         // log2+=log(xp_var[p]*gsl_ran_gaussian_pdf(muu_p[0]-mean_p, sqrt_var1[p])+(1-xp_var[p])*gsl_ran_gaussian_pdf(muu_p[0]-mean_p, sqrt_var2[p])); 
+         log2 += log(
+           xp_var[p] * Rf_dnorm4(muu_p[0], mean_p, sqrt_var1[p], 0) +
+           (1 - xp_var[p]) * Rf_dnorm4(muu_p[0], mean_p, sqrt_var2[p], 0)
+         );
+         
          delF = 0.;
          for (int i=0; i<xI;i++) {
             for(int k=0; k<K1; k++) {
@@ -91,9 +91,19 @@ for (int p=0; p<xM; p++) {
            }
         }
         mean_p = std::max(0.01, muu_p[0]+delF/xtt);
-        log1+=log(xp_var[p]*gsl_ran_gaussian_pdf(xmuut[p]-mean_p, sqrt_var1[p])+(1-xp_var[p])*gsl_ran_gaussian_pdf(xmuut[p]-mean_p, sqrt_var2[p]));
-        log2+=log(gsl_ran_gaussian_pdf(xmuut[p]-xmu[p], xSigu[p]));
-        log1+=log(gsl_ran_gaussian_pdf(muu_p[0]-xmu[p], xSigu[p]));
+        
+        // log1+=log(xp_var[p]*gsl_ran_gaussian_pdf(xmuut[p]-mean_p, sqrt_var1[p])+(1-xp_var[p])*gsl_ran_gaussian_pdf(xmuut[p]-mean_p, sqrt_var2[p]));
+        log1 += log(
+          xp_var[p] * Rf_dnorm4(xmuut[p], mean_p, sqrt_var1[p], 0) +
+          (1 - xp_var[p]) * Rf_dnorm4(xmuut[p], mean_p, sqrt_var2[p], 0)
+        );
+        
+        //log2+=log(gsl_ran_gaussian_pdf(xmuut[p]-xmu[p], xSigu[p]));
+        log2 += Rf_dnorm4(xmuut[p], xmu[p], xSigu[p], 1);
+        
+        // log1+=log(gsl_ran_gaussian_pdf(muu_p[0]-xmu[p], xSigu[p]));
+        log1 += Rf_dnorm4(muu_p[0], xmu[p], xSigu[p], 1);
+        
        //std::cout <<"log1= "<< log1 << " log2 = "<<log2 <<" p="<<p<<std::endl;
 
           if (log(Rcpp::as<double>(Rcpp::runif(1)) ) <= (log1 - log2)) {
