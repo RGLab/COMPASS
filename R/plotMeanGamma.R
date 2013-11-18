@@ -9,6 +9,8 @@
 ##'   \code{row_annotation} is missing.
 ##' @param subset An \R expression, evaluated within the metadata, used to
 ##'   determine which individuals should be kept.
+##' @param remove_unexpressed_categories Boolean, if \code{TRUE} we
+##'   remove the unexpressed categories.
 ##' @param row_annotation A vector of names, pulled from the metadata, to be
 ##'   used for row annotation.
 ##' @param palette The colour palette to be used.
@@ -18,8 +20,8 @@
 ##'   (ie, the column name associated with a cytokine; typically not needed)
 ##' @param ... Optional arguments passed to \code{pheatmap}.
 ##' @importFrom RColorBrewer brewer.pal
-plot.COMPASSResult <- function(x, y, subset, row_annotation,
-  palette=brewer.pal(n=9, "Blues"), show_rownames=FALSE, 
+plot.COMPASSResult <- function(x, y, subset, remove_unexpressed_categories=TRUE, 
+  row_annotation, palette=brewer.pal(n=9, "Blues"), show_rownames=FALSE, 
   show_colnames=FALSE, ...) {
   
   subset_expr <- match.call()$subset
@@ -53,6 +55,14 @@ plot.COMPASSResult <- function(x, y, subset, row_annotation,
   cats <- as.data.frame( lapply(cats, function(x) {
     factor(x, levels=c(0, 1))
   }))
+  
+  if (remove_unexpressed_categories) {
+    m <- apply(M, 2, sum)
+    keep <- m != 0
+    M <- M[, keep, drop=FALSE]
+    cats <- cats[keep, ]
+  }
+  
   colnames(M) <- rownames(cats)
   
   ## handle subsetting
