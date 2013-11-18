@@ -51,7 +51,7 @@ CellCounts.default <- function(data, combinations) {
   
   combinations <- lapply(combinations, function(combo) {
     if (is.character(combo)) {
-      splat <- unlist( strsplit(combo, "|", fixed=TRUE) )
+      splat <- unlist( strsplit(combo, "&", fixed=TRUE) )
       return( sapply(splat, function(y) {
         if (substring(y, 1, 1) == "!") {
           return( match( substring(y, 2, nchar(y)), cn ) )
@@ -67,7 +67,7 @@ CellCounts.default <- function(data, combinations) {
   names(combinations) <- sapply(combinations, function(x) {
     nm <- cn[ abs(x) ]
     nm[ x < 0 ] <- paste0("!", nm[x < 0])
-    return( paste(nm[ order(abs(x)) ], collapse="|") )
+    return( paste(nm[ order(abs(x)) ], collapse="&") )
   })
   
   return( .Call("COMPASS_CellCounts", as.list(data), lapply(combinations, as.integer), PACKAGE="COMPASS") )

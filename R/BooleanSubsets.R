@@ -58,7 +58,7 @@ BooleanSubsets.default <- function(x, as.matrix=FALSE) {
     paste0(
       swap(combo, c(-n:-1, 1:n), c( rep("!", n), rep("", n) )),
       cn,
-      collapse="|"
+      collapse="&"
     )
   })))
   names(combinations) <- nm
