@@ -44,6 +44,16 @@ COMPASSContainer <- function(data, counts, meta,
     counts <- counts[ !(names(counts) %in% null_data) ]
   }
   
+  ## convert named vectors to matrices
+  for (i in seq_along(data)) {
+    if (!is.null(names(data[[i]]))) {
+      warning("Converting the data at index ", i, " to a one-row matrix")
+      nm <- names( data[[i]] )
+      data[[i]] <- matrix( data[[i]], nrow=1 )
+      colnames( data[[i]] ) <- nm
+    }
+  }
+  
   ## type checking
   .type_check <- function(y) {
     yy <- deparse(substitute(y))

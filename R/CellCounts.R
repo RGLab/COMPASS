@@ -35,17 +35,18 @@ CellCounts.COMPASSContainer <- function(data, combinations) {
   NextMethod("CellCounts")
 }
 
-##' @S3method CellCounts default
-##' @method CellCounts default
-CellCounts.default <- function(data, combinations) {
-  
-  if (missing(combinations)) {
-    combinations <- BooleanSubsets.default(data)
-  }
-  
-  if (!is.list(combinations)) {
-    combinations <- list(combinations)
-  }
+.CellCounts_character <- function(data, combinations) {
+  output <- sapply(combinations, function(c) {
+    tmp <- sapply(data, function(x) {
+      mode(x) <- "logical"
+      sum(eval( parse(text=c), envir=as.data.frame(x) ))
+    })
+  })
+  colnames(output) <- unlist(combinations)
+  return(output)
+}
+
+.CellCounts_numeric <- function(data, combinations) {
   
   cn <- colnames(data[[1]])
   
@@ -71,5 +72,32 @@ CellCounts.default <- function(data, combinations) {
   })
   
   return( .Call("COMPASS_CellCounts", as.list(data), lapply(combinations, as.integer), PACKAGE="COMPASS") )
+}
+
+##' @S3method CellCounts default
+##' @method CellCounts default
+CellCounts.default <- function(data, combinations) {
+  
+  if (missing(combinations)) {
+    combinations <- BooleanSubsets.default(data)
+  }
+  
+  if (!is.list(combinations)) {
+    combinations <- list(combinations)
+  }
+  
+  if (length(unique(sapply(combinations, typeof))) > 1) {
+    stop("'combinations' must all be of the same type")
+  }
+  
+  output <- switch( t <- typeof(combinations[[1]]),
+    double=.CellCounts_numeric(data, combinations),
+    integer=.CellCounts_numeric(data, combinations),
+    character=.CellCounts_character(data, combinations),
+    stop ("Unexpected value type for combinations (type == ", t, ")")
+  )
+  
+  return(output)
+
   
 }
