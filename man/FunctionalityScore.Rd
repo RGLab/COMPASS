@@ -4,11 +4,11 @@
 \alias{FunctionalityScore.default}
 \title{Compute the Functionality Score for each subject fit in a COMPASS model}
 \usage{
-  FunctionalityScore(x)
+FunctionalityScore(x)
 
-  \method{FunctionalityScore}{COMPASSResult} (x)
+\method{FunctionalityScore}{COMPASSResult}(x)
 
-  \method{FunctionalityScore}{default} (x)
+\method{FunctionalityScore}{default}(x)
 }
 \arguments{
   \item{x}{An object of class \code{COMPASSResult}, as

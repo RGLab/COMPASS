@@ -2,28 +2,21 @@
 \alias{pheatmap}
 \title{A function to draw clustered heatmaps.}
 \usage{
-  pheatmap(mat,
-    color = colorRampPalette(rev(brewer.pal(n = 7, name = "RdYlBu")))(100),
-    kmeans_k = NA, breaks = NA, border_color = "grey60",
-    cellwidth = NA, cellheight = NA, scale = "none",
-    cluster_rows = TRUE, cluster_cols = TRUE,
-    clustering_distance_rows = "euclidean",
-    clustering_distance_cols = "euclidean",
-    clustering_method = "complete",
-    treeheight_row = ifelse(cluster_rows, 50, 0),
-    treeheight_col = ifelse(cluster_cols, 50, 0),
-    legend = TRUE, legend_breaks = NA, legend_labels = NA,
-    annotation = NA, annotation_colors = NA,
-    annotation_legend = TRUE, drop_levels = TRUE,
-    show_rownames = T, show_colnames = T, main = NA,
-    fontsize = 10, fontsize_row = fontsize,
-    fontsize_col = fontsize, display_numbers = F,
-    number_format = "\%.2f",
-    fontsize_number = 0.8 * fontsize, filename = NA,
-    width = NA, height = NA, row_annotation = NA,
-    row_annotation_legend = TRUE,
-    row_annotation_colors = NA, cytokine_annotation = NA,
-    headerplot = NA, ...)
+pheatmap(mat, color = colorRampPalette(rev(brewer.pal(n = 7, name =
+  "RdYlBu")))(100), kmeans_k = NA, breaks = NA, border_color = "grey60",
+  cellwidth = NA, cellheight = NA, scale = "none", cluster_rows = TRUE,
+  cluster_cols = TRUE, clustering_distance_rows = "euclidean",
+  clustering_distance_cols = "euclidean", clustering_method = "complete",
+  treeheight_row = ifelse(cluster_rows, 50, 0),
+  treeheight_col = ifelse(cluster_cols, 50, 0), legend = TRUE,
+  legend_breaks = NA, legend_labels = NA, annotation = NA,
+  annotation_colors = NA, annotation_legend = TRUE, drop_levels = TRUE,
+  show_rownames = T, show_colnames = T, main = NA, fontsize = 10,
+  fontsize_row = fontsize, fontsize_col = fontsize, display_numbers = F,
+  number_format = "\%.2f", fontsize_number = 0.8 * fontsize,
+  filename = NA, width = NA, height = NA, row_annotation = NA,
+  row_annotation_legend = TRUE, row_annotation_colors = NA,
+  cytokine_annotation = NA, headerplot = NA, ...)
 }
 \arguments{
   \item{mat}{numeric matrix of the values to be plotted.}

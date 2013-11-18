@@ -2,7 +2,7 @@
 \alias{print.COMPASSResult}
 \title{Print a COMPASSResult Object}
 \usage{
-  \method{print}{COMPASSResult} (x, ...)
+\method{print}{COMPASSResult}(x, ...)
 }
 \arguments{
   \item{x}{An object of class \code{COMPASSResult}.}

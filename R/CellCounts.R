@@ -23,7 +23,7 @@
 ##'   do.call(rbind, lapply(data, function(x) apply(x, 2, function(x) sum(x > 0))))
 ##' }
 ##' cc2 <- f(data)
-##' identical(cc, cc2)
+##' stopifnot(identical( unname(cc), unname(cc2) ))
 CellCounts <- function(data, combinations) {
   UseMethod("CellCounts")
 }

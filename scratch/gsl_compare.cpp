@@ -8,6 +8,18 @@
 using namespace Rcpp;
 
 // [[Rcpp::export]]
+SEXP R_add_gaussian(SEXP x, double mean, double sd) {
+  SEXP output = PROTECT( Rf_allocVector(REALSXP, 1) );
+  double* out_ptr = REAL(output);
+  double* x_ptr = REAL(x);
+  for (int i=0; i < Rf_length(x); ++i) {
+    out_ptr[0] += Rf_dnorm4( x_ptr[i], mean, sd, 0 );
+  }
+  UNPROTECT(1);
+  return output;
+}
+
+// [[Rcpp::export]]
 double Rcpp_add_gaussian(NumericVector x, double mean, double sd) {
   NumericVector dnorms = dnorm(x, mean, sd, true);
   double output = sum(dnorms);
@@ -17,8 +29,9 @@ double Rcpp_add_gaussian(NumericVector x, double mean, double sd) {
 // [[Rcpp::export]]
 double gsl_add_gaussian(NumericVector x, double mean, double sd) {
   double sum = 0;
+  NumericVector vec = x - mean;
   for (int i=0; i < x.size(); ++i) {
-    sum += gsl_ran_gaussian_pdf(x[i] - mean, sd);
+    sum += gsl_ran_gaussian_pdf(vec[i], sd);
   }
   return sum;
 }
@@ -71,6 +84,7 @@ gsl_compare(x, mu, sd)
 x <- rnorm(1E5)
 Rcpp_add_gaussian(x, mu, sd)
 microbenchmark(
+  R_add_gaussian(x, mu, sd),
   Rcpp_add_gaussian(x, mu, sd),
   gsl_add_gaussian(x, mu, sd)
 )

@@ -12,7 +12,7 @@ BugReports: https://github.com/RGLab/COMPASS/issues
 VignetteBuilder: knitr
 Depends:
     R (>= 3.0.1)
-LinkingTo: Rcpp, RcppArmadillo
+LinkingTo: Rcpp
 Imports:
     data.table,
     RColorBrewer,
@@ -20,28 +20,5 @@ Imports:
 Suggests:
     flowWorkspace,
     shiny
-Collate:
-    'repmat.R'
-    'COMPASS-continuous.R'
-    'COMPASS.R'
-    'RcppExports.R'
-    'COMPASS-discrete.R'
-    'COMPASSContainer.R'
-    'utils.R'
-    'Scores.R'
-    'COMPASS-package.R'
-    'plotMeanGamma.R'
-    'discrete_combinations.R'
-    'shinyCOMPASS.R'
-    'swap.R'
-    'transpose_list.R'
-    'GatingSetToCOMPASS.R'
-    'Posterior.R'
-    'pheatmap.R'
-    'melt_.R'
-    'BooleanSubsets.R'
-    'CellCounts.R'
-    'subset-COMPASSContainer.R'
-    'COMPASSResult-methods.R'
 LazyLoad: yes
 LazyData: yes

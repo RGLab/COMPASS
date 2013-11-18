@@ -2,7 +2,7 @@
 \alias{transpose_list}
 \title{Transpose a List}
 \usage{
-  transpose_list(x)
+transpose_list(x)
 }
 \arguments{
   \item{x}{An \R list.}

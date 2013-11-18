@@ -2,7 +2,7 @@
 \alias{CellCounts}
 \title{Compute Number of Cells Positive for Certain Cytokine Combinations}
 \usage{
-  CellCounts(data, combinations)
+CellCounts(data, combinations)
 }
 \arguments{
   \item{data}{A list of matrices. Each matrix \code{i} is
@@ -33,6 +33,6 @@ f <- function(data) {
   do.call(rbind, lapply(data, function(x) apply(x, 2, function(x) sum(x > 0))))
 }
 cc2 <- f(data)
-identical(cc, cc2)
+stopifnot(identical( unname(cc), unname(cc2) ))
 }
 

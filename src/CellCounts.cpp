@@ -16,7 +16,7 @@ using namespace Rcpp;
 // eg: for a matrix with columns CD4 and TNFa, we might pass combos=list(c(1, -2))
 // to get counts that are CD4+TNFa-
 
-// [[Rcpp::export]]
+// [[Rcpp::export(.CellCounts)]]
 IntegerMatrix CellCounts(List x, List combos) {
   
   int x_n = x.size();

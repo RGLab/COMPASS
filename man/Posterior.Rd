@@ -2,7 +2,7 @@
 \alias{Posterior}
 \title{Compute the Posterior Difference, Log Ratio}
 \usage{
-  Posterior(x)
+Posterior(x)
 }
 \arguments{
   \item{x}{An object of class \code{COMPASSResult}.}

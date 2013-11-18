@@ -2,9 +2,10 @@
 \alias{plot.COMPASSResult}
 \title{Plot a Heatmap of the Mean Gammas}
 \usage{
-  \method{plot}{COMPASSResult} (x, y, subset,
-    row_annotation, palette = brewer.pal(n = 9, "Blues"),
-    show_rownames = FALSE, show_colnames = FALSE, ...)
+\method{plot}{COMPASSResult}(x, y, subset,
+  remove_unexpressed_categories = TRUE, row_annotation,
+  palette = brewer.pal(n = 9, "Blues"), show_rownames = FALSE,
+  show_colnames = FALSE, ...)
 }
 \arguments{
   \item{x}{An object of class \code{COMPASSResult}.}
@@ -16,6 +17,9 @@
   \item{subset}{An \R expression, evaluated within the
   metadata, used to determine which individuals should be
   kept.}
+
+  \item{remove_unexpressed_categories}{Boolean, if
+  \code{TRUE} we remove the unexpressed categories.}
 
   \item{row_annotation}{A vector of names, pulled from the
   metadata, to be used for row annotation.}
