@@ -36,12 +36,13 @@ CellCounts.COMPASSContainer <- function(data, combinations) {
 }
 
 .CellCounts_character <- function(data, combinations) {
-  output <- sapply(combinations, function(c) {
-    tmp <- sapply(data, function(x) {
-      mode(x) <- "logical"
-      sum(eval( parse(text=c), envir=as.data.frame(x) ))
-    })
-  })
+  
+  output <- .Call("COMPASS_CellCounts_character", 
+    data, 
+    lapply(combinations, function(x) parse(text=x)),
+    PACKAGE="COMPASS"
+  )
+  rownames(output) <- names(data)
   colnames(output) <- unlist(combinations)
   return(output)
 }
@@ -80,10 +81,6 @@ CellCounts.default <- function(data, combinations) {
   
   if (missing(combinations)) {
     combinations <- BooleanSubsets.default(data)
-  }
-  
-  if (!is.list(combinations)) {
-    combinations <- list(combinations)
   }
   
   if (length(unique(sapply(combinations, typeof))) > 1) {
