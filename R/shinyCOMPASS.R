@@ -66,7 +66,7 @@ shinyCOMPASS <- function(x, dir=NULL,
   })
   
   ## Compute the joint distribution of counts
-  combos <- discrete_combinations( length(markers) )
+  combos <- discrete_combinations( 1:length(markers) )
   
   d_counts <- CellCounts(dat, combos)
   rownames(d_counts) <- names(dat)
