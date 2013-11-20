@@ -1,15 +1,15 @@
 ##' Compute Total Cell Counts by Stimulation
 ##' 
 ##' @param data A \code{COMPASSContainer}.
-##' @param stimulation A stimulation, or set of stimulations, expressed as a
-##'   boolean combination.
+##' @param subset An expression, evaluated within the metadata, defining
+##'   the subset of \code{data} over which the counts are computed.
 ##' @export
-TotalCounts <- function(data, stimulation) {
+TotalCounts <- function(data, subset) {
   
   if (!inherits(data, "COMPASSContainer"))
     stop("'data' must be an object of class 'COMPASSContainer'")
   
-  keep <- data$meta[[ data$stimulation_id ]] %like% stimulation
+  keep <- eval(subset, envir=data$meta)
   samples_keep <- unique(data$meta[[ data$sample_id ]][ keep ])
   dt <- data.table(
     Samples=samples_keep
