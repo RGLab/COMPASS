@@ -144,7 +144,7 @@ plot2 <- function(x, y, subset,
   ## reorder the data
   o <- do.call(order, as.list(rowann[row_annotation]))
   
-  print( pheatmap(M[o,],
+  pheatmap(M[o,],
     color=palette,
     show_rownames=show_rownames,
     show_colnames=show_colnames,
@@ -153,8 +153,8 @@ plot2 <- function(x, y, subset,
     cluster_cols=FALSE,
     cytokine_annotation=cats,
     ...
-  ) )
+  )
   
-  return(M[o, ])
+  return (invisible(M[o, ]))
   
 }
