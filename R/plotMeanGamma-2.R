@@ -21,6 +21,7 @@
 ##'   (ie, the column name associated with a cytokine; typically not needed)
 ##' @param ... Optional arguments passed to \code{pheatmap}.
 ##' @importFrom scales div_gradient_pal
+##' @export
 plot2 <- function(x, y, subset, 
   remove_unexpressed_categories=TRUE, minimum_dof=1, maximum_dof=Inf, 
   row_annotation, 
