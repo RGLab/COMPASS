@@ -16,6 +16,7 @@ LinkingTo: Rcpp
 Imports:
     data.table,
     RColorBrewer,
+    scales,
     grid
 Suggests:
     flowWorkspace,

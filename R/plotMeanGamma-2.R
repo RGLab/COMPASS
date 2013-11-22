@@ -2,11 +2,8 @@
 ##' 
 ##' This function plots the mean gammas.
 ##' 
-##' @method plot COMPASSResult
-##' @S3method plot COMPASSResult
 ##' @param x An object of class \code{COMPASSResult}.
-##' @param y This argument gets passed to \code{row_annotation}, if
-##'   \code{row_annotation} is missing.
+##' @param y An object of class \code{COMPASSResult}.
 ##' @param subset An \R expression, evaluated within the metadata, used to
 ##'   determine which individuals should be kept.
 ##' @param remove_unexpressed_categories Boolean, if \code{TRUE} we remove
@@ -23,32 +20,44 @@
 ##' @param show_colnames Boolean; if \code{TRUE} we display column names
 ##'   (ie, the column name associated with a cytokine; typically not needed)
 ##' @param ... Optional arguments passed to \code{pheatmap}.
-##' @importFrom scales seq_gradient_pal
-plot.COMPASSResult <- function(x, y, subset, 
+##' @importFrom scales div_gradient_pal
+plot2 <- function(x, y, subset, 
   remove_unexpressed_categories=TRUE, minimum_dof=1, maximum_dof=Inf, 
-  row_annotation,
-  palette=seq_gradient_pal(low="black", high="red")(seq(0, 1, length=20)),
+  row_annotation, 
+  palette=div_gradient_pal(low="blue", mid="black", high="red")(seq(0, 1, length=20)),
   show_rownames=FALSE, 
   show_colnames=FALSE, ...) {
   
   subset_expr <- match.call()$subset
   
-  if (missing(row_annotation)) {
-    row_annotation <- y
+  nc_x <- ncol(x$fit$gamma)
+  M_x <- x$fit$mean_gamma[, -nc_x]
+  
+  nc_y <- ncol(y$fit$gamma)
+  M_y <- y$fit$mean_gamma[, -nc_y]
+  
+  ## make sure the row order is the same
+  M_x <- M_x[ order(rownames(M_x)), , drop=FALSE ]
+  M_y <- M_y[ order(rownames(M_y)), , drop=FALSE ]
+  
+  ## find the common PTIDs, incase the fits have different ones
+  if (!all( rownames(M_x) %in% rownames(M_y))) {
+    warning("Not all individuals are shared in common between the two ",
+      "fit objects; some will be dropped.")
+    common <- intersect( rownames(M_x), rownames(M_y) )
+    M_x <- M_x[ rownames(M_x) %in% common, , drop=FALSE]
+    M_y <- M_y[ rownames(M_y) %in% common, , drop=FALSE]
+    meta_x <- x$data$meta[ c(x$data$individual_id, row_annotation) ]
+    meta_y <- y$data$meta[ c(y$data$individual_id, row_annotation) ]
+    meta <- meta_x[ meta_x[[x$data$individual_id]] %in% common, ]
+  } else {
+    meta <- meta_x
   }
   
-  nc <- ncol(x$fit$gamma)
-  M <- x$fit$mean_gamma[, -nc]
-  
-  ## compute dof from the colnames of M
-  dof <- sapply( strsplit( colnames(M), "", fixed=TRUE ), function(x) {
-    sum( as.integer(x) )
-  })
-  
-  rowann <- data.frame(.id=rownames(M))
+  rowann <- data.frame(.id=rownames(M_x))
   rowann <- merge(
     rowann, 
-    x$data$meta[c(x$data$individual_id, row_annotation)], 
+    meta[c(x$data$individual_id, row_annotation)], 
     by.x=".id",
     by.y=x$data$individual_id
   )
@@ -57,17 +66,55 @@ plot.COMPASSResult <- function(x, y, subset,
   rowann <- rowann[-c(which(names(rowann)==".id"))]
   
   ## make sure M, rowann names match up
-  rowann <- rowann[ match(rownames(M), rownames(rowann)), , drop=FALSE ]
+  rowann <- rowann[ match(rownames(M_x), rownames(rowann)), , drop=FALSE ]
   
-  cats <- x$fit$categories[-nc,]
+  ## get the common categories
+  cats <- unique( rbind( 
+    x$fit$categories,
+    y$fit$categories
+  ) )
+  
+  ## remove the null category
+  cats <- cats[ -nrow(cats), ]
+  
   cats <- data.frame(cats)
   cats <- cats[,1:(ncol(cats)-1)]
-#   cats <- as.data.frame( lapply(cats, function(x) {
-#     swap(x, 0, -1)
-#   }))
   cats <- as.data.frame( lapply(cats, function(x) {
     factor(x, levels=c(0, 1))
   }))
+  
+  cats_str <- apply(cats, 1, function(x) {
+    paste0(x, collapse="")
+  })
+  
+  ## for all of the categories not in common between M_x, M_y,
+  ## set them to zero
+  M_x <- as.data.frame(M_x)
+  M_y <- as.data.frame(M_y)
+  for (cat in cats_str) {
+    if (!(cat %in% names(M_x))) {
+      M_x[[cat]] <- 0
+    }
+    if (!(cat %in% names(M_y))) {
+      M_y[[cat]] <- 0
+    }
+  }
+  
+  ## reorder M_x, M_y
+  M_x <- M_x[, order(colnames(M_x)), drop=FALSE]
+  M_y <- M_y[, order(colnames(M_y)), drop=FALSE]
+  
+  if (!all(colnames(M_x) == colnames(M_y))) {
+    stop("Internal error: could not match categories between the matrices ",
+      "from 'x' and 'y'")
+  }
+  
+  M <- M_x - M_y
+  
+  ## compute dof from the colnames of M
+  dof <- sapply( strsplit( colnames(M), "", fixed=TRUE ), function(x) {
+    sum( as.integer(x) )
+  })
   
   ## keep only those meeting the min, max dof criteria
   M <- M[, dof >= minimum_dof & dof <= maximum_dof, drop=FALSE]
@@ -96,7 +143,7 @@ plot.COMPASSResult <- function(x, y, subset,
   ## reorder the data
   o <- do.call(order, as.list(rowann[row_annotation]))
   
-  pheatmap(M[o,],
+  print( pheatmap(M[o,],
     color=palette,
     show_rownames=show_rownames,
     show_colnames=show_colnames,
@@ -105,6 +152,8 @@ plot.COMPASSResult <- function(x, y, subset,
     cluster_cols=FALSE,
     cytokine_annotation=cats,
     ...
-  )
+  ) )
+  
+  return(M[o, ])
   
 }

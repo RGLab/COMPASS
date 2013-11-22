@@ -1,19 +1,16 @@
-\name{plot.COMPASSResult}
-\alias{plot.COMPASSResult}
+\name{plot2}
+\alias{plot2}
 \title{Plot a Heatmap of the Mean Gammas}
 \usage{
-\method{plot}{COMPASSResult}(x, y, subset,
-  remove_unexpressed_categories = TRUE, minimum_dof = 1,
-  maximum_dof = Inf, row_annotation, palette = seq_gradient_pal(low =
-  "black", high = "red")(seq(0, 1, length = 20)), show_rownames = FALSE,
-  show_colnames = FALSE, ...)
+plot2(x, y, subset, remove_unexpressed_categories = TRUE, minimum_dof = 1,
+  maximum_dof = Inf, row_annotation, palette = div_gradient_pal(low =
+  "blue", mid = "black", high = "red")(seq(0, 1, length = 20)),
+  show_rownames = FALSE, show_colnames = FALSE, ...)
 }
 \arguments{
   \item{x}{An object of class \code{COMPASSResult}.}
 
-  \item{y}{This argument gets passed to
-  \code{row_annotation}, if \code{row_annotation} is
-  missing.}
+  \item{y}{An object of class \code{COMPASSResult}.}
 
   \item{subset}{An \R expression, evaluated within the
   metadata, used to determine which individuals should be
