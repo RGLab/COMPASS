@@ -52,7 +52,7 @@ plot2 <- function(x, y, subset,
     meta_y <- y$data$meta[ c(y$data$individual_id, row_annotation) ]
     meta <- meta_x[ meta_x[[x$data$individual_id]] %in% common, ]
   } else {
-    meta <- meta_x
+    meta <- x$data$meta[ c(x$data$individual_id, row_annotation) ]
   }
   
   rowann <- data.frame(.id=rownames(M_x))
