@@ -2,7 +2,8 @@
 \alias{GatingSetToCOMPASS}
 \title{Extract A GatingSet Node to a COMPASSContainer}
 \usage{
-GatingSetToCOMPASS(gs, node, children, meta, individual_id, sample_id)
+  GatingSetToCOMPASS(gs, node, children, meta,
+    individual_id, sample_id)
 }
 \arguments{
   \item{gs}{A \code{GatingSet} object.}

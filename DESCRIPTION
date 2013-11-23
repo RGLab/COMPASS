@@ -1,7 +1,7 @@
 Package: COMPASS
 Type: Package
 Title: Combinatorial Polyfunctionality Analysis of Single Cells
-Version: 0.91
+Version: 0.92
 Date: 2013-10-24
 Author: Lynn Lin <llin@fhcrc.org>
 Maintainer: Kevin Ushey <kushey@fhcrc.org>, Greg Finak <gfinak@fhcrc.org>
@@ -23,3 +23,28 @@ Suggests:
     shiny
 LazyLoad: yes
 LazyData: yes
+Collate:
+    'BooleanSubsets.R'
+    'COMPASS-continuous.R'
+    'COMPASS-discrete.R'
+    'COMPASS-package.R'
+    'COMPASS.R'
+    'COMPASSContainer.R'
+    'COMPASSResult-methods.R'
+    'CellCounts.R'
+    'GatingSetToCOMPASS.R'
+    'Posterior.R'
+    'RcppExports.R'
+    'Scores.R'
+    'TotalCounts.R'
+    'discrete_combinations.R'
+    'melt_.R'
+    'pheatmap.R'
+    'plotMeanGamma-2.R'
+    'plotMeanGamma.R'
+    'repmat.R'
+    'shinyCOMPASS.R'
+    'subset-COMPASSContainer.R'
+    'swap.R'
+    'transpose_list.R'
+    'utils.R'

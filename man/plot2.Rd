@@ -2,10 +2,10 @@
 \alias{plot2}
 \title{Plot a Heatmap of the Mean Gammas}
 \usage{
-plot2(x, y, subset, remove_unexpressed_categories = TRUE, minimum_dof = 1,
-  maximum_dof = Inf, row_annotation, palette = div_gradient_pal(low =
-  "blue", mid = "black", high = "red")(seq(0, 1, length = 20)),
-  show_rownames = FALSE, show_colnames = FALSE, ...)
+  plot2(x, y, subset, remove_unexpressed_categories = TRUE,
+    minimum_dof = 1, maximum_dof = Inf, row_annotation,
+    palette = div_gradient_pal(low = "blue", mid = "black", high = "red")(seq(0, 1, length = 20)),
+    show_rownames = FALSE, show_colnames = FALSE, ...)
 }
 \arguments{
   \item{x}{An object of class \code{COMPASSResult}.}

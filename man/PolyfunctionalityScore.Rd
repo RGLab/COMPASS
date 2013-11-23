@@ -4,12 +4,13 @@
 \alias{PolyfunctionalityScore.default}
 \title{Compute the Polyfunctionality Score for each subject fit in a COMPASS model}
 \usage{
-PolyfunctionalityScore(x, degree, normalization)
+  PolyfunctionalityScore(x, degree, normalization)
 
-\method{PolyfunctionalityScore}{COMPASSResult}(x, degree,
-  normalization = "all")
+  \method{PolyfunctionalityScore}{COMPASSResult} (x,
+    degree, normalization = "all")
 
-\method{PolyfunctionalityScore}{default}(x, degree, normalization)
+  \method{PolyfunctionalityScore}{default} (x, degree,
+    normalization)
 }
 \arguments{
   \item{x}{An object of class \code{COMPASSResult}, as

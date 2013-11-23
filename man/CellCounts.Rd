@@ -2,7 +2,7 @@
 \alias{CellCounts}
 \title{Compute Number of Cells Positive for Certain Cytokine Combinations}
 \usage{
-CellCounts(data, combinations)
+  CellCounts(data, combinations)
 }
 \arguments{
   \item{data}{A list of matrices. Each matrix \code{i} is

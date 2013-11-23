@@ -2,7 +2,7 @@
 \alias{shinyCOMPASS}
 \title{Start a Shiny Application for Visualizing COMPASS Results}
 \usage{
-shinyCOMPASS(x, dir = NULL, stimulated, unstimulated)
+  shinyCOMPASS(x, dir = NULL, stimulated, unstimulated)
 }
 \arguments{
   \item{x}{An object of class \code{COMPASSResult}.}

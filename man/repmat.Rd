@@ -2,7 +2,7 @@
 \alias{repmat}
 \title{R equivalent of repmat}
 \usage{
-repmat(X, m, n)
+  repmat(X, m, n)
 }
 \arguments{
   \item{X}{input matrix}

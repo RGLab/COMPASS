@@ -2,11 +2,11 @@
 \alias{plot.COMPASSResult}
 \title{Plot a Heatmap of the Mean Gammas}
 \usage{
-\method{plot}{COMPASSResult}(x, y, subset,
-  remove_unexpressed_categories = TRUE, minimum_dof = 1,
-  maximum_dof = Inf, row_annotation, palette = seq_gradient_pal(low =
-  "black", high = "red")(seq(0, 1, length = 20)), show_rownames = FALSE,
-  show_colnames = FALSE, ...)
+  \method{plot}{COMPASSResult} (x, y, subset,
+    remove_unexpressed_categories = TRUE, minimum_dof = 1,
+    maximum_dof = Inf, row_annotation,
+    palette = seq_gradient_pal(low = "black", high = "red")(seq(0, 1, length = 20)),
+    show_rownames = FALSE, show_colnames = FALSE, ...)
 }
 \arguments{
   \item{x}{An object of class \code{COMPASSResult}.}

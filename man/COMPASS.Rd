@@ -4,11 +4,13 @@
 \alias{COMPASS-package}
 \title{COMPASS (Combinatorial Polyfunctionality Analysis of Single-Cells)}
 \usage{
-COMPASS(data, treatment, control, subset = NULL,
-  category_filter = function(x) colSums(x > 5) > 2,
-  filter_lowest_frequency = 0, filter_specific_markers = NULL,
-  model = c("discrete", "continuous"), iterations = 40000,
-  replications = 8, keep_original_data = FALSE, verbose = TRUE, ...)
+  COMPASS(data, treatment, control, subset = NULL,
+    category_filter = function(x) colSums(x > 5) > 2,
+    filter_lowest_frequency = 0,
+    filter_specific_markers = NULL,
+    model = c("discrete", "continuous"),
+    iterations = 40000, replications = 8,
+    keep_original_data = FALSE, verbose = TRUE, ...)
 }
 \arguments{
   \item{data}{An object of class \code{COMPASSData}.}
