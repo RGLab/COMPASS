@@ -182,7 +182,7 @@ COMPASSContainerFromGatingSet <- function(gs=NULL,node=NULL,filter.fun=NULL,indi
     setkey(params,desc)
     if(class(filter.fun)!="function"){
       filter.fun<-function(x){
-        gsub("\\\\","",gsub("/","",gsub("\\+","",x)))
+        gsub("-","",gsub("\\d+\\.","",gsub("\\\\","",gsub("/","",gsub("\\+","",x)))))
       }
     }
     map <- na.omit(unique(ldply(child.nodes,function(x)params[desc%like%filter.fun(x),node:=x])))
@@ -193,14 +193,15 @@ COMPASSContainerFromGatingSet <- function(gs=NULL,node=NULL,filter.fun=NULL,indi
         all.row<-which(map$node%in%names(tbl)[x])
         row.remove<-setdiff(all.row,row.keep)
       })
+      map<-map[-c(row.remove),]
     }
-    map<-map[-c(row.remove),]
     
     #Some error checking
     if(nrow(map)!=length(child.nodes)){
       message(sprintf("We failed to guess the mapping between the node %s and the markers in the flowFrame\n",child.nodes))
       message("Our best guess was:")
       kable(map)
+      stop("Quitting")
     }
     message("We will map the following nodes to markers:")
     kable(map)
@@ -208,11 +209,11 @@ COMPASSContainerFromGatingSet <- function(gs=NULL,node=NULL,filter.fun=NULL,indi
     
     #construct the map
     mp<-map[,"desc"]
-    names(mp)<-paste(parent.node,map[,"node"],sep="/")
+    names(mp)<-map[,"node"]
     mp<-as.list(mp)
   }
   #Construct the expression
-  expr<-as.name(paste(paste(parent.node,child.nodes,sep="/"),collapse="|"))
+  expr<-as.name(paste(child.nodes,collapse="|"))
   message(sprintf("Extracting single cell data for %s",as.character(expr)))
   
   #extract the single cell values
