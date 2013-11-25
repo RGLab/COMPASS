@@ -14,9 +14,9 @@ CellCounts(data, combinations)
   examples.}
 }
 \description{
-  This function takes a list of cell expression matrices,
-  each matrix \code{i} of dimension \code{N_i cells} by
-  \code{K} common markers.
+This function takes a list of cell expression matrices,
+each matrix \code{i} of dimension \code{N_i cells} by
+\code{K} common markers.
 }
 \examples{
 K <- 6 ## number of markers

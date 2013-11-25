@@ -16,6 +16,6 @@ TotalCounts(data, subset, aggregate = TRUE)
   individual.}
 }
 \description{
-  Compute Total Cell Counts by Stimulation
+Compute Total Cell Counts by Stimulation
 }
 

@@ -43,6 +43,6 @@
   \item{...}{Optional arguments passed to \code{pheatmap}.}
 }
 \description{
-  This function plots the mean gammas.
+This function plots the mean gammas.
 }
 

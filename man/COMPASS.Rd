@@ -65,17 +65,16 @@ COMPASS(data, treatment, control, subset = NULL,
   \item{...}{Other arguments; currently unused.}
 }
 \value{
-  A \code{list} with class \code{COMPASSResult} with two
-  components, the \code{fit} containing parameter estimates
-  and parameter acceptance rates, and \code{data}
-  containing the generated data used as input for the
-  model.
+A \code{list} with class \code{COMPASSResult} with two
+components, the \code{fit} containing parameter estimates
+and parameter acceptance rates, and \code{data} containing
+the generated data used as input for the model.
 }
 \description{
-  This package implements a model for the analysis of
-  polyfunctionality in single-cell experiments.
+This package implements a model for the analysis of
+polyfunctionality in single-cell experiments.
 
-  This function fits the \code{COMPASS} model.
+This function fits the \code{COMPASS} model.
 }
 \section{Category Filter}{
   The category filter is used to exclude categories
@@ -93,7 +92,7 @@ COMPASS(data, treatment, control, subset = NULL,
   particular combination of markers.
 }
 \seealso{
-  \code{\link{COMPASSContainer}}, for constructing the data
-  object required by \code{COMPASS}.
+\code{\link{COMPASSContainer}}, for constructing the data
+object required by \code{COMPASS}.
 }
 

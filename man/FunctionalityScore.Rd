@@ -16,10 +16,10 @@ FunctionalityScore(x)
   matrix of functionality scores.}
 }
 \value{
-  A numeric vector of functionality scores.
+A numeric vector of functionality scores.
 }
 \description{
-  Computes the functionality score for each observation
-  from the gamma matrix of a COMPASS model fit.
+Computes the functionality score for each observation from
+the gamma matrix of a COMPASS model fit.
 }
 

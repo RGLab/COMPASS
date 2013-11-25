@@ -19,14 +19,14 @@ BooleanSubsets(x, as.matrix)
   a list.}
 }
 \description{
-  Generate all possible boolean subsets (that is, unique
-  rows by index).
+Generate all possible boolean subsets (that is, unique rows
+by index).
 }
 \details{
-  \itemize{
-  \item{\code{\link{BooleanSubsets.COMPASSContainer}}}{ for
-  a \code{COMPASSContainer}},
-  \item{\code{\link{BooleanSubsets.default}}}{ for the
-  default method} }
+\itemize{
+\item{\code{\link{BooleanSubsets.COMPASSContainer}}}{ for a
+\code{COMPASSContainer}},
+\item{\code{\link{BooleanSubsets.default}}}{ for the
+default method} }
 }
 

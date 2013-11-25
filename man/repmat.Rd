@@ -12,9 +12,9 @@ repmat(X, m, n)
   \item{n}{number of times to replicate the columns}
 }
 \description{
-  R equivalent of repmat
+R equivalent of repmat
 }
 \details{
-  replicates mx rows x m and nx columns by n
+replicates mx rows x m and nx columns by n
 }
 

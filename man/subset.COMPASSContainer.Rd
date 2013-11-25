@@ -13,6 +13,6 @@
   \item{...}{Optional arguents; currently unused.}
 }
 \description{
-  Use this function to subset a \code{COMPASSContainer}.
+Use this function to subset a \code{COMPASSContainer}.
 }
 

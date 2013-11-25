@@ -40,6 +40,6 @@ plot2(x, y, subset, remove_unexpressed_categories = TRUE, minimum_dof = 1,
   \item{...}{Optional arguments passed to \code{pheatmap}.}
 }
 \description{
-  This function plots the mean gammas.
+This function plots the mean gammas.
 }
 

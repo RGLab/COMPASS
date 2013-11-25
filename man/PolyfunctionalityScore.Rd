@@ -24,10 +24,10 @@ PolyfunctionalityScore(x, degree, normalization)
   categories.}
 }
 \value{
-  A numeric vector of polyfunctionality scores.
+A numeric vector of polyfunctionality scores.
 }
 \description{
-  Computes the Polyfunctionality score for each observation
-  from the gamma matrix of a COMPASS model fit.
+Computes the Polyfunctionality score for each observation
+from the gamma matrix of a COMPASS model fit.
 }
 

@@ -19,8 +19,8 @@ shinyCOMPASS(x, dir = NULL, stimulated, unstimulated)
   \code{stimulation_id}.}
 }
 \description{
-  This function takes a \code{COMPASSResult} object, and
-  generates a local Shiny application for visualizing the
-  results.
+This function takes a \code{COMPASSResult} object, and
+generates a local Shiny application for visualizing the
+results.
 }
 

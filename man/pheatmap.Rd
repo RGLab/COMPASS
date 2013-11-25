@@ -177,26 +177,26 @@ pheatmap(mat, color = colorRampPalette(rev(brewer.pal(n = 7, name =
   \code{\link{gpar}}.}
 }
 \value{
-  Invisibly a list of components \itemize{ \item
-  \code{tree_row} the clustering of rows as
-  \code{\link{hclust}} object \item \code{tree_col} the
-  clustering of columns as \code{\link{hclust}} object
-  \item \code{kmeans} the kmeans clustering of rows if
-  parameter \code{kmeans_k} was specified }
+Invisibly a list of components \itemize{ \item
+\code{tree_row} the clustering of rows as
+\code{\link{hclust}} object \item \code{tree_col} the
+clustering of columns as \code{\link{hclust}} object \item
+\code{kmeans} the kmeans clustering of rows if parameter
+\code{kmeans_k} was specified }
 }
 \description{
-  A function to draw clustered heatmaps where one has
-  better control over some graphical parameters such as
-  cell size, etc.
+A function to draw clustered heatmaps where one has better
+control over some graphical parameters such as cell size,
+etc.
 }
 \details{
-  The function also allows to aggregate the rows using
-  kmeans clustering. This is advisable if number of rows is
-  so big that R cannot handle their hierarchical clustering
-  anymore, roughly more than 1000. Instead of showing all
-  the rows separately one can cluster the rows in advance
-  and show only the cluster centers. The number of clusters
-  can be tuned with parameter kmeans_k.
+The function also allows to aggregate the rows using kmeans
+clustering. This is advisable if number of rows is so big
+that R cannot handle their hierarchical clustering anymore,
+roughly more than 1000. Instead of showing all the rows
+separately one can cluster the rows in advance and show
+only the cluster centers. The number of clusters can be
+tuned with parameter kmeans_k.
 }
 \examples{
 # Generate some data
@@ -261,6 +261,6 @@ dcols = dist(t(test), method = "minkowski")
 pheatmap(test, clustering_distance_rows = drows, clustering_distance_cols = dcols)
 }
 \author{
-  Raivo Kolde <rkolde@gmail.com>
+Raivo Kolde <rkolde@gmail.com>
 }
 

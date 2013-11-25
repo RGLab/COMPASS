@@ -36,7 +36,7 @@ COMPASSContainer(data, counts, meta, individual_id, sample_id, stimulation_id)
   sample received.}
 }
 \description{
-  This function generates the data container suitable for
-  use with \code{COMPASS}.
+This function generates the data container suitable for use
+with \code{COMPASS}.
 }
 
