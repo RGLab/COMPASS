@@ -2,7 +2,7 @@
 \alias{TotalCounts}
 \title{Compute Total Cell Counts by Stimulation}
 \usage{
-  TotalCounts(data, subset, aggregate = TRUE)
+TotalCounts(data, subset, aggregate = TRUE)
 }
 \arguments{
   \item{data}{A \code{COMPASSContainer}.}

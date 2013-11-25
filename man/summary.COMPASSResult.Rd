@@ -2,7 +2,7 @@
 \alias{summary.COMPASSResult}
 \title{Summarize a COMPASSResult Object}
 \usage{
-  \method{summary}{COMPASSResult} (object, ...)
+\method{summary}{COMPASSResult}(object, ...)
 }
 \arguments{
   \item{object}{An object of class \code{COMPASSResult}.}

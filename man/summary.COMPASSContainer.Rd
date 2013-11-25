@@ -2,7 +2,7 @@
 \alias{summary.COMPASSContainer}
 \title{Summarize a COMPASSContainer Object}
 \usage{
-  \method{summary}{COMPASSContainer} (object, ...)
+\method{summary}{COMPASSContainer}(object, ...)
 }
 \arguments{
   \item{object}{An object of class

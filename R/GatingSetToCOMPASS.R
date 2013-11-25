@@ -4,30 +4,30 @@ if (FALSE) {
   gs <- load_gs("../shinyGate/gs/LoveLab-Gated")
 }
 
-##' Extract A GatingSet Node to a COMPASSContainer
-##' 
-##' This function can be used to take gated data from a \code{flowWorkspace}
-##' object (e.g., a \code{GatingSet}), and retrieve it as a 
-##' \code{COMPASSContainer}, suitable for ##' modelling with \code{COMPASS}.
-##' 
-##' @param gs A \code{GatingSet} object.
-##' @param node The name of the node. We extract all children of that node,
-##'   under the assumption that the markers of interest have been gated at
-##'   the chosen node.
-##' @param children A character vector, or list, giving the names of the children of
-##'   \code{node} that we wish to extract. If unspecified, we take all
-##'   children of that node. If the character vector passed is named, we map
-##'   from value to name; e.g. if a node is named \code{154} but we prefer the
-##'   name \code{CD154+}, we could pass \code{`CD154+`="154"}.
-##' @param meta A \code{data.frame} of meta data. If it is missing, we attempt
-##'   to pull the metadata from the \code{GatingSet}, and throw an error if it
-##'   is unavailable.
-##' @param individual_id The name of the vector in \code{meta} that denotes the
-##'   individuals from which samples were drawn. 
-##' @param sample_id The name of the vector in \code{meta} that denotes the samples.
-##'   This vector should contain all of the names in the \code{data} input.
-##' @export
-##' @seealso \code{\link{COMPASSContainer}}
+##'  Extract A GatingSet Node to a COMPASSContainer
+##'  
+##'  This function can be used to take gated data from a \code{flowWorkspace}
+##'  object (e.g., a \code{GatingSet}), and retrieve it as a 
+##'  \code{COMPASSContainer}, suitable for ##'  modelling with \code{COMPASS}.
+##'  
+##'  @param gs A \code{GatingSet} object.
+##'  @param node The name of the node. We extract all children of that node,
+##'    under the assumption that the markers of interest have been gated at
+##'    the chosen node.
+##'  @param children A character vector, or list, giving the names of the children of
+##'    \code{node} that we wish to extract. If unspecified, we take all
+##'    children of that node. If the character vector passed is named, we map
+##'    from value to name; e.g. if a node is named \code{154} but we prefer the
+##'    name \code{CD154+}, we could pass \code{`CD154+`="154"}.
+##'  @param meta A \code{data.frame} of meta data. If it is missing, we attempt
+##'    to pull the metadata from the \code{GatingSet}, and throw an error if it
+##'    is unavailable.
+##'  @param individual_id The name of the vector in \code{meta} that denotes the
+##'    individuals from which samples were drawn. 
+##'  @param sample_id The name of the vector in \code{meta} that denotes the samples.
+##'    This vector should contain all of the names in the \code{data} input.
+##'  @export
+##'  @seealso \code{\link{COMPASSContainer}}
 GatingSetToCOMPASS <- function(gs, node, children, 
                                meta, individual_id, sample_id) {
   
@@ -96,37 +96,40 @@ GatingSetToCOMPASS <- function(gs, node, children,
 
 
 ##' Create a COMPASS Container from a GatingSet
-##'
-##'This code expects a \code{GatingSet} or \code{GatingSetList}. 
-##'It expects a regular expression for the node name (i.e. "/4\\+$" would match "/4+" in a node name with the plus
-##'sign at the end of the string.
-##'The user must supply the individual_id, sample_id, and stimulation_id, 
-##'but they have default values suitable for the data we commonly see.
-##'Sometimes the child node names don't match the marker names exactly.
-##'This function will try to make some guesses about how to match these up. 
-##'The \code{filter.fun} parameter is a function that does some regular expression string
-##'substitution to try and clean up the node names by removing
-##'various symobls that are often added to gates, {+/-\}. The user can provide their
-##'own function to do string cleanup.
-##'Counts are extracted as well as metadata and single cell data, and these are fed into the
-##'COMPASSContainer constructor.
-##'
-##'@note There is likely not sufficient error checking. 
-##'
-##'@param gs a \code{GatingSet} or \code{GatingSetList}
-##'@param node a \code{regular expression} to match a single node in the gating tree. If more than one node is matched, an error is thrown.
-##'@param filter.fun a \code{function} that does string substitution to clean up node names, i.e. turns a "CD4+" into a "CD4" to try and
-##'match against the \code{parameters} slot of the \code{flowFrames} in \code{gs}
-##'@param individual_id a \code{character} identifying the subject id column in the \code{gs} metadata
-##'@param sample_id a \code{character} idetifying the sample id column in the \code{gs} metadata.
-##'@param stimulation_id a \code{character} identifying the stimulation or treatment columnin the \code{gs} metadata.
-##'@param mp a \code{list} mapping node names to markers. This function tries to guess, but may fail. The user can override the guesswork.
-##'@seealso \code{\link{COMPASSContainer}}
-##'@examples
-##'\dontrun{
-##' COMPASS:::COMPASSContainerFromGatingSet(gatingset,"/4\\+$")
-##'}
-##'@export
+##' 
+##' This code expects a \code{GatingSet} or \code{GatingSetList}. 
+##' It expects a regular expression for the node name 
+##' (i.e. "/4\\+$" would match "/4+" in a node name with the plus
+##' sign at the end of the string.
+##' The user must supply the individual_id, sample_id, and stimulation_id, 
+##' but they have default values suitable for the data we commonly see.
+##' Sometimes the child node names don't match the marker names exactly.
+##' This function will try to make some guesses about how to match these up. 
+##' The \code{filter.fun} parameter is a function that does some regular expression string
+##' substitution to try and clean up the node names by removing
+##' various symobls that are often added to gates, \{+/-\}. The user can provide their
+##' own function to do string cleanup.
+##' Counts are extracted as well as metadata and single cell data, and these are fed into the
+##' COMPASSContainer constructor.
+##' 
+##' There is likely not sufficient error checking. 
+##' 
+##' @param gs a \code{GatingSet} or \code{GatingSetList}
+##' @param node a \code{regular expression} to match a single node in the gating tree. If more than one node is matched, an error is thrown.
+##' @param filter.fun a \code{function} that does string substitution to clean up node names, i.e. turns a "CD4+" into a "CD4" to try and
+##' match against the \code{parameters} slot of the \code{flowFrames} in \code{gs}
+##' @param individual_id a \code{character} identifying the subject id column in the \code{gs} metadata
+##' @param sample_id a \code{character} idetifying the sample id column in the \code{gs} metadata.
+##' @param stimulation_id a \code{character} identifying the stimulation or treatment columnin the \code{gs} metadata.
+##' @param mp a \code{list} mapping node names to markers. This function tries to guess, but may fail. The user can override the guesswork.
+##' @seealso \code{\link{COMPASSContainer}}
+##' @examples
+##' \dontrun{
+##'   COMPASSContainerFromGatingSet(gatingset,"/4\\+$")
+##' }
+##' @importFrom plyr laply ldply
+##' @importFrom knitr kable
+##' @export
 COMPASSContainerFromGatingSet <- function(gs=NULL,node=NULL,filter.fun=NULL,individual_id="PTID",sample_id="name",stimulation_id="Stim",mp=NULL){
   if(require(flowWorkspace)){
   if(is.null(gs)|is.null(node)){
@@ -134,7 +137,7 @@ COMPASSContainerFromGatingSet <- function(gs=NULL,node=NULL,filter.fun=NULL,indi
   }
   #extract all the counts
   message("Extracting cell counts")
-  stats<-getPopStats(aeras,statistic="count")
+  stats<-getPopStats(gs,statistic="count")
   
   pd<-pData(gs)
   #Do the expected columns exist?
@@ -179,7 +182,7 @@ COMPASSContainerFromGatingSet <- function(gs=NULL,node=NULL,filter.fun=NULL,indi
   if(is.null(mp)){
     params<-parameters(getData(gs[[1]]))@data
     params <- data.table(params[,c("name","desc")])
-    setkey(params,desc)
+    setkeyv(params, "desc")
     if(class(filter.fun)!="function"){
       filter.fun<-function(x){
         gsub("-","",gsub("\\d+\\.","",gsub("\\\\","",gsub("/","",gsub("\\+","",x)))))

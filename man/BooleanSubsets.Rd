@@ -4,12 +4,11 @@
 \alias{BooleanSubsets.default}
 \title{Generate Boolean Subsets}
 \usage{
-  BooleanSubsets(x, as.matrix)
+BooleanSubsets(x, as.matrix)
 
-  \method{BooleanSubsets}{COMPASSContainer} (x,
-    as.matrix = FALSE)
+\method{BooleanSubsets}{COMPASSContainer}(x, as.matrix = FALSE)
 
-  \method{BooleanSubsets}{default} (x, as.matrix = FALSE)
+\method{BooleanSubsets}{default}(x, as.matrix = FALSE)
 }
 \arguments{
   \item{x}{Either a \code{COMPASSContainer}, or a list of
