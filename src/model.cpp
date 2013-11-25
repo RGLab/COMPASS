@@ -1,3 +1,5 @@
+#include <R_ext/Utils.h>
+
 #include <Rcpp.h>
 #include "model.h"
 #include "updatealphau_RW.h"
@@ -133,6 +135,8 @@ RcppExport SEXP model(SEXP T, SEXP I, SEXP K, SEXP M, SEXP ttt, SEXP SS, SEXP al
 
   for (int tt=1; tt<xT; tt++){
     t1=tt-1; 
+    
+    R_CheckUserInterrupt();
       
      // update alpha_u
     updatealphau_RW(alphau_t1, xn_s, xn_u, xI, xK, xlambda_u, sqrt_var, xtt, gamma_t1, Aalp_t1);
