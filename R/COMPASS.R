@@ -99,6 +99,20 @@ COMPASS <- function(data, treatment, control, subset=NULL,
     data$meta <- data$meta[ data$meta[[sid]] %in% keep, ]
   }
   
+  ## further subsetting -- make sure all the data that goes in
+  ## will survive the model fitting
+  null_data <- sapply(data$data, is.null)
+  bad_samples <- names(data$data)[null_data]
+  if (any(null_data)) {
+    warning("The following samples had no cytometry data available ",
+      "and will not be included in the model fit:\n\t: ",
+      paste( bad_samples, collapse=", ")
+    )
+    data$data <- data$data[ !(names(data$data) %in% bad_samples) ]
+    data$counts <- data$counts[ !(names(data$counts) %in% bad_samples) ]
+    data$meta <- data$meta[ !(data$meta[[sid]] %in% bad_samples), ]
+  }
+  
   .get_data <- function(data, expr, group) {
     which <- eval(expr, envir=data$meta)
     samples <- data$meta[[sid]][which]

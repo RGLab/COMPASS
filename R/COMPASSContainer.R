@@ -38,10 +38,8 @@ COMPASSContainer <- function(data, counts, meta,
   ## remove NULLs
   null_data <- names(data)[sapply(data, is.null)]
   if (length(null_data)) {
-    warning("The following samples had no cytometry information available ",
-      "and will be removed:\n\t", paste(null_data, collapse=", "))
-    data <- data[ !(names(data) %in% null_data) ]
-    counts <- counts[ !(names(counts) %in% null_data) ]
+    warning("The following samples had no cytometry information available:\n\t",
+      paste(null_data, collapse=", "))
   }
   
   ## convert named vectors to matrices
