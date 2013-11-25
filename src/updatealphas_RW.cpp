@@ -1,5 +1,5 @@
 #include <Rcpp.h>
-#include <boost/math/special_functions/digamma.hpp>
+
 
 using namespace std;
 using namespace Rcpp;

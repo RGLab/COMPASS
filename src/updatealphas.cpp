@@ -1,5 +1,6 @@
 #include <Rcpp.h>
-#include <boost/math/special_functions/digamma.hpp>
+
+extern "C" double digamma(double);
 
 using namespace std;
 using namespace Rcpp;
@@ -15,7 +16,7 @@ void updatealphas(vector<double>& xalphast,vector<int>& xn_s, int xK, int xI, ve
     double log2 = 0.0;  int flag1=0;   int flagkk=0; int lp1=0;
     for (int kk = 0; kk < xK; kk++) {
         delF = 0.0;  
-        psik = boost::math::digamma(xalphast[kk]);
+        psik = digamma(xalphast[kk]);
         log1 = 0.0;
         log2 = 0.0;
         for (int i = 0; i < xI; i++) {
@@ -43,7 +44,7 @@ void updatealphas(vector<double>& xalphast,vector<int>& xn_s, int xK, int xI, ve
                 sum_gl_alp_ns += lgamma(sums);
             }
             if (flagkk > 0) {
-               delF += boost::math::digamma(xn_s[i+xI*kk]+xalphast[kk]) - psik - boost::math::digamma(sum_alp_ns) + boost::math::digamma(sum_alp);
+               delF += digamma(xn_s[i+xI*kk]+xalphast[kk]) - psik - digamma(sum_alp_ns) + digamma(sum_alp);
             }
             if (lp1>0) {
                log2 += -(sum_gl_alp-lgamma(sum_alp)) + (sum_gl_alp_ns - lgamma(sum_alp_ns));
@@ -68,7 +69,7 @@ void updatealphas(vector<double>& xalphast,vector<int>& xn_s, int xK, int xI, ve
              (1 - xp_var[kk]) * Rf_dnorm4(alp[kk], mean_p, sqrt_var2[kk], 0)
            );
            
-           delF = 0.0; psik = boost::math::digamma(alp[kk]);
+           delF = 0.0; psik = digamma(alp[kk]);
            for ( int i = 0; i < xI; i++) {
                
               lp1 = 0; 
@@ -97,7 +98,7 @@ void updatealphas(vector<double>& xalphast,vector<int>& xn_s, int xK, int xI, ve
                    sum_gl_alp_ns += lgamma(sums);
                }
                if (flagkk > 0) {
-                   delF += boost::math::digamma(xn_s[i+xI*kk]+alp[kk]) - psik - boost::math::digamma(sum_alp_ns) + boost::math::digamma(sum_alp);
+                   delF += digamma(xn_s[i+xI*kk]+alp[kk]) - psik - digamma(sum_alp_ns) + digamma(sum_alp);
                }
                if (lp1>0) {
                    log1 += -(sum_gl_alp-lgamma(sum_alp)) + (sum_gl_alp_ns - lgamma(sum_alp_ns));

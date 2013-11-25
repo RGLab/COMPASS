@@ -1,5 +1,6 @@
 #include <Rcpp.h>
-#include <boost/math/special_functions/digamma.hpp>
+
+extern "C" double digamma(double);
 
 using namespace std;
 using namespace Rcpp;
@@ -19,7 +20,7 @@ void updatealphau(vector<double>& xalphaut, vector<int>& xn_s, vector<int>& xn_u
             sum_alphau += xalphaut[s];  
         }
         log2 -= xI*lgamma(xalphaut[kk]);
-        delF += xI*(boost::math::digamma(sum_alphau)- boost::math::digamma(xalphaut[kk]));
+        delF += xI*(digamma(sum_alphau)- digamma(xalphaut[kk]));
         log2 += xI*lgamma(sum_alphau);
         for (int i = 0; i < xI; i++) {
             int lp1 = 0; 
@@ -43,7 +44,7 @@ void updatealphau(vector<double>& xalphaut, vector<int>& xn_s, vector<int>& xn_u
             }
             if (flagkk==1) {
                log2 += lgamma(xn_u[i+xI*kk]+xalphaut[kk]);
-               delF +=boost::math::digamma(xn_u[i+xI*kk]+xalphaut[kk]);
+               delF +=digamma(xn_u[i+xI*kk]+xalphaut[kk]);
                double sum_nualphau = 0.0;
                double sum_nusalphau = 0.0;
                for (int k = 0; k<lp1; k++) {
@@ -54,24 +55,24 @@ void updatealphau(vector<double>& xalphaut, vector<int>& xn_s, vector<int>& xn_u
                }
                log2 -=lgamma(sum_nualphau);
                log2 += lgamma(sum_nusalphau+1);
-               delF -=boost::math::digamma(sum_nualphau);
-               delF += boost::math::digamma(sum_nusalphau+1);
+               delF -=digamma(sum_nualphau);
+               delF += digamma(sum_nusalphau+1);
               
                for (int k= 0; k<lp0; k++) {
                     temp = i+xI*p0[k];
                     sum_nusalphau +=(xn_u[temp]+xalphaut[p0[k]]+xn_s[temp]);
                }
-               delF -= boost::math::digamma(sum_nusalphau+1);
+               delF -= digamma(sum_nusalphau+1);
                log2 -= lgamma(sum_nusalphau+1);
             } else {
                log2 += lgamma(xn_u[i+xI*kk]+xalphaut[kk]+xn_s[i+xI*kk]);
-               delF += boost::math::digamma(xn_u[i+xI*kk]+xalphaut[kk]+xn_s[i+kk*xI]);
+               delF += digamma(xn_u[i+xI*kk]+xalphaut[kk]+xn_s[i+kk*xI]);
                double sum_nusalphau = 0.0;
                for ( int k = 0; k<xK; k++) {
                    sum_nusalphau +=xn_u[i+xI*k]+xalphaut[k]+xn_s[i+xI*k];
                }
                log2 -= lgamma(sum_nusalphau+1);
-               delF -= boost::math::digamma(sum_nusalphau+1);
+               delF -= digamma(sum_nusalphau+1);
            }
  
         }
@@ -92,7 +93,7 @@ void updatealphau(vector<double>& xalphaut, vector<int>& xn_s, vector<int>& xn_u
                 sum_alphau += alp[s];
             }
             log1 -= xI*lgamma(alp[kk]);
-            delF += xI*(boost::math::digamma(sum_alphau)- boost::math::digamma(alp[kk]));
+            delF += xI*(digamma(sum_alphau)- digamma(alp[kk]));
             log1 += xI*lgamma(sum_alphau);
             for (int i = 0; i < xI; i++ ){
                 int lp1 = 0; 
@@ -116,7 +117,7 @@ void updatealphau(vector<double>& xalphaut, vector<int>& xn_s, vector<int>& xn_u
                  }
                  if (flagkk==1) {
                    log1 += lgamma(xn_u[i+xI*kk]+alp[kk]);
-                   delF +=boost::math::digamma(xn_u[i+xI*kk]+alp[kk]);
+                   delF +=digamma(xn_u[i+xI*kk]+alp[kk]);
                    double sum_nualphau = 0.0;
                    double sum_nusalphau = 0.0;
                    for (int k = 0; k<lp1; k++) {
@@ -127,24 +128,24 @@ void updatealphau(vector<double>& xalphaut, vector<int>& xn_s, vector<int>& xn_u
                    }
                    log1 -=lgamma(sum_nualphau);
                    log1 += lgamma(sum_nusalphau+1);
-                   delF -=boost::math::digamma(sum_nualphau);
-                   delF += boost::math::digamma(sum_nusalphau+1);
+                   delF -=digamma(sum_nualphau);
+                   delF += digamma(sum_nusalphau+1);
               
                    for (int k= 0; k<lp0; k++) {
                        sum_nusalphau +=(xn_u[i+xI*p0[k]]+alp[p0[k]]+xn_s[i+xI*p0[k]]);
                    }
-                   delF -= boost::math::digamma(sum_nusalphau+1);
+                   delF -= digamma(sum_nusalphau+1);
                    log1 -= lgamma(sum_nusalphau+1);
                  } else {
                    log1 += lgamma(xn_u[i+xI*kk]+alp[kk]+xn_s[i+xI*kk]);
-                   delF += boost::math::digamma(xn_u[i+xI*kk]+alp[kk]+xn_s[i+xI*kk]);
+                   delF += digamma(xn_u[i+xI*kk]+alp[kk]+xn_s[i+xI*kk]);
                    double sum_nusalphau = 0.0;
                    for ( int k = 0; k<xK; k++) {
                      temp = i+xI*k;
                       sum_nusalphau +=xn_u[temp]+alp[k]+xn_s[temp];
                    }
                    log1 -= lgamma(sum_nusalphau+1);
-                   delF -= boost::math::digamma(sum_nusalphau+1);
+                   delF -= digamma(sum_nusalphau+1);
                 }
                 
             }

@@ -1,5 +1,7 @@
 #include <Rcpp.h>
-#include <boost/math/special_functions/digamma.hpp>
+
+extern "C" double digamma(double);
+
 using namespace std;
 using namespace Rcpp;
 
@@ -12,7 +14,7 @@ void updatealpha_scalar(vector<double>& xmust, vector<double>& xmuut, vector<int
     double delF=0.; double log1=0.; double log2=0.; 
     int nik=0;  int temp=0; double beta_np=0.; double alpha_np=0.;
    
-    double lbetadga = log(xbeta)-boost::math::digamma(xalpha); double alblga = xalpha*log(xbeta)-lgamma(xalpha);
+    double lbetadga = log(xbeta)-digamma(xalpha); double alblga = xalpha*log(xbeta)-lgamma(xalpha);
     for (int p=0; p<xM; p++) {
     for (int i=0; i<xI;i++) {
          for(int k=0; k<K1; k++) {
@@ -25,17 +27,17 @@ void updatealpha_scalar(vector<double>& xmust, vector<double>& xmuut, vector<int
                                         pow((xmust[p]-xybar_s(temp,p)),2)/(2*(xlambda+1/xn_s[temp])));
                            alpha_np = nik/2+xalpha;
                            log2 += alblga+lgamma(alpha_np)-alpha_np*beta_np;
-                           delF+=lbetadga+boost::math::digamma(alpha_np)-beta_np;
+                           delF+=lbetadga+digamma(alpha_np)-beta_np;
                     }else if (xn_u[temp]==0 && xn_s[temp]>0) {
                             beta_np = log(pt1(temp,p)+xbeta+pow((xmust[p]-xybar_s(temp,p)),2)/(2*(xlambda+1/xn_s[temp])));
                             alpha_np = nik/2+xalpha;
                             log2 += alblga+lgamma(alpha_np)-alpha_np*beta_np;
-                            delF+=lbetadga+boost::math::digamma(alpha_np)-beta_np;                 
+                            delF+=lbetadga+digamma(alpha_np)-beta_np;                 
                     } else if (xn_u[temp]>0 && xn_s[temp]==0) {
                             beta_np = log(pt2(temp,p)+xbeta+pow((xmuut[p]-xybar_u(temp,p)),2)/(2*(xlambda+1/xn_u[temp])));
                             alpha_np = nik/2+xalpha;
                            log2 += alblga+lgamma(alpha_np)-alpha_np*beta_np;
-                           delF+=lbetadga+boost::math::digamma(alpha_np)-beta_np;    
+                           delF+=lbetadga+digamma(alpha_np)-beta_np;    
                     }         
                 }else{
                      if (nik>0) {
@@ -43,7 +45,7 @@ void updatealpha_scalar(vector<double>& xmust, vector<double>& xmuut, vector<int
                                            0.5*xn_s[temp]*pow(xybar_s(temp,p),2)+ 0.5*xn_u[temp]*pow(xybar_u(temp,p),2)-0.5*pow((xn_s[temp]*xybar_s(temp,p)+xn_u[temp]*xybar_u(temp,p)),2)/nik);
                             alpha_np = nik/2+xalpha;
                             log2 += alblga+lgamma(alpha_np)-alpha_np*beta_np;
-                            delF+=lbetadga+boost::math::digamma(alpha_np)-beta_np;
+                            delF+=lbetadga+digamma(alpha_np)-beta_np;
                      }       
                 }
              }
@@ -64,7 +66,7 @@ void updatealpha_scalar(vector<double>& xmust, vector<double>& xmuut, vector<int
           (1 - xp_var) * Rf_dnorm4(alphap[0], mean_p, sqrt_var2, 0)
         );
          
-         delF = 0.;  double lbetadga = log(xbeta)-boost::math::digamma(alphap[0]); double alblga = xalpha*log(xbeta)-lgamma(alphap[0]);
+         delF = 0.;  double lbetadga = log(xbeta)-digamma(alphap[0]); double alblga = xalpha*log(xbeta)-lgamma(alphap[0]);
          for (int p=0; p<xM; p++) {
          for (int i=0; i<xI;i++) {
          for(int k=0; k<K1; k++) {
@@ -77,17 +79,17 @@ void updatealpha_scalar(vector<double>& xmust, vector<double>& xmuut, vector<int
                                         pow((xmust[p]-xybar_s(temp,p)),2)/(2*(xlambda+1/xn_s[temp])));
                            alpha_np = nik/2+alphap[0];
                            log1 += alblga+lgamma(alpha_np)-alpha_np*beta_np;
-                           delF+=lbetadga+boost::math::digamma(alpha_np)-beta_np;
+                           delF+=lbetadga+digamma(alpha_np)-beta_np;
                     }else if (xn_u[temp]==0 && xn_s[temp]>0) {
                            beta_np = log(pt1(temp,p)+xbeta+pow((xmust[p]-xybar_s(temp,p)),2)/(2*(xlambda+1/xn_s[temp])));
                             alpha_np = nik/2+alphap[0];
                             log1 +=alblga+lgamma(alpha_np)-alpha_np*beta_np;
-                            delF+=lbetadga+boost::math::digamma(alpha_np)-beta_np;             
+                            delF+=lbetadga+digamma(alpha_np)-beta_np;             
                     } else if (xn_u[temp]>0 && xn_s[temp]==0) {
                              beta_np = log(pt2(temp,p)+xbeta+pow((xmuut[p]-xybar_u(temp,p)),2)/(2*(xlambda+1/xn_u[temp])));
                             alpha_np = nik/2+alphap[0];
                              log1 += alblga+lgamma(alpha_np)-alpha_np*beta_np;
-                            delF+=lbetadga+boost::math::digamma(alpha_np)-beta_np;             
+                            delF+=lbetadga+digamma(alpha_np)-beta_np;             
                     }         
                 }else{
                      if (nik>0) {
@@ -95,7 +97,7 @@ void updatealpha_scalar(vector<double>& xmust, vector<double>& xmuut, vector<int
                                           0.5*xn_s[temp]*pow(xybar_s(temp,p),2)+ 0.5*xn_u[temp]*pow(xybar_u(temp,p),2)-0.5*pow((xn_s[temp]*xybar_s(temp,p)+xn_u[temp]*xybar_u(temp,p)),2)/nik);
                             alpha_np = nik/2+alphap[0];
                             log1 += alblga+lgamma(alpha_np)-alpha_np*beta_np;
-                            delF+=lbetadga+boost::math::digamma(alpha_np)-beta_np;             
+                            delF+=lbetadga+digamma(alpha_np)-beta_np;             
                      }       
                 }
              }
