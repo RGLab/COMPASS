@@ -51,6 +51,24 @@ COMPASSContainer <- function(data, counts, meta,
     }
   }
   
+  ## convert NULLs to 0-row matrices
+  n_markers <- NULL
+  marker_names <- NULL
+  for (i in 1:length(data)) {
+    if (is.matrix(data[[i]])) {
+      n_markers <- ncol(data[[i]])
+      marker_names <- colnames(data[[i]])
+      break
+    }
+  }
+  
+  ## replace null with 0-row matrices
+  empty_matrix <- matrix(nrow=0, ncol=n_markers)
+  colnames(empty_matrix) <- marker_names
+  mode(empty_matrix) <- "numeric"
+  null_data <- sapply(data, is.null)
+  data[ sapply(data, is.null) ] <- empty_matrix
+  
   ## type checking
   .type_check <- function(y) {
     yy <- deparse(substitute(y))
