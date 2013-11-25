@@ -75,6 +75,20 @@ COMPASS <- function(data, treatment, control, subset=NULL,
   
   call <- match.call()
   
+  ## make sure all the data input
+  ## will survive the model fitting
+  null_data <- sapply(data$data, is.null)
+  bad_samples <- names(data$data)[null_data]
+  if (any(null_data)) {
+    warning("The following samples had no cytometry data available ",
+      "and will not be included in the model fit:\n\t: ",
+      paste( bad_samples, collapse=", ")
+    )
+    data$data <- data$data[ !(names(data$data) %in% bad_samples) ]
+    data$counts <- data$counts[ !(names(data$counts) %in% bad_samples) ]
+    data$meta <- data$meta[ !(data$meta[[sid]] %in% bad_samples), ]
+  }
+  
   ## We allow the user to either pass just a character vector of
   ## names (with the understanding that it's pulled from the stimulation vector
   ## in the meta-data), or we allow them to pass an expression
@@ -97,20 +111,6 @@ COMPASS <- function(data, treatment, control, subset=NULL,
       " of ", length(data$data), " samples.")
     data$data <- data$data[ names(data$data) %in% keep ]
     data$meta <- data$meta[ data$meta[[sid]] %in% keep, ]
-  }
-  
-  ## further subsetting -- make sure all the data that goes in
-  ## will survive the model fitting
-  null_data <- sapply(data$data, is.null)
-  bad_samples <- names(data$data)[null_data]
-  if (any(null_data)) {
-    warning("The following samples had no cytometry data available ",
-      "and will not be included in the model fit:\n\t: ",
-      paste( bad_samples, collapse=", ")
-    )
-    data$data <- data$data[ !(names(data$data) %in% bad_samples) ]
-    data$counts <- data$counts[ !(names(data$counts) %in% bad_samples) ]
-    data$meta <- data$meta[ !(data$meta[[sid]] %in% bad_samples), ]
   }
   
   .get_data <- function(data, expr, group) {
