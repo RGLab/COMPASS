@@ -130,7 +130,7 @@ GatingSetToCOMPASS <- function(gs, node, children,
 ##' @importFrom plyr laply ldply
 ##' @importFrom knitr kable
 ##' @export
-COMPASSContainerFromGatingSet <- function(gs=NULL,node=NULL,filter.fun=NULL,individual_id="PTID",sample_id="name",stimulation_id="Stim",mp=NULL){
+COMPASSContainerFromGatingSet <- function(gs=NULL,node=NULL,filter.fun=NULL,individual_id="PTID",sample_id="name",stimulation_id="Stim",mp=NULL,countFilterThreshold=5000){
   if(require(flowWorkspace)){
   if(is.null(gs)|is.null(node)){
     stop("Must specify a gating set and parent node.")
@@ -221,6 +221,15 @@ COMPASSContainerFromGatingSet <- function(gs=NULL,node=NULL,filter.fun=NULL,indi
   
   #extract the single cell values
   sc_data<-getData(obj=gs,y=expr,pop_marker_list=mp)
+  
+  message("Filtering low counts")
+  filter <- counts > countFilterThreshold
+  keep.names <- names(counts)[filter]
+  sc_data <- sc_data[keep.names]
+  counts <- counts[keep.names]
+  pd <- subset(pd,eval(as.name(sample_id))%in%keep.names)
+  message(sprintf("Filtering %s samples due to low counts",length(filter)-length(keep.names)))
+  
   message("Creating COMPASS Container")
   cc<-COMPASSContainer(data=sc_data,counts=counts,meta=pd,individual_id=individual_id,sample_id=sample_id,stimulation_id=stimulation_id)
   return(cc)
