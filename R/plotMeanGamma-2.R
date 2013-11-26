@@ -25,7 +25,8 @@
 plot2 <- function(x, y, row_annotation=NULL, 
   remove_unexpressed_categories=TRUE, minimum_dof=1, maximum_dof=Inf, 
   subset, 
-  palette=div_gradient_pal(low="blue", mid="black", high="red")(seq(0, 1, length=20)),
+  palette=NA,
+  #palette=div_gradient_pal(low="blue", mid="black", high="red")(seq(0, 1, length=20)),
   show_rownames=FALSE, 
   show_colnames=FALSE, ...) {
   
@@ -42,7 +43,7 @@ plot2 <- function(x, y, row_annotation=NULL,
   M_y <- M_y[ order(rownames(M_y)), , drop=FALSE ]
   
   ## find the common PTIDs, incase the fits have different ones
-  if (!all( rownames(M_x) %in% rownames(M_y))) {
+  if (!all( (rownames(M_x)==rownames(M_y)))) {
     warning("Not all individuals are shared in common between the two ",
       "fit objects; some will be dropped.")
     common <- intersect( rownames(M_x), rownames(M_y) )
@@ -152,7 +153,14 @@ plot2 <- function(x, y, row_annotation=NULL,
     rowann <- NA
   }
   
+
+  palette<-rgb(as.vector(as.matrix(M_x)),as.vector(as.matrix(M_y)),0)
   
+  m<-matrix(palette,nrow=nrow(M_x),ncol=ncol(M_x))
+  m<-m[,keep]
+  colnames(m)<-colnames(M)
+  rownames(m)<-rownames(M)
+  M<-m
   pheatmap(M[o, , drop=FALSE],
     color=palette,
     show_rownames=show_rownames,

@@ -476,7 +476,7 @@ heatmap_motor = function(matrix, border_color, cellwidth, cellheight, tree_col, 
   }
   
   # Draw legend
-  if(!is.na(legend[1])){
+  if(!is.na(legend[1])&is.numeric(matrix)){
     length(colnames(matrix))
     if(length(rownames(matrix)) != 0){
       pushViewport(vplayout(4:5, 5)) 
@@ -921,7 +921,7 @@ pheatmap = function(mat, color = colorRampPalette(rev(brewer.pal(n = 7, name = "
   }
   
   
-  if(is.na(breaks[1])){
+  if(is.na(breaks[1])&is.numeric(mat)){
     breaks = generate_breaks(as.vector(mat), length(color))
   }
   if (legend & is.na(legend_breaks[1])) {
@@ -942,7 +942,9 @@ pheatmap = function(mat, color = colorRampPalette(rev(brewer.pal(n = 7, name = "
   else {
     legend = NA
   }
-  mat = scale_colours(mat, col = color, breaks = breaks)
+  if(is.numeric(mat)){
+    mat = scale_colours(mat, col = color, breaks = breaks)
+  }
   
   # Preparing annotation colors
   if(!is.na(annotation[[1]][1])){
