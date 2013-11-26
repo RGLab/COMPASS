@@ -21,7 +21,7 @@ Imports:
     plyr,
     knitr
 Suggests:
-    flowWorkspace,
+    flowWorkspace (>= 3.9.36),
     shiny
 LazyLoad: yes
 LazyData: yes
