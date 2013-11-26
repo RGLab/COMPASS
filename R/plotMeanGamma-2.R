@@ -76,7 +76,7 @@ plot2 <- function(x, y, subset,
   ) )
   
   ## remove the null category
-  cats <- cats[ -nrow(cats), ]
+  cats <- cats[ rowSums(cats)!=0, ]
   
   cats <- data.frame(cats)
   cats <- cats[,1:(ncol(cats)-1)]
