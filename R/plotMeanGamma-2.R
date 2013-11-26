@@ -153,9 +153,14 @@ plot2 <- function(x, y, row_annotation=NULL,
     rowann <- NA
   }
   
-
-  palette<-rgb(as.vector(as.matrix(M_x)),as.vector(as.matrix(M_y)),0)
+  .scale<-function(x){
+    x/max(x)
+  }
   
+  palette<-rgb2hsv(as.vector(as.matrix(M_x)),0,as.vector(as.matrix(M_y)))
+  palette["s",]<-.scale(asinh(1*as.vector(as.matrix(M_x))+as.vector(as.matrix(M_y))))
+  palette["v",]<-1
+  palette<-hsv(h=palette["h",],s=palette["s",],v=palette["v",])
   m<-matrix(palette,nrow=nrow(M_x),ncol=ncol(M_x))
   m<-m[,keep]
   colnames(m)<-colnames(M)
