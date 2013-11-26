@@ -114,7 +114,7 @@ COMPASS <- function(data, treatment, control, subset=NULL,
   }
   
   .get_data <- function(data, expr, group) {
-    which <- eval(expr, envir=data$meta)
+    which <- eval(expr, envir=data$meta,enclos=parent.frame(n=2))
     samples <- data$meta[[sid]][which]
     samples <- samples[ samples %in% names(data$data) ]
     individuals <- unique(data$meta[[iid]][ data$meta[[sid]] %in% samples ])
@@ -240,7 +240,7 @@ COMPASS <- function(data, treatment, control, subset=NULL,
   ## we have to regenerate cell count totals (by individual) to account
   ## for aggregation
   .update_total_CellCounts <- function(counts, individuals, expr) {
-    which <- eval(expr, data$meta)
+    which <- eval(expr, data$meta,enclos=parent.frame(n=2))
     new_counts <- sapply(individuals, function(ind) {
       ## get the samples corresponding to the current individual, expr
       which2 <- data$meta[[iid]] == ind
