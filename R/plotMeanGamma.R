@@ -34,7 +34,11 @@ plot.COMPASSResult <- function(x, y, subset,
   subset_expr <- match.call()$subset
   
   if (missing(row_annotation)) {
-    row_annotation <- y
+    if (missing(y)) {
+      y <- NULL
+    } else {
+      row_annotation <- y
+    }
   }
   
   nc <- ncol(x$fit$gamma)
@@ -96,7 +100,7 @@ plot.COMPASSResult <- function(x, y, subset,
   ## reorder the data
   o <- do.call(order, as.list(rowann[row_annotation]))
   
-  pheatmap(M[o,],
+  pheatmap(M[o, , drop=FALSE],
     color=palette,
     show_rownames=show_rownames,
     show_colnames=show_colnames,

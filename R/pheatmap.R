@@ -188,6 +188,9 @@ draw_headerplot = function(order,data,ylabel){
 }
 
 draw_matrix = function(matrix, border_color, fmat, fontsize_number){
+  if (!is.matrix(matrix)) {
+    matrix <- as.matrix(matrix)
+  }
   n = nrow(matrix)
   m = ncol(matrix)
   x = (1:m)/m - 1/2/m
