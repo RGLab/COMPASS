@@ -4,16 +4,16 @@
 ##' 
 ##' @param x An object of class \code{COMPASSResult}.
 ##' @param y An object of class \code{COMPASSResult}.
-##' @param subset An \R expression, evaluated within the metadata, used to
-##'   determine which individuals should be kept.
+##' @param row_annotation A vector of names, pulled from the metadata, to be
+##'   used for row annotation.
 ##' @param remove_unexpressed_categories Boolean, if \code{TRUE} we remove
 ##'   any unexpressed categories.
 ##' @param minimum_dof The minimum degree of functionality for the categories
 ##'   to be plotted.
 ##' @param maximum_dof The maximum degree of functionality for the categories
 ##'   to be plotted.
-##' @param row_annotation A vector of names, pulled from the metadata, to be
-##'   used for row annotation.
+##' @param subset An \R expression, evaluated within the metadata, used to
+##'   determine which individuals should be kept.
 ##' @param palette The colour palette to be used.
 ##' @param show_rownames Boolean; if \code{TRUE} we display row names (ie,
 ##'   the individual ids).
@@ -22,9 +22,9 @@
 ##' @param ... Optional arguments passed to \code{pheatmap}.
 ##' @importFrom scales div_gradient_pal
 ##' @export
-plot2 <- function(x, y, subset, 
+plot2 <- function(x, y, row_annotation=NULL, 
   remove_unexpressed_categories=TRUE, minimum_dof=1, maximum_dof=Inf, 
-  row_annotation, 
+  subset, 
   palette=div_gradient_pal(low="blue", mid="black", high="red")(seq(0, 1, length=20)),
   show_rownames=FALSE, 
   show_colnames=FALSE, ...) {
@@ -55,19 +55,22 @@ plot2 <- function(x, y, subset,
     meta <- x$data$meta[ c(x$data$individual_id, row_annotation) ]
   }
   
-  rowann <- data.frame(.id=rownames(M_x))
-  rowann <- merge(
-    rowann, 
-    meta[c(x$data$individual_id, row_annotation)], 
-    by.x=".id",
-    by.y=x$data$individual_id
-  )
-  rowann <- rowann[!duplicated(rowann[[".id"]]), ]
-  rownames(rowann) <- rowann[[".id"]]
-  rowann <- rowann[-c(which(names(rowann)==".id"))]
-  
-  ## make sure M, rowann names match up
-  rowann <- rowann[ match(rownames(M_x), rownames(rowann)), , drop=FALSE ]
+  ## generate the row annotations if needed
+  if (!is.null(row_annotation)) {
+    rowann <- data.frame(.id=rownames(M_x))
+    rowann <- merge(
+      rowann, 
+      meta[c(x$data$individual_id, row_annotation)], 
+      by.x=".id",
+      by.y=x$data$individual_id
+    )
+    rowann <- rowann[!duplicated(rowann[[".id"]]), ]
+    rownames(rowann) <- rowann[[".id"]]
+    rowann <- rowann[-c(which(names(rowann)==".id"))]
+    
+    ## make sure M, rowann names match up
+    rowann <- rowann[ match(rownames(M_x), rownames(rowann)), , drop=FALSE ]
+  }
   
   ## get the common categories
   cats <- unique( rbind( 
@@ -142,9 +145,15 @@ plot2 <- function(x, y, subset,
   }
   
   ## reorder the data
-  o <- do.call(order, as.list(rowann[row_annotation]))
+  if (!is.null(row_annotation)) {
+    o <- do.call(order, as.list(rowann[row_annotation]))
+  } else {
+    o <- 1:nrow(M)
+    rowann <- NA
+  }
   
-  pheatmap(M[o,],
+  
+  pheatmap(M[o, , drop=FALSE],
     color=palette,
     show_rownames=show_rownames,
     show_colnames=show_colnames,
@@ -155,6 +164,6 @@ plot2 <- function(x, y, subset,
     ...
   )
   
-  return (invisible(M[o, ]))
+  return (invisible(M[o, , drop=FALSE]))
   
 }

@@ -115,6 +115,6 @@ plot.COMPASSResult <- function(x, y, subset,
     ...
   )
   
-  return (invisible(M[o, ]))
+  return (invisible(M[o, , drop=FALSE]))
   
 }

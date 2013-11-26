@@ -4,7 +4,7 @@
 \usage{
 COMPASSContainerFromGatingSet(gs = NULL, node = NULL, filter.fun = NULL,
   individual_id = "PTID", sample_id = "name", stimulation_id = "Stim",
-  mp = NULL)
+  mp = NULL, countFilterThreshold = 5000)
 }
 \arguments{
   \item{gs}{a \code{GatingSet} or \code{GatingSetList}}
