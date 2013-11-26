@@ -2,7 +2,8 @@
 \alias{GatingSetToCOMPASS}
 \title{Extract A GatingSet Node to a COMPASSContainer}
 \usage{
-GatingSetToCOMPASS(gs, node, children, meta, individual_id, sample_id)
+  GatingSetToCOMPASS(gs, node, children, meta,
+    individual_id, sample_id)
 }
 \arguments{
   \item{gs}{A \code{GatingSet} object.}
@@ -33,12 +34,12 @@ GatingSetToCOMPASS(gs, node, children, meta, individual_id, sample_id)
   of the names in the \code{data} input.}
 }
 \description{
-This function can be used to take gated data from a
-\code{flowWorkspace} object (e.g., a \code{GatingSet}), and
-retrieve it as a \code{COMPASSContainer}, suitable for ##'
-modelling with \code{COMPASS}.
+  This function can be used to take gated data from a
+  \code{flowWorkspace} object (e.g., a \code{GatingSet}),
+  and retrieve it as a \code{COMPASSContainer}, suitable
+  for ##' modelling with \code{COMPASS}.
 }
 \seealso{
-\code{\link{COMPASSContainer}}
+  \code{\link{COMPASSContainer}}
 }
 
