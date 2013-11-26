@@ -23,11 +23,13 @@
 ##' @param show_colnames Boolean; if \code{TRUE} we display column names
 ##'   (ie, the column name associated with a cytokine; typically not needed)
 ##' @param ... Optional arguments passed to \code{pheatmap}.
-##' @importFrom scales seq_gradient_pal
+##' @importFrom RColorBrewer brewer.pal
+##' @importFrom grDevices colorRampPalette
 plot.COMPASSResult <- function(x, y, subset, 
   remove_unexpressed_categories=TRUE, minimum_dof=1, maximum_dof=Inf, 
   row_annotation,
-  palette=seq_gradient_pal(low="black", high="red")(seq(0, 1, length=20)),
+  #palette=seq_gradient_pal(low="black", high="red")(seq(0, 1, length=20)),
+  palette=colorRampPalette(brewer.pal(10,"Purples"))(20),
   show_rownames=FALSE, 
   show_colnames=FALSE, ...) {
   
