@@ -67,7 +67,11 @@ COMPASSContainer <- function(data, counts, meta,
   colnames(empty_matrix) <- marker_names
   mode(empty_matrix) <- "numeric"
   null_data <- sapply(data, is.null)
-  data[ sapply(data, is.null) ] <- empty_matrix
+  if (any(null_data)) {
+    for (i in which(null_data)) {
+      data[[i]] <- empty_matrix
+    }
+  }
   
   ## type checking
   .type_check <- function(y) {
