@@ -365,9 +365,17 @@ COMPASS <- function(data, treatment, control, subset=NULL,
   vmessage("Computing the posterior difference in proportions, posterior log ratio...")
   output$fit$posterior <- compute_posterior(output)
   vmessage("Done!")
-  
+  #Filter metadata
+  #Here, we subset on individual_id (in case any were filtered out), and subset on treatment group. 
+  #control is generally fixed and needs to be matched to treatment anyway.
+  #May be missing something..we'll see.
+  output$data$meta<-with(output$data,{
+    meta.sub<-meta[with(meta,get(individual_id))%in%rownames(n_s)&eval(treatment,meta,parent.frame(n=4)),]
+    meta.sub[match(rownames(n_s),meta.sub[,individual_id]),]
+    }
+  )
   output$fit$call <- match.call()
-  
+
   class(output) <- "COMPASSResult"
   return(output)
   
