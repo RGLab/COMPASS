@@ -33,8 +33,11 @@ plot.COMPASSResult <- function(x, y, subset,
   
   subset_expr <- match.call()$subset
   
-  if (missing(row_annotation)) {
+  if (missing(row_annotation)&!missing(y)) {
     row_annotation <- y
+  }else{
+    #by default annotate with subject id
+    row_annotation<-NA
   }
   
   nc <- ncol(x$fit$gamma)
@@ -44,21 +47,23 @@ plot.COMPASSResult <- function(x, y, subset,
   dof <- sapply( strsplit( colnames(M), "", fixed=TRUE ), function(x) {
     sum( as.integer(x) )
   })
-  
+
   rowann <- data.frame(.id=rownames(M))
+  if(!is.na(row_annotation)){
   rowann <- merge(
-    rowann, 
+    rowann,
     x$data$meta[c(x$data$individual_id, row_annotation)], 
     by.x=".id",
     by.y=x$data$individual_id
   )
-  rowann <- rowann[!duplicated(rowann[[".id"]]), ]
+  }
+  rowann <- rowann[!duplicated(rowann[[".id"]]), ,drop=FALSE]
   rownames(rowann) <- rowann[[".id"]]
   rowann <- rowann[-c(which(names(rowann)==".id"))]
   
   ## make sure M, rowann names match up
   rowann <- rowann[ match(rownames(M), rownames(rowann)), , drop=FALSE ]
-  
+ 
   cats <- x$fit$categories[-nc,]
   cats <- data.frame(cats)
   cats <- cats[,1:(ncol(cats)-1)]
@@ -94,8 +99,12 @@ plot.COMPASSResult <- function(x, y, subset,
   }
   
   ## reorder the data
-  o <- do.call(order, as.list(rowann[row_annotation]))
-  
+  if(!is.na(row_annotation)){
+    o <- do.call(order, as.list(rowann[row_annotation]))
+  }else{
+    o <- 1:nrow(M)
+    rowann<-NA
+  }
   pheatmap(M[o,],
     color=palette,
     show_rownames=show_rownames,
