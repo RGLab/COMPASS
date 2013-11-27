@@ -182,13 +182,20 @@ COMPASSContainerFromGatingSet <- function(gs=NULL,node=NULL,filter.fun=NULL,indi
   if(is.null(mp)){
     params<-parameters(getData(gs[[1]]))@data
     params <- data.table(params[,c("name","desc")])
+    #make case consistent
+    params[,desc.upper:=toupper(desc)]
+    child.nodes.upper<-toupper(child.nodes)
+    child.nodes<-data.table(data.frame(child.nodes,child.nodes.upper))
     setkeyv(params, "desc")
     if(class(filter.fun)!="function"){
       filter.fun<-function(x){
         gsub("-","",gsub("\\d+\\.","",gsub("\\\\","",gsub("/","",gsub("\\+","",x)))))
       }
     }
-    map <- na.omit(unique(ldply(child.nodes,function(x)params[desc%like%filter.fun(x),node:=x])))
+    child.nodes[,child.nodes.upper:=filter.fun(child.nodes.upper)]
+    map <- na.omit(unique(ldply(child.nodes[,child.nodes.upper],function(x){params[desc.upper%like%x,child.nodes.upper:=x]})))
+    map<-data.table(merge(map,child.nodes,by="child.nodes.upper",all.x=TRUE))
+    map[,node:=child.nodes]
     tbl <- table(map$node)
     if(any(tbl>1)){
       row.remove<-sapply(which(tbl>1),function(x){
@@ -200,19 +207,19 @@ COMPASSContainerFromGatingSet <- function(gs=NULL,node=NULL,filter.fun=NULL,indi
     }
     
     #Some error checking
-    if(nrow(map)!=length(child.nodes)){
+    if(nrow(map)!=length(child.nodes[,child.nodes])){
       message(sprintf("We failed to guess the mapping between the node %s and the markers in the flowFrame\n",child.nodes))
       message("Our best guess was:")
       kable(map)
       stop("Quitting")
     }
     message("We will map the following nodes to markers:")
-    kable(map)
+    kable(map[,c(2,3,5),with=FALSE])
     
     
     #construct the map
-    mp<-map[,"desc"]
-    names(mp)<-map[,"node"]
+    mp<-map[,desc]
+    names(mp)<-map[,node]
     mp<-as.list(mp)
   }
   #Construct the expression

@@ -340,7 +340,7 @@ vplayout = function(x, y){
   return(viewport(layout.pos.row = x, layout.pos.col = y))
 }
 
-heatmap_motor = function(matrix, border_color, cellwidth, cellheight, tree_col, tree_row, treeheight_col, treeheight_row, filename, width, height, breaks, color, legend, annotation, annotation_colors, annotation_legend, main, fontsize, fontsize_row, fontsize_col, fmat, fontsize_number, row_annotation, row_annotation_legend, row_annotation_colors, cytokine_annotation, headerplot, polar, ...){
+heatmap_motor = function(matrix, border_color, cellwidth, cellheight, tree_col, tree_row, treeheight_col, treeheight_row, filename, width, height, breaks, color, legend, annotation, annotation_colors, annotation_legend, main, fontsize, fontsize_row, fontsize_col, fmat, fontsize_number, row_annotation, row_annotation_legend, row_annotation_colors, cytokine_annotation, headerplot,...){
   grid.newpage()
   
   
@@ -374,7 +374,7 @@ heatmap_motor = function(matrix, border_color, cellwidth, cellheight, tree_col, 
     
     # print(sprintf("height:%f width:%f", height, width))
     f(filename, height = height, width = width)
-    heatmap_motor(matrix, cellwidth = cellwidth, cellheight = cellheight, border_color = border_color, tree_col = tree_col, tree_row = tree_row, treeheight_col = treeheight_col, treeheight_row = treeheight_row, breaks = breaks, color = color, legend = legend, annotation = annotation, annotation_colors = annotation_colors, annotation_legend = annotation_legend, filename = NA, main = main, fontsize = fontsize, fontsize_row = fontsize_row, fontsize_col = fontsize_col, fmat = fmat, fontsize_number =  fontsize_number, row_annotation = row_annotation, row_annotation_legend = row_annotation_legend, cytokine_annotation = cytokine_annotation, polar=polar, ...)
+    heatmap_motor(matrix, cellwidth = cellwidth, cellheight = cellheight, border_color = border_color, tree_col = tree_col, tree_row = tree_row, treeheight_col = treeheight_col, treeheight_row = treeheight_row, breaks = breaks, color = color, legend = legend, annotation = annotation, annotation_colors = annotation_colors, annotation_legend = annotation_legend, filename = NA, main = main, fontsize = fontsize, fontsize_row = fontsize_row, fontsize_col = fontsize_col, fmat = fmat, fontsize_number =  fontsize_number, row_annotation = row_annotation, row_annotation_legend = row_annotation_legend, cytokine_annotation = cytokine_annotation, ...)
     dev.off()
     upViewport()
     return()
@@ -506,10 +506,10 @@ heatmap_motor = function(matrix, border_color, cellwidth, cellheight, tree_col, 
     else{
       pushViewport(vplayout(3:5, 5)) 
     }
-    if(polar){
-      draw_polar_legend(fontsize=fontsize)
-    }else{
+    if(is.numeric(matrix)){
       draw_legend(color, breaks, legend, fontsize = fontsize, ...)
+    }else{
+      draw_polar_legend(fontsize=fontsize)
     }
     upViewport()
   }
@@ -518,8 +518,8 @@ heatmap_motor = function(matrix, border_color, cellwidth, cellheight, tree_col, 
 }
 
 draw_polar_legend <- function(fontsize=NA,treatmentLabel=c("Condition X","Condition Y")){
-  height =unit(0.5,"npc")
-  width = unit(2,"npc")
+  height =unit(0.25,"npc")
+  width = unit(1,"npc")
   pushViewport(viewport(x = unit(0,"npc"), y = unit(0.8, "npc"), just = c(0, 1), width=width,height = height))
   C=0.45 #center
   R=0.25 #radius
@@ -891,7 +891,7 @@ kmeans_pheatmap = function(mat, k = min(nrow(mat), 150), sd_limit = NA, ...){
 #' pheatmap(test, clustering_distance_rows = drows, clustering_distance_cols = dcols)
 #' @importFrom RColorBrewer brewer.pal
 #' @export
-pheatmap = function(mat, color = colorRampPalette(rev(brewer.pal(n = 7, name = "RdYlBu")))(100), kmeans_k = NA, breaks = NA, border_color = "grey60", cellwidth = NA, cellheight = NA, scale = "none", cluster_rows = TRUE, cluster_cols = TRUE, clustering_distance_rows = "euclidean", clustering_distance_cols = "euclidean", clustering_method = "complete",  treeheight_row = ifelse(cluster_rows, 50, 0), treeheight_col = ifelse(cluster_cols, 50, 0), legend = TRUE, legend_breaks = NA, legend_labels = NA, annotation = NA, annotation_colors = NA, annotation_legend = TRUE, drop_levels = TRUE, show_rownames = T, show_colnames = T, main = NA, fontsize = 10, fontsize_row = fontsize, fontsize_col = fontsize, display_numbers = F, number_format = "%.2f", fontsize_number = 0.8 * fontsize, filename = NA, width = NA, height = NA, row_annotation = NA, row_annotation_legend = TRUE, row_annotation_colors=NA, cytokine_annotation=NA, headerplot=NA, polar=FALSE, ...){
+pheatmap = function(mat, color = colorRampPalette(rev(brewer.pal(n = 7, name = "RdYlBu")))(100), kmeans_k = NA, breaks = NA, border_color = "grey60", cellwidth = NA, cellheight = NA, scale = "none", cluster_rows = TRUE, cluster_cols = TRUE, clustering_distance_rows = "euclidean", clustering_distance_cols = "euclidean", clustering_method = "complete",  treeheight_row = ifelse(cluster_rows, 50, 0), treeheight_col = ifelse(cluster_cols, 50, 0), legend = TRUE, legend_breaks = NA, legend_labels = NA, annotation = NA, annotation_colors = NA, annotation_legend = TRUE, drop_levels = TRUE, show_rownames = T, show_colnames = T, main = NA, fontsize = 10, fontsize_row = fontsize, fontsize_col = fontsize, display_numbers = F, number_format = "%.2f", fontsize_number = 0.8 * fontsize, filename = NA, width = NA, height = NA, row_annotation = NA, row_annotation_legend = TRUE, row_annotation_colors=NA, cytokine_annotation=NA, headerplot=NA, ...){
   #Do the arguments even make sense?
   oldwarn<-options("warn")
   options("warn"=-1)
@@ -1048,7 +1048,7 @@ pheatmap = function(mat, color = colorRampPalette(rev(brewer.pal(n = 7, name = "
   }
   
   # Draw heatmap
-  heatmap_motor(mat, border_color = border_color, cellwidth = cellwidth, cellheight = cellheight, treeheight_col = treeheight_col, treeheight_row = treeheight_row, tree_col = tree_col, tree_row = tree_row, filename = filename, width = width, height = height, breaks = breaks, color = color, legend = legend, annotation = annotation, annotation_colors = annotation_colors, annotation_legend = annotation_legend, main = main, fontsize = fontsize, fontsize_row = fontsize_row, fontsize_col = fontsize_col, fmat = fmat, fontsize_number = fontsize_number, row_annotation = row_annotation, row_annotation_legend = row_annotation_legend, row_annotation_colors = row_annotation_colors, cytokine_annotation = cytokine_annotation, headerplot=headerplot, polar=polar, ...)
+  heatmap_motor(mat, border_color = border_color, cellwidth = cellwidth, cellheight = cellheight, treeheight_col = treeheight_col, treeheight_row = treeheight_row, tree_col = tree_col, tree_row = tree_row, filename = filename, width = width, height = height, breaks = breaks, color = color, legend = legend, annotation = annotation, annotation_colors = annotation_colors, annotation_legend = annotation_legend, main = main, fontsize = fontsize, fontsize_row = fontsize_row, fontsize_col = fontsize_col, fmat = fmat, fontsize_number = fontsize_number, row_annotation = row_annotation, row_annotation_legend = row_annotation_legend, row_annotation_colors = row_annotation_colors, cytokine_annotation = cytokine_annotation, headerplot=headerplot,...)
   options("warn"=oldwarn$warn)
   invisible(list(tree_row = tree_row, tree_col = tree_col, kmeans = km))
 }
