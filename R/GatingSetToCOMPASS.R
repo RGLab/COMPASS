@@ -214,7 +214,7 @@ COMPASSContainerFromGatingSet <- function(gs=NULL,node=NULL,filter.fun=NULL,indi
       stop("Quitting")
     }
     message("We will map the following nodes to markers:")
-    kable(map[,c(2,3,5),with=FALSE])
+    kable(map[,c(2,3,6),with=FALSE])
     
     
     #construct the map
@@ -223,7 +223,7 @@ COMPASSContainerFromGatingSet <- function(gs=NULL,node=NULL,filter.fun=NULL,indi
     mp<-as.list(mp)
   }
   #Construct the expression
-  expr<-as.name(paste(child.nodes,collapse="|"))
+  expr<-as.name(paste(map[,node],collapse="|"))
   message(sprintf("Extracting single cell data for %s",as.character(expr)))
   
   #extract the single cell values
