@@ -215,18 +215,12 @@ draw_rownames = function(rown, ...){
   grid.text(rown, x = unit(0.04, "npc"), y = y, vjust = 0.5, hjust = 0, gp = gpar(...))	
 }
 
-.polarLegend<-function(){
-  .toCart<-function(r,theta,C=0.5){
-    list(x=r*cos(theta)+C,y=r*sin(theta)+C)
-  }
-  radius<-0.25
-  xy<-.toCart(radius,seq(0,pi,l=100))
-  
-  grid.polygon(x=xy$x, y=xy$y, gp=gpar(fill=NA, col="grey90")) # outer shell 
-  
-  N<-101
-  R<-0.25
-  C<-0.5
+.toCart<-function(r,theta,C=0.5){
+  list(x=r*cos(theta)+C,y=r*sin(theta)+C)
+}
+
+.polarLegend<-function(R=0.25,N=11,C=0.5){
+ 
   
   polar.grid<-expand.grid(r=seq(0,R,l=N),theta=seq(0,pi,l=N))
   cart.grid<-do.call(cbind,.toCart(polar.grid$r,polar.grid$theta,C=0))/R
@@ -240,7 +234,7 @@ draw_rownames = function(rown, ...){
   .scale<-function(x){x/max(x)}
   cols<-hsv(pal[1,],colors$saturation,pal[3,],alpha=0.2)
   # plot(cart.grid,col=cols,pch=20,cex=4)
-  return(cols,cart.grid)
+  return(list(colors=cols,position=cart.grid))
 }
 
 draw_legend = function(color, breaks, legend, ...){
@@ -504,7 +498,7 @@ heatmap_motor = function(matrix, border_color, cellwidth, cellheight, tree_col, 
   }
   
   # Draw legend
-  if(!is.na(legend[1])&is.numeric(matrix)){
+  if(!is.na(legend[1])){
     length(colnames(matrix))
     if(length(rownames(matrix)) != 0){
       pushViewport(vplayout(4:5, 5)) 
@@ -512,11 +506,49 @@ heatmap_motor = function(matrix, border_color, cellwidth, cellheight, tree_col, 
     else{
       pushViewport(vplayout(3:5, 5)) 
     }
-    draw_legend(color, breaks, legend, fontsize = fontsize, ...)
+    if(is.numeric(matrix)){
+      draw_legend(color, breaks, legend, fontsize = fontsize, ...)
+    }else{
+      draw_polar_legend(fontsize=fontsize)
+    }
     upViewport()
   }
   
   
+}
+
+draw_polar_legend <- function(fontsize=NA){
+  height =unit(0.5,"npc")
+  width = unit(2,"npc")
+  pushViewport(viewport(x = unit(0,"npc"), y = unit(0.8, "npc"), just = c(0, 1), width=width,height = height))
+  C=0.45
+  R=0.25
+  N=51
+  xy<-.toCart(R,seq(0,pi,l=100),C=C)  
+  polar_legend <- .polarLegend(R=R,N=N,C=C)
+  
+  o<-order(polar_legend$position[,"x"],polar_legend$position[,"y"],decreasing=TRUE)
+  for(i in (1:nrow(polar_legend$position))[o]){
+    grid.points(x=polar_legend$position[i,"x"]*R+C,y=polar_legend$position[i,"y"]*R+C,gp=gpar(col=polar_legend$color[i],cex=0.25),default.units="npc")
+  }
+  for(i in (1:nrow(polar_legend$position))[o]){
+    grid.points(x=polar_legend$position[i,"x"]*R+C,y=polar_legend$position[i,"y"]*R+C,gp=gpar(col=polar_legend$color[i],cex=0.4),default.units="npc")
+  }
+
+  grid.polygon(x=xy$x, y=xy$y, gp=gpar(fill=NA, col="black",lwd=2),default.units="npc") # outer shell 
+  grid.segments(x0=seq(-1,1,l=9)*R+C,y0=rep(0,9)*R+C,x1=seq(-1,1,l=9)*R+C,y1=rep(0-0.1,9)*R+C,default.units="npc",gp=gpar(lwd=2))
+  xy0<-.toCart(R,theta=seq(pi,0,l=11),C=C)
+  xy1<-.toCart(R+0.04,theta=seq(pi,0,l=11),C=C)
+  grid.segments(x0=xy0$x,y0=xy0$y,x1=xy1$x,y1=xy1$y,gp=gpar(lwd=2),default.units="npc")
+  grid.text(label=c("Condition X", "Condition Y"),x=c(-1,1)*R+C,y=rep(0-0.2,2)*R+C,rot=90,just=1)
+  xy1<-.toCart(R+0.1,theta=seq(pi,0,l=11),C=C)
+  rotation<-rev(seq(0,pi/2,l=6)*180/pi)
+  rotation<-c(-rev(rotation)[-6],rotation)
+  labs<-seq(1,0.5,l=6)
+  labs<-c(labs,rev(labs)[-1])
+  grid.text(label=labs,x=xy1$x,y=xy1$y,rot=rotation,just=0.5)
+  
+  upViewport()
 }
 
 generate_breaks = function(x, n, center = F){
