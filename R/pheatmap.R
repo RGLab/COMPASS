@@ -517,40 +517,37 @@ heatmap_motor = function(matrix, border_color, cellwidth, cellheight, tree_col, 
   
 }
 
-draw_polar_legend <- function(fontsize=NA){
+draw_polar_legend <- function(fontsize=NA,treatmentLabel=c("Condition X","Condition Y")){
   height =unit(0.5,"npc")
   width = unit(2,"npc")
   pushViewport(viewport(x = unit(0,"npc"), y = unit(0.8, "npc"), just = c(0, 1), width=width,height = height))
-  C=0.45
-  R=0.25
-  N=51
+  C=0.45 #center
+  R=0.25 #radius
+  N=51   #number of points
   xy<-.toCart(R,seq(0,pi,l=100),C=C)  
   polar_legend <- .polarLegend(R=R,N=N,C=C)
   
   o<-order(polar_legend$position[,"x"],polar_legend$position[,"y"],decreasing=TRUE)
-  for(i in (1:nrow(polar_legend$position))[o]){
-    grid.points(x=polar_legend$position[i,"x"]*R+C,y=polar_legend$position[i,"y"]*R+C,gp=gpar(col=polar_legend$color[i],cex=0.25),default.units="npc")
-  }
-  for(i in (1:nrow(polar_legend$position))[o]){
-    grid.points(x=polar_legend$position[i,"x"]*R+C,y=polar_legend$position[i,"y"]*R+C,gp=gpar(col=polar_legend$color[i],cex=0.4),default.units="npc")
-  }
+  #for(i in (1:nrow(polar_legend$position))[o]){
+    pts<-pointsGrob(x=polar_legend$position[,"x"]*R+C,y=polar_legend$position[,"y"]*R+C,gp=gpar(col=polar_legend$color,cex=0.25),default.units="npc")
+  #}
+  #for(i in (1:nrow(polar_legend$position))[o]){
+  #  grid.points(x=polar_legend$position[i,"x"]*R+C,y=polar_legend$position[i,"y"]*R+C,gp=gpar(col=polar_legend$color[i],cex=0.4),default.units="npc")
+  #}
 
-  grid.polygon(x=xy$x, y=xy$y, gp=gpar(fill=NA, col="black",lwd=2),default.units="npc") # outer shell 
-  grid.segments(x0=seq(-1,1,l=9)*R+C,y0=rep(0,9)*R+C,x1=seq(-1,1,l=9)*R+C,y1=rep(0-0.1,9)*R+C,default.units="npc",gp=gpar(lwd=2))
-  #xy0<-.toCart(R,theta=seq(pi,0,l=11),C=C)
-  #xy1<-.toCart(R+0.04,theta=seq(pi,0,l=11),C=C)
-  #grid.segments(x0=xy0$x,y0=xy0$y,x1=xy1$x,y1=xy1$y,gp=gpar(lwd=2),default.units="npc")
+  poly<-polygonGrob(x=xy$x, y=xy$y, gp=gpar(fill=NA, col="black",lwd=2),default.units="npc") # outer shell 
+  seg<-segmentsGrob(x0=seq(-1,1,l=9)*R+C,y0=rep(0,9)*R+C,x1=seq(-1,1,l=9)*R+C,y1=rep(0-0.1,9)*R+C,default.units="npc",gp=gpar(lwd=2))
   label<-seq(1,0,l=5)
   label<-c(label,rev(label)[-1])
-  grid.text(label=label,x=seq(-1,1,l=9)*R+C,y=rep(0-0.2,9)*R+C,default.units="npc",rot=90,hjust=1)
-#   xy1<-.toCart(R+0.1,theta=seq(pi,0,l=11),C=C)
-#   rotation<-rev(seq(0,pi/2,l=6)*180/pi)
-#   rotation<-c(-rev(rotation)[-6],rotation)
-#   labs<-seq(1,0.5,l=6)
-#   labs<-c(labs,rev(labs)[-1])
-#   grid.text(label=labs,x=xy1$x,y=xy1$y,rot=rotation,just=0.5)
-  grid.text(label=c("Condition X", "Condition Y"),x=c(-1,1)*R+C,y=rep(0-0.5,2)*R+C,rot=90,just=1)
-  
+  tx1<-textGrob(label=label,x=seq(-1,1,l=9)*R+C,y=rep(0-0.2,9)*R+C,default.units="npc",rot=90,hjust=1)
+  tx2<-textGrob(label=treatmentLabel,x=c(-1.1,1.1)*R+C,y=rep(0,2)*R+C,rot=90,just=1)
+  grid.draw(pts)
+  grid.draw(poly)
+  grid.draw(seg)
+  offset<-unit(1,"grobheight",tx1)
+  tx2$y<-tx2$y-offset-unit(10,"bigpts")
+  grid.draw(tx1)
+  grid.draw(tx2)
   upViewport()
 }
 
