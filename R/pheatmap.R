@@ -536,6 +536,9 @@ draw_polar_legend <- function(fontsize=NA,treatmentLabel=c("Condition X","Condit
   #}
 
   poly<-polygonGrob(x=xy$x, y=xy$y, gp=gpar(fill=NA, col="black",lwd=2),default.units="npc") # outer shell 
+  gp2<-pts$gp
+  gp2$cex<-0.4
+  grid.draw(editGrob(pts,gp=gp2))
   seg<-segmentsGrob(x0=seq(-1,1,l=9)*R+C,y0=rep(0,9)*R+C,x1=seq(-1,1,l=9)*R+C,y1=rep(0-0.1,9)*R+C,default.units="npc",gp=gpar(lwd=2))
   label<-seq(1,0,l=5)
   label<-c(label,rev(label)[-1])
