@@ -215,6 +215,34 @@ draw_rownames = function(rown, ...){
   grid.text(rown, x = unit(0.04, "npc"), y = y, vjust = 0.5, hjust = 0, gp = gpar(...))	
 }
 
+.polarLegend<-function(){
+  .toCart<-function(r,theta,C=0.5){
+    list(x=r*cos(theta)+C,y=r*sin(theta)+C)
+  }
+  radius<-0.25
+  xy<-.toCart(radius,seq(0,pi,l=100))
+  
+  grid.polygon(x=xy$x, y=xy$y, gp=gpar(fill=NA, col="grey90")) # outer shell 
+  
+  N<-101
+  R<-0.25
+  C<-0.5
+  
+  polar.grid<-expand.grid(r=seq(0,R,l=N),theta=seq(0,pi,l=N))
+  cart.grid<-do.call(cbind,.toCart(polar.grid$r,polar.grid$theta,C=0))/R
+  saturation<-ddply(cbind(cart.grid,polar.grid),.(r),function(x)within(x,saturation<-r/R))
+  colors<-ddply(saturation,.(theta),function(x)within(x,cbind(A<-theta/pi,B<-1-A)))
+  head(colors)
+  
+  
+  pal<-rgb2hsv(colors$A,0,colors$B)
+  pal["v",]<-1
+  .scale<-function(x){x/max(x)}
+  cols<-hsv(pal[1,],colors$saturation,pal[3,],alpha=0.2)
+  # plot(cart.grid,col=cols,pch=20,cex=4)
+  return(cols,cart.grid)
+}
+
 draw_legend = function(color, breaks, legend, ...){
   height = min(unit(1, "npc"), unit(150, "bigpts"))
   pushViewport(viewport(x = 0, y = unit(1, "npc"), just = c(0, 1), height = height))

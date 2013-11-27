@@ -2,9 +2,9 @@
 \alias{plot2}
 \title{Plot a Heatmap of the Mean Gammas}
 \usage{
-  plot2(x, y, subset, remove_unexpressed_categories = TRUE,
-    minimum_dof = 1, maximum_dof = Inf, row_annotation,
-    palette = div_gradient_pal(low = "blue", mid = "black", high = "red")(seq(0, 1, length = 20)),
+  plot2(x, y, row_annotation = NULL,
+    remove_unexpressed_categories = TRUE, minimum_dof = 1,
+    maximum_dof = Inf, subset, palette = NA,
     show_rownames = FALSE, show_colnames = FALSE, ...)
 }
 \arguments{
