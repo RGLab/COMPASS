@@ -4,13 +4,11 @@
 \alias{COMPASS-package}
 \title{COMPASS (Combinatorial Polyfunctionality Analysis of Single-Cells)}
 \usage{
-  COMPASS(data, treatment, control, subset = NULL,
-    category_filter = function(x) colSums(x > 5) > 2,
-    filter_lowest_frequency = 0,
-    filter_specific_markers = NULL,
-    model = c("discrete", "continuous"),
-    iterations = 40000, replications = 8,
-    keep_original_data = FALSE, verbose = TRUE, ...)
+COMPASS(data, treatment, control, subset = NULL,
+  category_filter = function(x) colSums(x > 5) > 2,
+  filter_lowest_frequency = 0, filter_specific_markers = NULL,
+  model = c("discrete", "continuous"), iterations = 40000,
+  replications = 8, keep_original_data = FALSE, verbose = TRUE, ...)
 }
 \arguments{
   \item{data}{An object of class \code{COMPASSData}.}
@@ -67,17 +65,16 @@
   \item{...}{Other arguments; currently unused.}
 }
 \value{
-  A \code{list} with class \code{COMPASSResult} with two
-  components, the \code{fit} containing parameter estimates
-  and parameter acceptance rates, and \code{data}
-  containing the generated data used as input for the
-  model.
+A \code{list} with class \code{COMPASSResult} with two
+components, the \code{fit} containing parameter estimates
+and parameter acceptance rates, and \code{data} containing
+the generated data used as input for the model.
 }
 \description{
-  This package implements a model for the analysis of
-  polyfunctionality in single-cell experiments.
+This package implements a model for the analysis of
+polyfunctionality in single-cell experiments.
 
-  This function fits the \code{COMPASS} model.
+This function fits the \code{COMPASS} model.
 }
 \section{Category Filter}{
   The category filter is used to exclude categories
@@ -95,7 +92,7 @@
   particular combination of markers.
 }
 \seealso{
-  \code{\link{COMPASSContainer}}, for constructing the data
-  object required by \code{COMPASS}.
+\code{\link{COMPASSContainer}}, for constructing the data
+object required by \code{COMPASS}.
 }
 

@@ -174,6 +174,7 @@ plot2 <- function(x, y, row_annotation=NULL,
     cluster_rows=FALSE,
     cluster_cols=FALSE,
     cytokine_annotation=cats,
+    polar=TRUE,
     ...
   )
   
