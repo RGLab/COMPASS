@@ -22,7 +22,7 @@
     l2 = which((n_s[,k]/N_s)-(n_u[,k]/N_u) <= 0)
     indi[l2, k] <- 0;
   }
-  indi[,K] <- rowSums(indi[,1:K1])
+  indi[,K] <- rowSums(indi[,1:K1, drop=FALSE])
   indi <- matrix(as.integer(indi), nrow=I)
   
   #############################################
