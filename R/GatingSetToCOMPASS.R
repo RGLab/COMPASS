@@ -211,6 +211,11 @@ COMPASSContainerFromGatingSet <- function(gs=NULL,node=NULL,filter.fun=NULL,indi
       message(sprintf("We failed to guess the mapping between the node %s and the markers in the flowFrame\n",child.nodes))
       message("Our best guess was:")
       kable(map)
+      message("Expected nodes:")
+      message(sprintf("%s ",child.nodes$child.nodes))
+      message("Available dyes:")
+      message(sprintf("%s ",na.omit(as.vector(params$desc))))
+      message("Try specifying the mapping manually.")
       stop("Quitting")
     }
     message("We will map the following nodes to markers:")
@@ -223,7 +228,7 @@ COMPASSContainerFromGatingSet <- function(gs=NULL,node=NULL,filter.fun=NULL,indi
     mp<-as.list(mp)
   }
   #Construct the expression
-  expr<-as.name(paste(map[,node],collapse="|"))
+  expr<-as.name(paste(names(mp),collapse="|"))
   message(sprintf("Extracting single cell data for %s",as.character(expr)))
   
   #extract the single cell values
