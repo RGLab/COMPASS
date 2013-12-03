@@ -108,7 +108,8 @@ plot2 <- function(x, y, row_annotation=NULL,
   ## reorder M_x, M_y
   M_x <- M_x[, order(colnames(M_x)), drop=FALSE]
   M_y <- M_y[, order(colnames(M_y)), drop=FALSE]
-  
+  cats<-cats[order(cats_str),]
+  cats_str<-cats_str[order(cats_str)]
   if (!all(colnames(M_x) == colnames(M_y))) {
     stop("Internal error: could not match categories between the matrices ",
       "from 'x' and 'y'")
@@ -134,8 +135,12 @@ plot2 <- function(x, y, row_annotation=NULL,
     keep <- m != 0
     M <- M[, keep, drop=FALSE]
     cats <- cats[keep, ]
+  }else{
+    #default keep everything
+    keep<-1:ncol(M)
   }
   
+
   colnames(M) <- rownames(cats)
   
   ## handle subsetting

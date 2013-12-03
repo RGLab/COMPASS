@@ -166,6 +166,7 @@ COMPASSContainerFromGatingSet <- function(gs=NULL,node=NULL,filter.fun=NULL,indi
   # Test if children exist, and test if non-empty set returned.
   message("Fetching child nodes")
   child.nodes <- getChildren(gs[[1]],parent.node)
+  child.nodes<-basename(child.nodes)
   if(length(child.nodes)==0){
     stop(sprintf("Population %s has no children! Choose a different parent population.",parent.node))
   }
