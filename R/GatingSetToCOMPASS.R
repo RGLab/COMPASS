@@ -196,6 +196,31 @@ COMPASSContainerFromGatingSet <- function(gs = NULL, node = NULL,
     # number of mapped nodes at the end matches the expected number of
     # child nodes, and error out if it doesn't. We may also want to
     # let the user pass a map.
+    .checkMarkerConsistency<-function(xx){
+      mlist <- lapply(xx,function(x)na.omit(parameters(getData(xx,use.exprs=FALSE))@data$desc))
+      common<-Reduce(intersect,mlist)
+      unyn<-Reduce(union,mlist)
+      warnflag<-FALSE
+      if(!all(common%in%unyn)){
+        warnflag<-TRUE
+      }
+      message("common markers are: ")
+      message(sprintf("%s ",common))
+      if(!is.na(markers)){
+        if(all(markers%in%common)){
+          warnflag<-FALSE
+        }else{
+          warnflag<-TRUE
+        }
+      }
+      if(warnflag){
+        warning("Not all markers are shared across files.")
+        message("Disparate markers are:")
+        message(sprintf("%s "),setdiff(unyn,common))
+      }
+    }
+    
+    .checkMarkerConsistency(gs)
     if (is.null(mp)) {
       params <- parameters(getData(gs[[1]], use.exprs = FALSE))@data
       params <- data.table(params[, c("name", "desc")])
