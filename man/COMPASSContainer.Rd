@@ -2,7 +2,8 @@
 \alias{COMPASSContainer}
 \title{Generate the Data Object used by COMPASS}
 \usage{
-COMPASSContainer(data, counts, meta, individual_id, sample_id, stimulation_id)
+  COMPASSContainer(data, counts, meta, individual_id,
+    sample_id, stimulation_id)
 }
 \arguments{
   \item{data}{A list of matrices. Each matrix \code{M_i} is
@@ -36,7 +37,7 @@ COMPASSContainer(data, counts, meta, individual_id, sample_id, stimulation_id)
   sample received.}
 }
 \description{
-This function generates the data container suitable for use
-with \code{COMPASS}.
+  This function generates the data container suitable for
+  use with \code{COMPASS}.
 }
 
