@@ -117,6 +117,7 @@ GatingSetToCOMPASS <- function(gs, node, children, meta, individual_id,
 ##' @param stimulation_id a \code{character} identifying the stimulation or treatment columnin the \code{gs} metadata.
 ##' @param mp a \code{list} mapping node names to markers. This function tries to guess, but may fail. The user can override the guesswork.
 ##' @param matchmethod a \code{character} either 'regex' or 'Levenshtein' for matching nodes to markers.
+##' @param markers a \code{character} vector of marker names to include.
 ##' @seealso \code{\link{COMPASSContainer}}
 ##' @examples
 ##' \dontrun{
@@ -130,7 +131,7 @@ GatingSetToCOMPASS <- function(gs, node, children, meta, individual_id,
 COMPASSContainerFromGatingSet <- function(gs = NULL, node = NULL, 
                                           filter.fun = NULL, individual_id = "PTID", sample_id = "name", 
                                           stimulation_id = "Stim", mp = NULL, countFilterThreshold = 5000, 
-                                          matchmethod = c("regex", "Levenshtein")) {
+                                          matchmethod = c("regex", "Levenshtein"), markers=NA) {
   if (require(flowWorkspace)) {
     if (is.null(gs) | is.null(node)) {
       stop("Must specify a gating set and parent node.")
@@ -253,6 +254,12 @@ COMPASSContainerFromGatingSet <- function(gs = NULL, node = NULL,
           stop("Quitting")
         }
         map <- map[, c(2, 3, 6), with = FALSE]
+      }
+      
+      #Filter based on selected markers
+      if(!is.na(markers)){
+        setkey(map,desc)
+        map<-map[markers,]
       }
       message("We will map the following nodes to markers:")
       kable(map)

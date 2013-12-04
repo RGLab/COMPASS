@@ -18,7 +18,7 @@
   node. If the character vector passed is named, we map
   from value to name; e.g. if a node is named \code{154}
   but we prefer the name \code{CD154+}, we could pass
-  \code{`CD154+`="154"}.}
+  \code{`CD154+`='154'}.}
 
   \item{meta}{A \code{data.frame} of meta data. If it is
   missing, we attempt to pull the metadata from the

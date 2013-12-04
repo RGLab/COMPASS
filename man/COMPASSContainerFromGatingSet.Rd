@@ -6,7 +6,7 @@
     filter.fun = NULL, individual_id = "PTID",
     sample_id = "name", stimulation_id = "Stim", mp = NULL,
     countFilterThreshold = 5000,
-    matchmethod = c("regex", "Levenshtein"))
+    matchmethod = c("regex", "Levenshtein"), markers = NA)
 }
 \arguments{
   \item{gs}{a \code{GatingSet} or \code{GatingSetList}}
@@ -16,8 +16,8 @@
   matched, an error is thrown.}
 
   \item{filter.fun}{a \code{function} that does string
-  substitution to clean up node names, i.e. turns a "CD4+"
-  into a "CD4" to try and match against the
+  substitution to clean up node names, i.e. turns a 'CD4+'
+  into a 'CD4' to try and match against the
   \code{parameters} slot of the \code{flowFrames} in
   \code{gs}}
 
@@ -34,11 +34,17 @@
   \item{mp}{a \code{list} mapping node names to markers.
   This function tries to guess, but may fail. The user can
   override the guesswork.}
+
+  \item{matchmethod}{a \code{character} either 'regex' or
+  'Levenshtein' for matching nodes to markers.}
+
+  \item{markers}{a \code{character} vector of marker names
+  to include.}
 }
 \description{
   This code expects a \code{GatingSet} or
   \code{GatingSetList}. It expects a regular expression for
-  the node name (i.e. "/4\\+$" would match "/4+" in a node
+  the node name (i.e. '/4\\+$' would match '/4+' in a node
   name with the plus sign at the end of the string. The
   user must supply the individual_id, sample_id, and
   stimulation_id, but they have default values suitable for
@@ -58,7 +64,7 @@
 }
 \examples{
 \dontrun{
-  COMPASSContainerFromGatingSet(gatingset,"/4\\\\+$")
+  COMPASSContainerFromGatingSet(gatingset,'/4\\\\+$')
 }
 }
 \seealso{
