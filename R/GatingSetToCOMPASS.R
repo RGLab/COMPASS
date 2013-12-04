@@ -88,10 +88,10 @@ COMPASSContainerFromGatingSet <- function(gs = NULL, node = NULL, filter.fun = N
     
     if (inherits(gs, "GatingSetList")) {
       counts <- unlist( lapply(gs@data, function(x) {
-        .get_cell_counts(x, sampleNames(x), node)
+        .get_cell_counts(x, sampleNames(x), parent.pop)
       }))
     } else if (inherits(gs, "GatingSet")) {
-      counts <- .get_cell_counts(gs, sampleNames(gs), node)
+      counts <- .get_cell_counts(gs, sampleNames(gs), parent.pop)
     } else {
       stop("Internal error: 'gs' should have either been a GatingSet or a GatingSetList")
     }
