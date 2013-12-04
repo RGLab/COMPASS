@@ -91,6 +91,8 @@ COMPASSContainerFromGatingSet <- function(gs = NULL, node = NULL, filter.fun = N
       }))
     } else if (inherits(gs, "GatingSet")) {
       counts <- .get_cell_counts(gs, sampleNames(gs), node)
+    } else {
+      stop("Internal error: 'gs' should have either been a GatingSet or a GatingSetList")
     }
     
     # Extract the parent node name from the full population name
