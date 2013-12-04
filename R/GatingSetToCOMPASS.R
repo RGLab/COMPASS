@@ -65,7 +65,8 @@ COMPASSContainerFromGatingSet <- function(gs = NULL, node = NULL, filter.fun = N
       stop("Quitting")
     }
     # Can we identify a unique parent node?
-    parent.pop <- rownames(stats)[grepl(node, rownames(stats), fixed = FALSE)]
+    paths <- getNodes(gs[[1]], isPath=TRUE)
+    parent.pop <- paths[grepl(node, paths, fixed = FALSE)]
     if (length(parent.pop) > 1) {
       stop(sprintf("The node expression %s is not unique.", node))
     }
