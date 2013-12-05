@@ -45,13 +45,42 @@ if (FALSE) {
 ##' @export
 COMPASSContainerFromGatingSet <- function(gs = NULL, node = NULL, filter.fun = NULL, 
                                           individual_id = "PTID", sample_id = "name", stimulation_id = "Stim", 
-                                          mp = NULL, countFilterThreshold = 5000, matchmethod = c("regex", "Levenshtein"), 
+                                          mp = NULL, countFilterThreshold = 5000, matchmethod = c("Levenshtein","regex"), 
                                           markers = NA) {
   if (require(flowWorkspace)) {
     
     if (is.null(gs) | is.null(node)) {
       stop("Must specify a gating set and parent node.")
     }
+
+    # extract all the counts
+    message("Extracting cell counts")
+    .getOneStat<-function(x,y){
+      parent.counts<-flowWorkspace::lapply(x,function(xx,yy=y){
+        getTotal(xx,yy)
+      })
+      parent.counts <- unlist(parent.counts)
+      names(parent.counts) <- sampleNames(x)
+      parent.counts
+    }
+    
+    nnames<-getNodes(gs[[1]],isPath=TRUE)
+    parent.pop<-nnames[grepl(node, nnames, fixed = FALSE)]    
+    if (length(parent.pop) > 1) {
+      stop(sprintf("The node expression %s is not unique.", node))
+    }
+    if (length(parent.pop) == 0) {
+      stop(sprintf("The node expression %s doesn't identify any nodes.", 
+                   node))
+    }
+    
+    # Extract the parent node name from the full population name
+    parent.node <- laply(strsplit(parent.pop, "/"), function(x) x[length(x)])
+    message(sprintf("Fetching %s", parent.node))
+    
+    counts<-.getOneStat(gs,parent.node)
+    
+    #stats <- getPopStats(gs, statistic = "count")
     
     pd <- pData(gs)
     # Do the expected columns exist?
@@ -64,44 +93,56 @@ COMPASSContainerFromGatingSet <- function(gs = NULL, node = NULL, filter.fun = N
                                                                  colnames(pd))]))
       stop("Quitting")
     }
+    
     # Can we identify a unique parent node?
-    paths <- getNodes(gs[[1]], isPath=TRUE)
-    parent.pop <- paths[grepl(node, paths, fixed = FALSE)]
-    if (length(parent.pop) > 1) {
-      stop(sprintf("The node expression %s is not unique.", node))
-    }
-    if (length(parent.pop) == 0) {
-      stop(sprintf("The node expression %s doesn't identify any nodes.", 
-                   node))
-    }
+
+#     paths <- getNodes(gs[[1]], isPath=TRUE)
+#     parent.pop <- paths[grepl(node, paths, fixed = FALSE)]
+#     if (length(parent.pop) > 1) {
+#       stop(sprintf("The node expression %s is not unique.", node))
+#     }
+#     if (length(parent.pop) == 0) {
+#       stop(sprintf("The node expression %s doesn't identify any nodes.", 
+#                    node))
+#     }
+#     
+#     # extract all the counts
+#     message("Extracting cell counts")
+#     .get_cell_counts <- function(gs, samples, node) {
+#       nodes <- getNodes(gs[[1]], isPath=FALSE)
+#       paths <- getNodes(gs[[1]], isPath=TRUE)
+#       node <- nodes[ node == paths ]
+#       ind <- .Call("R_getNodeID", gs@pointer, samples[[1]], node)
+#       output <- unlist( lapply(samples, function(x) {
+#         .Call("R_getPopStats", gs@pointer, x, ind)$FlowCore["count"]
+#       }) )
+#       names(output) <- samples
+#       return(output)
+#     }
+#     
+#     if (inherits(gs, "GatingSetList")) {
+#       counts <- unlist( lapply(gs@data, function(x) {
+#         .get_cell_counts(x, sampleNames(x), parent.pop)
+#       }))
+#     } else if (inherits(gs, "GatingSet")) {
+#       counts <- .get_cell_counts(gs, sampleNames(gs), parent.pop)
+#     } else {
+#       stop("Internal error: 'gs' should have either been a GatingSet or a GatingSetList")
+#     }
+
+    #parent.pop <- rownames(stats)[grepl(node, rownames(stats), fixed = FALSE)]
+    #if (length(parent.pop) > 1) {
+    #  stop(sprintf("The node expression %s is not unique.", node))
+    #}
+    #if (length(parent.pop) == 0) {
+    #  stop(sprintf("The node expression %s doesn't identify any nodes.", 
+    #               node))
+    #}
     
-    # extract all the counts
-    message("Extracting cell counts")
-    .get_cell_counts <- function(gs, samples, node) {
-      nodes <- getNodes(gs[[1]], isPath=FALSE)
-      paths <- getNodes(gs[[1]], isPath=TRUE)
-      node <- nodes[ node == paths ]
-      ind <- .Call("R_getNodeID", gs@pointer, samples[[1]], node)
-      output <- unlist( lapply(samples, function(x) {
-        .Call("R_getPopStats", gs@pointer, x, ind)$FlowCore["count"]
-      }) )
-      names(output) <- samples
-      return(output)
-    }
+    # Grab the counts for the parent
+    #counts <- stats[which(rownames(stats) %in% parent.pop), ]
     
-    if (inherits(gs, "GatingSetList")) {
-      counts <- unlist( lapply(gs@data, function(x) {
-        .get_cell_counts(x, sampleNames(x), parent.pop)
-      }))
-    } else if (inherits(gs, "GatingSet")) {
-      counts <- .get_cell_counts(gs, sampleNames(gs), parent.pop)
-    } else {
-      stop("Internal error: 'gs' should have either been a GatingSet or a GatingSetList")
-    }
-    
-    # Extract the parent node name from the full population name
-    parent.node <- laply(strsplit(parent.pop, "/"), function(x) x[length(x)])
-    message(sprintf("Fetching %s", parent.node))
+
     # Get the children of that parent and filter out boolean gates Test if
     # children exist, and test if non-empty set returned.
     message("Fetching child nodes")
@@ -145,6 +186,8 @@ COMPASSContainerFromGatingSet <- function(gs = NULL, node = NULL, filter.fun = N
       } else {
         stop("Expected object of type 'GatingSetList' or 'GatingSet'")
       }
+      mlist <- flowWorkspace::lapply(xx, function(x) na.omit(parameters(getData(x, 
+                                                                 use.exprs = FALSE))@data$desc))
       common <- Reduce(intersect, mlist)
       unyn <- Reduce(union, mlist)
       warnflag <- FALSE
@@ -184,15 +227,14 @@ COMPASSContainerFromGatingSet <- function(gs = NULL, node = NULL, filter.fun = N
       }
       child.nodes[, `:=`(child.nodes.upper, filter.fun(child.nodes.upper))]
       
-      matchmethod <- match.arg(arg = matchmethod, choices = c("regex", 
-                                                              "Levenshtein"))
+      matchmethod <- match.arg(arg = matchmethod, choices = c("Levenshtein",
+                                                              "regex"))
       if (matchmethod == "Levenshtein") {
         distances <- adist(child.nodes[, child.nodes.upper], na.omit(params[, 
                                                                             desc.upper]))
         matching <- as.vector(solve_LSAP(distances))
-        matched <- cbind(na.omit(params)[matching, list(name, desc)], 
-                         node = child.nodes[, child.nodes])
-        map <- matched
+        matched <- cbind(as.data.frame(na.omit(params)[matching, list(name, desc)]),  data.frame(node=child.nodes[, child.nodes]))
+        map <- data.table(matched)
       } else {
         map <- na.omit(unique(ldply(child.nodes[, child.nodes.upper], 
                                     function(x) {
@@ -202,6 +244,8 @@ COMPASSContainerFromGatingSet <- function(gs = NULL, node = NULL, filter.fun = N
         map <- data.table(merge(map, child.nodes, by = "child.nodes.upper", 
                                 all.x = TRUE))
         map[, `:=`(node, child.nodes)]
+        #drop uncompensated markers
+        map<-map[name%like%"<"]
         tbl <- table(map$node)
         if (any(tbl > 1)) {
           row.remove <- sapply(which(tbl > 1), function(x) {
@@ -247,7 +291,13 @@ COMPASSContainerFromGatingSet <- function(gs = NULL, node = NULL, filter.fun = N
     message(sprintf("Extracting single cell data for %s", as.character(expr)))
     
     # extract the single cell values
-    sc_data <- getData(obj = gs, y = expr, pop_marker_list = mp)
+    sc_data <- try(getData(obj = gs, y = expr, pop_marker_list = mp))
+    if(inherits(sc_data,"try-error")){
+      message("getData failed. Perhaps the marker list is not unique in the flowFrame.")
+      message("All markers and channels:")
+      kable(na.omit(data.frame(params[,1:2,with=FALSE])))
+      stop()
+    }
     
     message("Filtering low counts")
     filter <- counts > countFilterThreshold
