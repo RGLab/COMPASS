@@ -128,8 +128,23 @@ COMPASSContainerFromGatingSet <- function(gs = NULL, node = NULL, filter.fun = N
     # the expected number of child nodes, and error out if it doesn't. We
     # may also want to let the user pass a map.
     .checkMarkerConsistency <- function(xx) {
-      mlist <- lapply(xx, function(x) na.omit(parameters(getData(xx, 
-                                                                 use.exprs = FALSE))@data$desc))
+      if (inherits(xx, "GatingSetList")) {
+        mlist <- unlist( recursive=FALSE, lapply(xx@data, function(x) {
+          dat <- getData(x, use.exprs=FALSE)
+          lapply( objects(dat@frames), function(obj) {
+            fr <- get(obj, envir=dat@frames)
+            return(na.omit( parameters(fr)@data$desc ))
+          })
+        }) )
+      } else if (inherits(xx, "GatingSet")) {
+        dat <- getData(xx, use.exprs=FALSE)
+        mlist <- lapply( objects(dat@frames), function(obj) {
+          fr <- get(obj, envir=dat@frames)
+          return(na.omit( parameters(fr)@data$desc ))
+        })
+      } else {
+        stop("Expected object of type 'GatingSetList' or 'GatingSet'")
+      }
       common <- Reduce(intersect, mlist)
       unyn <- Reduce(union, mlist)
       warnflag <- FALSE
