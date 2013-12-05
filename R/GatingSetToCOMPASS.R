@@ -78,6 +78,9 @@ COMPASSContainerFromGatingSet <- function(gs = NULL, node = NULL, filter.fun = N
     # extract all the counts
     message("Extracting cell counts")
     .get_cell_counts <- function(gs, samples, node) {
+      nodes <- getNodes(gs[[1]], isPath=FALSE)
+      paths <- getNodes(gs[[1]], isPath=TRUE)
+      node <- nodes[ node == paths ]
       ind <- .Call("R_getNodeID", gs@pointer, samples[[1]], node)
       output <- unlist( lapply(samples, function(x) {
         .Call("R_getPopStats", gs@pointer, x, ind)$FlowCore["count"]
