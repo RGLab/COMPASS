@@ -61,6 +61,7 @@ double digamma_radford_neal (double x)
 
   f = 1/(x*x);
 
+  // t = f*(-1/12.0 + f*(1/120.0 + f*(-1/252.0 + f*(1/240.0 + f*(-1/132.0)))));
   t = f*(-1/12.0 + f*(1/120.0 + f*(-1/252.0 + f*(1/240.0 + f*(-1/132.0
        + f*(691/32760.0 + f*(-1/12.0 + f*3617/8160.0)))))));
 
@@ -79,7 +80,7 @@ NumericVector c_digamma(NumericVector x) {
 
 /*** R
 library(microbenchmark)
-x <- rgamma(1E5, 1)
+x <- rgamma(1E4, 1E-1)
 microbenchmark(
   R_digamma(x),
   boost_digamma(x),
@@ -91,5 +92,6 @@ B <- boost_digamma(x)
 C <- c_digamma(x)
 mean(R - B)
 mean(R - C)
+max( R - C )
 all.equal(R, C)
 */

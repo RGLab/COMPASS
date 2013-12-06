@@ -2,10 +2,11 @@
 \alias{COMPASSContainerFromGatingSet}
 \title{Create a COMPASS Container from a GatingSet}
 \usage{
-COMPASSContainerFromGatingSet(gs = NULL, node = NULL, filter.fun = NULL,
-  individual_id = "PTID", sample_id = "name", stimulation_id = "Stim",
-  mp = NULL, countFilterThreshold = 5000, matchmethod = c("regex",
-  "Levenshtein"), markers = NA)
+  COMPASSContainerFromGatingSet(gs = NULL, node = NULL,
+    filter.fun = NULL, individual_id = "PTID",
+    sample_id = "name", stimulation_id = "Stim", mp = NULL,
+    countFilterThreshold = 5000,
+    matchmethod = c("regex", "Levenshtein"), markers = NA)
 }
 \arguments{
   \item{gs}{a \code{GatingSet} or \code{GatingSetList}}
@@ -41,25 +42,25 @@ COMPASSContainerFromGatingSet(gs = NULL, node = NULL, filter.fun = NULL,
   to include.}
 }
 \description{
-This code expects a \code{GatingSet} or
-\code{GatingSetList}. It expects a regular expression for
-the node name (i.e. '/4\\+$' would match '/4+' in a node
-name with the plus sign at the end of the string. The user
-must supply the individual_id, sample_id, and
-stimulation_id, but they have default values suitable for
-the data we commonly see. Sometimes the child node names
-don't match the marker names exactly. This function will
-try to make some guesses about how to match these up. The
-\code{filter.fun} parameter is a function that does some
-regular expression string substitution to try and clean up
-the node names by removing various symobls that are often
-added to gates, \{+/-\}. The user can provide their own
-function to do string cleanup. Counts are extracted as well
-as metadata and single cell data, and these are fed into
-the COMPASSContainer constructor.
+  This code expects a \code{GatingSet} or
+  \code{GatingSetList}. It expects a regular expression for
+  the node name (i.e. '/4\\+$' would match '/4+' in a node
+  name with the plus sign at the end of the string. The
+  user must supply the individual_id, sample_id, and
+  stimulation_id, but they have default values suitable for
+  the data we commonly see. Sometimes the child node names
+  don't match the marker names exactly. This function will
+  try to make some guesses about how to match these up. The
+  \code{filter.fun} parameter is a function that does some
+  regular expression string substitution to try and clean
+  up the node names by removing various symobls that are
+  often added to gates, \{+/-\}. The user can provide their
+  own function to do string cleanup. Counts are extracted
+  as well as metadata and single cell data, and these are
+  fed into the COMPASSContainer constructor.
 }
 \details{
-There is likely not sufficient error checking.
+  There is likely not sufficient error checking.
 }
 \examples{
 \dontrun{
@@ -67,6 +68,6 @@ There is likely not sufficient error checking.
 }
 }
 \seealso{
-\code{\link{COMPASSContainer}}
+  \code{\link{COMPASSContainer}}
 }
 
