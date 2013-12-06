@@ -2,9 +2,10 @@
 \alias{plot2}
 \title{Plot a Heatmap of the Mean Gammas}
 \usage{
-plot2(x, y, row_annotation = NULL, remove_unexpressed_categories = TRUE,
-  minimum_dof = 1, maximum_dof = Inf, subset, palette = NA,
-  show_rownames = FALSE, show_colnames = FALSE, ...)
+  plot2(x, y, row_annotation = NULL,
+    remove_unexpressed_categories = TRUE, minimum_dof = 1,
+    maximum_dof = Inf, subset, palette = NA,
+    show_rownames = FALSE, show_colnames = FALSE, ...)
 }
 \arguments{
   \item{x}{An object of class \code{COMPASSResult}.}
@@ -39,6 +40,6 @@ plot2(x, y, row_annotation = NULL, remove_unexpressed_categories = TRUE,
   \item{...}{Optional arguments passed to \code{pheatmap}.}
 }
 \description{
-This function plots the mean gammas.
+  This function plots the mean gammas.
 }
 

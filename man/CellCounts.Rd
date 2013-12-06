@@ -2,7 +2,7 @@
 \alias{CellCounts}
 \title{Compute Number of Cells Positive for Certain Cytokine Combinations}
 \usage{
-CellCounts(data, combinations)
+  CellCounts(data, combinations)
 }
 \arguments{
   \item{data}{A list of matrices. Each matrix \code{i} is
@@ -14,9 +14,9 @@ CellCounts(data, combinations)
   examples.}
 }
 \description{
-This function takes a list of cell expression matrices,
-each matrix \code{i} of dimension \code{N_i cells} by
-\code{K} common markers.
+  This function takes a list of cell expression matrices,
+  each matrix \code{i} of dimension \code{N_i cells} by
+  \code{K} common markers.
 }
 \examples{
 K <- 6 ## number of markers
