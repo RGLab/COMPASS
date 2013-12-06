@@ -6,7 +6,11 @@
     filter.fun = NULL, individual_id = "PTID",
     sample_id = "name", stimulation_id = "Stim", mp = NULL,
     countFilterThreshold = 5000,
+<<<<<<< HEAD
     matchmethod = c("regex", "Levenshtein"), markers = NA)
+=======
+    matchmethod = c("Levenshtein", "regex"), markers = NA)
+>>>>>>> e76df581e3211929150472305df5bf7da5ec812d
 }
 \arguments{
   \item{gs}{a \code{GatingSet} or \code{GatingSetList}}
