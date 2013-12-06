@@ -40,6 +40,11 @@ merge.COMPASSContainer <- function(x, y, ...) {
   
   data <- c(x$data, y$data)
   
+  ## drop rows that are all 0s, if necessary
+  data <- lapply(data, function(x) {
+    x[ rowSums(x) != 0, , drop=FALSE ]
+  })
+  
   ## Merge the metadata
   meta <- rbind.fill(x$meta, y$meta)
   
