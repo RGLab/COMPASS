@@ -9,7 +9,8 @@ if (FALSE) {
 ##' This code expects a \code{GatingSet} or \code{GatingSetList}. 
 ##' It expects a regular expression for the node name 
 ##' (i.e. '/4\\+$' would match '/4+' in a node name with the plus
-##' sign at the end of the string.
+##' sign at the end of the string. Alternatively, you can supply a
+##' partial path.
 ##' The user must supply the individual_id, sample_id, and stimulation_id, 
 ##' but they have default values suitable for the data we commonly see.
 ##' Sometimes the child node names don't match the marker names exactly.
@@ -36,7 +37,7 @@ if (FALSE) {
 ##' @seealso \code{\link{COMPASSContainer}}
 ##' @examples
 ##' \dontrun{
-##'   COMPASSContainerFromGatingSet(gatingset,'/4\\+$')
+##'   COMPASSContainerFromGatingSet(gatingset,'4+')
 ##' }
 ##' @importFrom plyr laply ldply
 ##' @importFrom knitr kable
@@ -52,6 +53,12 @@ COMPASSContainerFromGatingSet <- function(gs = NULL, node = NULL, filter.fun = N
     if (is.null(gs) | is.null(node)) {
       stop("Must specify a gating set and parent node.")
     }
+    
+    ## Make 'node' act more like a regular expression if it isn't one already
+    n <- nchar(node)
+    if (!substring(node, 1, 1) == "/") node <- paste0("/", node)
+    if (!substring(node, n, n) == "$") node <- paste0(node, "$")
+    node <- gsub("(?<!\\\\)\\+", "\\\\+", node, perl=TRUE)
 
     # extract all the counts
     message("Extracting cell counts")

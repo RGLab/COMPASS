@@ -45,8 +45,9 @@
   This code expects a \code{GatingSet} or
   \code{GatingSetList}. It expects a regular expression for
   the node name (i.e. '/4\\+$' would match '/4+' in a node
-  name with the plus sign at the end of the string. The
-  user must supply the individual_id, sample_id, and
+  name with the plus sign at the end of the string.
+  Alternatively, you can supply a partial path. The user
+  must supply the individual_id, sample_id, and
   stimulation_id, but they have default values suitable for
   the data we commonly see. Sometimes the child node names
   don't match the marker names exactly. This function will
