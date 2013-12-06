@@ -39,12 +39,10 @@ Collate:
     'RcppExports.R'
     'Scores.R'
     'TotalCounts.R'
-<<<<<<< HEAD
-=======
     'commonPlot.R'
->>>>>>> e76df581e3211929150472305df5bf7da5ec812d
     'discrete_combinations.R'
     'melt_.R'
+    'merge-COMPASSContainer.R'
     'pheatmap.R'
     'plotMeanGamma-2.R'
     'plotMeanGamma.R'
@@ -54,7 +52,3 @@ Collate:
     'swap.R'
     'transpose_list.R'
     'utils.R'
-<<<<<<< HEAD
-    'merge-COMPASSContainer.R'
-=======
->>>>>>> e76df581e3211929150472305df5bf7da5ec812d
