@@ -19,36 +19,11 @@ Imports:
     scales,
     grid,
     plyr,
-    knitr
+    knitr,
+    clue,
+    abind
 Suggests:
     flowWorkspace (>= 3.9.36),
     shiny
 LazyLoad: yes
 LazyData: yes
-Collate:
-    'BooleanSubsets.R'
-    'COMPASS-continuous.R'
-    'COMPASS-discrete.R'
-    'COMPASS-package.R'
-    'COMPASS.R'
-    'COMPASSContainer.R'
-    'COMPASSResult-methods.R'
-    'CellCounts.R'
-    'GatingSetToCOMPASS.R'
-    'Posterior.R'
-    'RcppExports.R'
-    'Scores.R'
-    'TotalCounts.R'
-    'commonPlot.R'
-    'discrete_combinations.R'
-    'melt_.R'
-    'merge-COMPASSContainer.R'
-    'pheatmap.R'
-    'plotMeanGamma-2.R'
-    'plotMeanGamma.R'
-    'repmat.R'
-    'shinyCOMPASS.R'
-    'subset-COMPASSContainer.R'
-    'swap.R'
-    'transpose_list.R'
-    'utils.R'

@@ -2,7 +2,7 @@
 \alias{subset.COMPASSContainer}
 \title{Subset a COMPASSContainer}
 \usage{
-  \method{subset}{COMPASSContainer} (x, subset, ...)
+\method{subset}{COMPASSContainer}(x, subset, ...)
 }
 \arguments{
   \item{x}{A \code{COMPASSContainer}.}
@@ -13,6 +13,6 @@
   \item{...}{Optional arguents; currently unused.}
 }
 \description{
-  Use this function to subset a \code{COMPASSContainer}.
+Use this function to subset a \code{COMPASSContainer}.
 }
 

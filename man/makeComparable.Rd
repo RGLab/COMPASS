@@ -2,7 +2,7 @@
 \alias{makeComparable}
 \title{Make a list of COMPASSResults comparable for display as heatamps}
 \usage{
-  makeComparable(X, subset, ...)
+makeComparable(X, subset, ...)
 }
 \arguments{
   \item{X}{An list of \code{COMPASSResult} objects}
@@ -14,9 +14,9 @@
   \item{...}{Optional arguments passed to \code{pheatmap}.}
 }
 \description{
-  This function makes a list of COMPASSResults comparable
-  for display as heatmaps. It has some inefficiencies as it
-  looks at all pairwise comparisons.
+This function makes a list of COMPASSResults comparable for
+display as heatmaps. It has some inefficiencies as it looks
+at all pairwise comparisons.
 }
 \examples{
 \dontrun{

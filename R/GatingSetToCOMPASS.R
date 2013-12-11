@@ -32,6 +32,9 @@ if (FALSE) {
 ##' @param sample_id a \code{character} idetifying the sample id column in the \code{gs} metadata.
 ##' @param stimulation_id a \code{character} identifying the stimulation or treatment columnin the \code{gs} metadata.
 ##' @param mp a \code{list} mapping node names to markers. This function tries to guess, but may fail. The user can override the guesswork.
+##' @param countFilterThreshold Numeric; if the number of cells expressing at
+##'   least one marker of interest is less than this threshold, we remove that
+##'   file.
 ##' @param matchmethod a \code{character} either 'regex' or 'Levenshtein' for matching nodes to markers.
 ##' @param markers a \code{character} vector of marker names to include.
 ##' @seealso \code{\link{COMPASSContainer}}

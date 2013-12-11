@@ -2,28 +2,21 @@
 \alias{pheatmap}
 \title{A function to draw clustered heatmaps.}
 \usage{
-  pheatmap(mat,
-    color = colorRampPalette(rev(brewer.pal(n = 7, name = "RdYlBu")))(100),
-    kmeans_k = NA, breaks = NA, border_color = "grey60",
-    cellwidth = NA, cellheight = NA, scale = "none",
-    cluster_rows = TRUE, cluster_cols = TRUE,
-    clustering_distance_rows = "euclidean",
-    clustering_distance_cols = "euclidean",
-    clustering_method = "complete",
-    treeheight_row = ifelse(cluster_rows, 50, 0),
-    treeheight_col = ifelse(cluster_cols, 50, 0),
-    legend = TRUE, legend_breaks = NA, legend_labels = NA,
-    annotation = NA, annotation_colors = NA,
-    annotation_legend = TRUE, drop_levels = TRUE,
-    show_rownames = T, show_colnames = T, main = NA,
-    fontsize = 10, fontsize_row = fontsize,
-    fontsize_col = fontsize, display_numbers = F,
-    number_format = "\%.2f",
-    fontsize_number = 0.8 * fontsize, filename = NA,
-    width = NA, height = NA, row_annotation = NA,
-    row_annotation_legend = TRUE,
-    row_annotation_colors = NA, cytokine_annotation = NA,
-    headerplot = NA, polar = FALSE, ...)
+pheatmap(mat, color = colorRampPalette(rev(brewer.pal(n = 7, name =
+  "RdYlBu")))(100), kmeans_k = NA, breaks = NA, border_color = "grey60",
+  cellwidth = NA, cellheight = NA, scale = "none", cluster_rows = TRUE,
+  cluster_cols = TRUE, clustering_distance_rows = "euclidean",
+  clustering_distance_cols = "euclidean", clustering_method = "complete",
+  treeheight_row = ifelse(cluster_rows, 50, 0),
+  treeheight_col = ifelse(cluster_cols, 50, 0), legend = TRUE,
+  legend_breaks = NA, legend_labels = NA, annotation = NA,
+  annotation_colors = NA, annotation_legend = TRUE, drop_levels = TRUE,
+  show_rownames = T, show_colnames = T, main = NA, fontsize = 10,
+  fontsize_row = fontsize, fontsize_col = fontsize, display_numbers = F,
+  number_format = "\%.2f", fontsize_number = 0.8 * fontsize,
+  filename = NA, width = NA, height = NA, row_annotation = NA,
+  row_annotation_legend = TRUE, row_annotation_colors = NA,
+  cytokine_annotation = NA, headerplot = NA, polar = FALSE, ...)
 }
 \arguments{
   \item{mat}{numeric matrix of the values to be plotted.}
@@ -174,36 +167,40 @@
 
   \item{headerplot}{is a list with two components, order
   and data. Order tells how to reorder the columns of the
-  matrix. Data is some summary statistic over the columns
-  which will be plotted in the header where the column
-  cluster tree usually appears. Cytokine ordering is
-  ignored when the headerplot argument is passed.}
+  matrix.}
+
+  \item{polar}{Boolean; if \code{TRUE} we draw a polar
+  legend. Primarily for internal use. Data is some summary
+  statistic over the columns which will be plotted in the
+  header where the column cluster tree usually appears.
+  Cytokine ordering is ignored when the headerplot argument
+  is passed.}
 
   \item{\dots}{graphical parameters for the text used in
   plot. Parameters passed to \code{\link{grid.text}}, see
   \code{\link{gpar}}.}
 }
 \value{
-  Invisibly a list of components \itemize{ \item
-  \code{tree_row} the clustering of rows as
-  \code{\link{hclust}} object \item \code{tree_col} the
-  clustering of columns as \code{\link{hclust}} object
-  \item \code{kmeans} the kmeans clustering of rows if
-  parameter \code{kmeans_k} was specified }
+Invisibly a list of components \itemize{ \item
+\code{tree_row} the clustering of rows as
+\code{\link{hclust}} object \item \code{tree_col} the
+clustering of columns as \code{\link{hclust}} object \item
+\code{kmeans} the kmeans clustering of rows if parameter
+\code{kmeans_k} was specified }
 }
 \description{
-  A function to draw clustered heatmaps where one has
-  better control over some graphical parameters such as
-  cell size, etc.
+A function to draw clustered heatmaps where one has better
+control over some graphical parameters such as cell size,
+etc.
 }
 \details{
-  The function also allows to aggregate the rows using
-  kmeans clustering. This is advisable if number of rows is
-  so big that R cannot handle their hierarchical clustering
-  anymore, roughly more than 1000. Instead of showing all
-  the rows separately one can cluster the rows in advance
-  and show only the cluster centers. The number of clusters
-  can be tuned with parameter kmeans_k.
+The function also allows to aggregate the rows using kmeans
+clustering. This is advisable if number of rows is so big
+that R cannot handle their hierarchical clustering anymore,
+roughly more than 1000. Instead of showing all the rows
+separately one can cluster the rows in advance and show
+only the cluster centers. The number of clusters can be
+tuned with parameter kmeans_k.
 }
 \examples{
 # Generate some data
@@ -268,6 +265,8 @@ dcols = dist(t(test), method = "minkowski")
 pheatmap(test, clustering_distance_rows = drows, clustering_distance_cols = dcols)
 }
 \author{
-  Raivo Kolde <rkolde@gmail.com>
+Original version by Raivo Kolde <rkolde@gmail.com>, with
+modifications by Greg Finak <gfinak@fhcrc.org> and Kevin
+Ushey <kushey@fhcrc.org>.
 }
 

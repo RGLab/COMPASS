@@ -4,6 +4,7 @@
 ##' 
 ##' @param x A \code{COMPASSContainer}.
 ##' @param y A \code{COMPASSContainer}.
+##' @param ... Optional arguments, currently ignored.
 ##' @method merge COMPASSContainer
 ##' @S3method merge COMPASSContainer
 ##' @importFrom plyr rbind.fill

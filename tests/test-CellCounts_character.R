@@ -1,6 +1,8 @@
 library(COMPASS)
 
-data <- replicate(100, matrix( rnorm(1E4 * 6, 2500, 500), nrow=1E4), simplify=FALSE)
+n <- 1E2
+
+data <- replicate(100, matrix( rnorm(n * 6, 2500, 500), nrow=n), simplify=FALSE)
 data <- lapply(data, function(x) {
   colnames(x) <- LETTERS[1:6]
   x[ x < 1500 ] <- 0

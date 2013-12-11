@@ -222,6 +222,8 @@ draw_rownames = function(rown, ...){
   list(x=r*cos(theta)+C,y=r*sin(theta)+C)
 }
 
+##' @importFrom plyr ddply
+##' @importFrom plyr .
 .polarLegend<-function(R=0.25,N=11,C=0.5){
  
   
@@ -829,6 +831,8 @@ kmeans_pheatmap = function(mat, k = min(nrow(mat), 150), sd_limit = NA, ...){
 #' of the categories for each column. They will be colored by their degree of functionality and ordered by degree of functionality
 #' and by amount of expression if column clustering is not done.
 #' @param headerplot is a list with two components, order and data. Order tells how to reorder the columns of the matrix. 
+#' @param polar Boolean; if \code{TRUE} we draw a polar legend. Primarily for
+#'  internal use.
 #' Data is some summary statistic over the columns which will be plotted in the header where the column cluster tree usually appears.
 #' Cytokine ordering is ignored when the headerplot argument is passed.
 #' @param \dots graphical parameters for the text used in plot. Parameters passed to 
@@ -843,7 +847,8 @@ kmeans_pheatmap = function(mat, k = min(nrow(mat), 150), sd_limit = NA, ...){
 #' specified 
 #' }
 #' 
-#' @author  Raivo Kolde <rkolde@@gmail.com>
+#' @author  Original version by Raivo Kolde <rkolde@@gmail.com>, with modifications
+#'  by Greg Finak <gfinak@@fhcrc.org> and Kevin Ushey <kushey@@fhcrc.org>.
 #' @examples
 #'  # Generate some data
 #' test = matrix(rnorm(200), 20, 10)

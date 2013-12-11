@@ -9,6 +9,7 @@
 ##' @param ... Optional arguments passed to \code{pheatmap}.
 ##' @importFrom clue solve_LSAP
 ##' @importFrom utils adist
+##' @importFrom abind abind
 ##' @export
 ##' @examples
 ##'\dontrun{
@@ -72,7 +73,7 @@ makeComparable <- function(X,
       cn<-colnames(x)
       xcn<-cn[grepl("\\.x$",cn)]
       ycn<-cn[grepl("\\.y$",cn)]
-      match_id<-as.vector(clue:::solve_LSAP(adist(xcn,ycn)))
+      match_id<-as.vector(solve_LSAP(adist(xcn,ycn)))
       for(i in 1:length(xcn)){
         imp<-apply(data.frame(x[,get(xcn[i])],x[,get(ycn[match_id[i]])]),1,function(xx)na.omit(unique(xx)))
         if(class(imp)!="list"){
@@ -149,7 +150,7 @@ makeComparable <- function(X,
     ncd<-nc-ncg
     if(ncd>0){
       for(i in 1:ncd){
-        x$fit$gamma<-(abind::abind(x$fit$gamma,matrix(0,nrow=dim(x$fit$gamma)[1],ncol=dim(x$fit$gamma)[3]),along=2))
+        x$fit$gamma<-(abind(x$fit$gamma,matrix(0,nrow=dim(x$fit$gamma)[1],ncol=dim(x$fit$gamma)[3]),along=2))
       }
     }
     nc <- ncol(M_y)
@@ -157,7 +158,7 @@ makeComparable <- function(X,
     ncd<-nc-ncg
     if(ncd>0){
       for(i in 1:ncd){
-        y$fit$gamma<-(abind::abind(y$fit$gamma,matrix(0,nrow=dim(y$fit$gamma)[1],ncol=dim(y$fit$gamma)[3]),along=2))
+        y$fit$gamma<-(abind(y$fit$gamma,matrix(0,nrow=dim(y$fit$gamma)[1],ncol=dim(y$fit$gamma)[3]),along=2))
       }
     }
     

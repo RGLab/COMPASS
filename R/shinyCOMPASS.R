@@ -66,7 +66,7 @@ shinyCOMPASS <- function(x, dir=NULL,
   })
   
   ## Compute the joint distribution of counts
-  combos <- discrete_combinations( 1:length(markers) )
+  combos <- discrete_combinations(length(markers))
   
   d_counts <- CellCounts(dat, combos)
   rownames(d_counts) <- names(dat)
@@ -101,6 +101,7 @@ shinyCOMPASS <- function(x, dir=NULL,
     names(counts),
     unname(counts)
   )
+  
   setnames(counts_dt, c(sid, "TotalCellCounts"))
   setkeyv(counts_dt, sid)
   setkeyv(d, sid)
@@ -185,7 +186,7 @@ shinyCOMPASS <- function(x, dir=NULL,
       }) )
     ]
   
-  dir.create(dir, showWarnings=FALSE)
+  dir.create(dir, showWarnings=FALSE, recursive=TRUE)
   file.copy(
     file.path( system.file(package="COMPASS"), "shiny/." ),
     file.path(dir),

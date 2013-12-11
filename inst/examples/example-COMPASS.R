@@ -33,14 +33,14 @@ verbose <- TRUE
 
 ## An example call
 set.seed(123)
-discrete1 <- COMPASS(
+system.time(discrete1 <- COMPASS(
   data=CC,
   treatment="92TH023 Env",
   control="negctrl 1",
-  model="continuous",
-  iterations=10,
-  replications=8
-)
+  model="discrete",
+  iterations=1E3,
+  replications=1
+))
 
 set.seed(123)
 discrete2 <- COMPASS(

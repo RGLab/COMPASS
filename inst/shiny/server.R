@@ -362,7 +362,7 @@ shinyServer( function(input, output, session) {
       ## merge them
       output <- rep(0, length(pos))
       output[pos == 1] <- 1
-      output[neg == -1] <- -1
+      output[neg == -1] <- 0
       return(output)
       
     })))
