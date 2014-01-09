@@ -1,7 +1,13 @@
 ##' Generate the Data Object used by COMPASS
 ##' 
 ##' This function generates the data container suitable for use with
-##' \code{COMPASS}.
+##' \code{COMPASS}. 
+##' 
+##' The \code{names} attributes for the \code{data} and \code{counts}
+##' objects passed should match, and these should be contained in the 
+##' metadata \code{meta} in the column \code{meta[[stimulation_id]]}.
+##' It is through this link that the model interface in
+##' \code{\link{COMPASS}} functions.
 ##' 
 ##' @param data A list of matrices. Each matrix \code{M_i} is made up of 
 ##'   \code{N_i} cells by \code{K} markers; for example, it could be the 
@@ -51,7 +57,10 @@ COMPASSContainer <- function(data, counts, meta,
     }
   }
   
-  ## convert NULLs to 0-row matrices
+  ## guess the number of markers
+  ## we have to do some ugly stuff here since there's no guarantee that
+  ## the user has actually passed in a list of matrices (could be 
+  ## NULL, NA, a named vector...) but we want to be helpful
   n_markers <- NULL
   marker_names <- NULL
   for (i in 1:length(data)) {
@@ -71,6 +80,17 @@ COMPASSContainer <- function(data, counts, meta,
     for (i in which(null_data)) {
       data[[i]] <- empty_matrix
     }
+  }
+  
+  ## ensure that the number of markers, names are identical
+  n_markers_all <- sapply(data, ncol)
+  if (length(unique(n_markers_all)) != 1) {
+    stop("The number of markers is not identical across samples!")
+  }
+  
+  names_all <- lapply(data, colnames)
+  if (!identical( Reduce(union, names_all), Reduce(intersect, names_all))) {
+    stop("The marker names are not identical across samples!")
   }
   
   ## type checking

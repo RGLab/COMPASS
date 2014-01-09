@@ -39,4 +39,11 @@ COMPASSContainer(data, counts, meta, individual_id, sample_id, stimulation_id)
 This function generates the data container suitable for use
 with \code{COMPASS}.
 }
+\details{
+The \code{names} attributes for the \code{data} and
+\code{counts} objects passed should match, and these should
+be contained in the metadata \code{meta} in the column
+\code{meta[[stimulation_id]]}. It is through this link that
+the model interface in \code{\link{COMPASS}} functions.
+}
 
