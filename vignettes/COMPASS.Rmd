@@ -1,0 +1,130 @@
+# COMPASS - Combinatorial Polyfunctionality Analysis of Single Cells
+
+Background, references. ICS experiments. Basics of gating.
+Quality > quantity -- how do we find 'high quality' cells?
+
+Applications in HIV research (other?)
+
+Fits the COMPASS model.
+
+Description of model.
+
+We will use a simulated dataset to illustrate the use of the `COMPASS` package.
+
+First, we will outline the components used to construct the `COMPASSContainer`,
+the data structure used to hold data from an ICS experiment. We will first
+initialize some parameters used in generating the simulated data.
+
+```{r sim-init}
+library(COMPASS)
+set.seed(123)
+n <- 100 ## number of samples
+k <- 6 ## number of markers
+
+sid_vec <- paste0("sid_", 1:n) ## sample ids; unique names used to denote samples
+iid_vec <- rep_len( paste0("iid_", 1:(n/10) ), n ) ## individual ids
+```
+
+### data
+
+This is a list of matrices, with each matrix
+representing a cell population drawn from a particular sample. Each row is a
+cell, each column is a marker, and each cell is an intensity measure associated
+with a particular cell and cytokine. Only cells that expressed at least one
+marker are included.
+
+```{r sim-data}
+data <- replicate(n, {
+  nrow <- round(runif(1) * 1E4 + 1000)
+  ncol <- k
+  vals <- rexp( nrow * ncol, 1/1000 )
+  vals[ vals < 1000 ] <- 0
+  output <- matrix(vals, nrow, ncol)
+  colnames(output) <- paste0("C", 1:k)
+  return(output)
+})
+names(data) <- sid_vec
+```
+
+### counts
+
+This is a named integer vector, denoting the total number of cells that were
+recovered from each sample in `data`.
+
+```{r sim-counts}
+counts <- sapply(data, nrow) + round( rnorm(n, 1E4, 1E3) )
+counts <- setNames( as.integer(counts), names(counts) )
+```
+
+### meta
+
+This is a `data.frame` that associates metadata information with each sample
+available in `data` / `counts`.
+
+```{r sim-meta}
+meta <- data.frame(
+  sid=sid_vec,
+  iid=iid_vec,
+  trt=sample( c("T1", "T2"), n, TRUE )
+)
+```
+
+Once we have these components, we can construct the `COMPASSContainer`:
+
+```{r sim-CC}
+CC <- COMPASSContainer(
+  data=data,
+  counts=counts,
+  meta=meta,
+  individual_id="iid", ## name of individual id vector in metadata
+  sample_id="sid", ## name of sample id vector in metadata
+  stimulation_id="trt" ## what treatment was applied to each sample?
+)
+```
+
+We can see some basic information about our `COMPASSContainer`:
+
+```{r CC-basics}
+CC
+summary(CC)
+```
+
+
+```{r sim-data}
+library(COMPASS)
+set.seed(123)
+n <- 100 ## number of samples
+k <- 6 ## number of markers
+data <- replicate(n, {
+  nrow <- round(runif(1) * 1E4 + 1000)
+  ncol <- k
+  vals <- rexp( nrow * ncol, 1/1000 )
+  vals[ vals < 1000 ] <- 0
+  output <- matrix(vals, nrow, ncol)
+  colnames(output) <- paste0("C", 1:k)
+  return(output)
+})
+
+sid_vec <- paste0("sid_", 1:n)
+iid_vec <- rep_len( paste0("iid_", 1:(n/10) ), n )
+
+names(data) <- sid_vec
+
+counts <- sapply(data, nrow) + round( rnorm(n, 1E4, 1E3) )
+
+meta <- data.frame(
+  sid=sid_vec,
+  iid=iid_vec,
+  trt=sample( c("T1", "T2"), n, TRUE )
+)
+
+CC <- COMPASSContainer(
+  data,
+  counts,
+  meta,
+  individual_id="iid",
+  sample_id="sid",
+  stimulation_id="trt"
+) 
+```
+
