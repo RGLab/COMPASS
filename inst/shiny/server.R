@@ -369,6 +369,9 @@ shinyServer( function(input, output, session) {
     
     rownames(annot_tmp) <- colnames(m)
     colnames(annot_tmp) <- orig_markers
+    for (i in seq_along(annot_tmp)) {
+      annot_tmp[[i]] <- factor( annot_tmp[[i]] )
+    }
     annot <<- annot_tmp
     
     ## Order the columns by degree of functionality, number of
