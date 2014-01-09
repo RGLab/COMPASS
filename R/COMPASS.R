@@ -15,7 +15,7 @@
 ##' indicates that we should only retain categories for which at least two samples
 ##' had at least 5 cells expressing that particular combination of markers.
 ##' 
-##' @param data An object of class \code{COMPASSData}.
+##' @param data An object of class \code{COMPASSContainer}.
 ##' @param treatment An \R expression, evaluated within the metadata, that
 ##'   returns \code{TRUE} for those samples that should belong to the
 ##'   treatment group. For example, if the samples that received a positive
@@ -51,7 +51,8 @@
 ##' @return A \code{list} with class \code{COMPASSResult} with two components,
 ##'   the \code{fit} containing parameter estimates and parameter acceptance
 ##'   rates, and \code{data} containing the generated data used as input for
-##'   the model.
+##'   the model. If \code{keep_original_data} is \code{TRUE}, then the original
+##'   data is also returned as a component of the list, with name \code{orig}.
 ##' @export
 COMPASS <- function(data, treatment, control, subset=NULL, 
   category_filter=function(x) colSums(x > 5) > 2,

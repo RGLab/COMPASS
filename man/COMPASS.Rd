@@ -11,7 +11,7 @@ COMPASS(data, treatment, control, subset = NULL,
   replications = 8, keep_original_data = FALSE, verbose = TRUE, ...)
 }
 \arguments{
-  \item{data}{An object of class \code{COMPASSData}.}
+  \item{data}{An object of class \code{COMPASSContainer}.}
 
   \item{treatment}{An \R expression, evaluated within the
   metadata, that returns \code{TRUE} for those samples that
@@ -68,7 +68,10 @@ COMPASS(data, treatment, control, subset = NULL,
 A \code{list} with class \code{COMPASSResult} with two
 components, the \code{fit} containing parameter estimates
 and parameter acceptance rates, and \code{data} containing
-the generated data used as input for the model.
+the generated data used as input for the model. If
+\code{keep_original_data} is \code{TRUE}, then the original
+data is also returned as a component of the list, with name
+\code{orig}.
 }
 \description{
 This package implements a model for the analysis of
