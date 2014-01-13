@@ -22,6 +22,9 @@
 ##'   the individual ids).
 ##' @param show_colnames Boolean; if \code{TRUE} we display column names
 ##'   (ie, the column name associated with a cytokine; typically not needed)
+##' @param measure Optional. By default, we produce a heatmap of the mean
+##'   gammas produced in a model fit. We can override this by supplying a
+##'   matrix of suitable dimension as well.
 ##' @param ... Optional arguments passed to \code{pheatmap}.
 ##' @importFrom RColorBrewer brewer.pal
 ##' @importFrom grDevices colorRampPalette
@@ -31,7 +34,14 @@ plot.COMPASSResult <- function(x, y, subset,
   #palette=seq_gradient_pal(low="black", high="red")(seq(0, 1, length=20)),
   palette=colorRampPalette(brewer.pal(10,"Purples"))(20),
   show_rownames=FALSE, 
-  show_colnames=FALSE, ...) {
+  show_colnames=FALSE, 
+  measure=NULL,
+  ...) {
+  
+  ## try to override mean_gamma with measure
+  if (!is.null(measure)) {
+    x$fit$mean_gamma <- measure
+  }
   
   subset_expr <- match.call()$subset
   

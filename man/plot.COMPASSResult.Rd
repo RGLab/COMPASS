@@ -6,7 +6,7 @@
   remove_unexpressed_categories = TRUE, minimum_dof = 1,
   maximum_dof = Inf, row_annotation,
   palette = colorRampPalette(brewer.pal(10, "Purples"))(20),
-  show_rownames = FALSE, show_colnames = FALSE, ...)
+  show_rownames = FALSE, show_colnames = FALSE, measure = NULL, ...)
 }
 \arguments{
   \item{x}{An object of class \code{COMPASSResult}.}
@@ -39,6 +39,11 @@
   \item{show_colnames}{Boolean; if \code{TRUE} we display
   column names (ie, the column name associated with a
   cytokine; typically not needed)}
+
+  \item{measure}{Optional. By default, we produce a heatmap
+  of the mean gammas produced in a model fit. We can
+  override this by supplying a matrix of suitable dimension
+  as well.}
 
   \item{...}{Optional arguments passed to \code{pheatmap}.}
 }
