@@ -12,7 +12,8 @@ Posterior <- function(x) {
   return(x$fit$posterior)
 }
 
-compute_posterior <- function(x) {
+compute_posterior <- function(x, as.matrix=FALSE) {
+  
   output <- lapply( 1:nrow(x$data$n_s), function(i) {
     .Call( "samplePuPs",
       x$fit$alpha_u,
@@ -29,4 +30,36 @@ compute_posterior <- function(x) {
   
   names(output) <- rownames(x$data$n_s)
   return(output)
+}
+
+##' @rdname Posterior
+##' @export
+PosteriorDiff <- function(x) {
+  
+  if (!inherits(x, "COMPASSResult")) {
+    stop("'x' must be an object of class 'COMPASSResult'")
+  }
+  
+  post <- x$fit$posterior
+  output <- sapply(post, "[[", "diff")
+  nm <- colnames( x$data$n_s )
+  rownames(output) <- nm[ -length(nm) ]
+  return(output)
+  
+}
+
+##' @rdname Posterior
+##' @export
+PosteriorLogDiff <- function(x) {
+  
+  if (!inherits(x, "COMPASSResult")) {
+    stop("'x' must be an object of class 'COMPASSResult'")
+  }
+  
+  post <- x$fit$posterior
+  output <- sapply(post, "[[", "logd")
+  nm <- colnames( x$data$n_s )
+  rownames(output) <- nm[ -length(nm) ]
+  return(output)
+  
 }
