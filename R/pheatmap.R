@@ -64,6 +64,7 @@ lo = function(rown, coln, nrow, ncol, cellheight = NA, cellwidth = NA, treeheigh
   if(!is.na(annotation[[1]][1])){
     # Column annotation height 
     annot_height = unit(ncol(annotation) * (8 + 2) + 2, "bigpts")
+    
     # Width of the correponding legend
     longest_ann = which.max(nchar(as.matrix(annotation)))
     annot_legend_width = unit(1.2, "grobwidth", textGrob(as.matrix(annotation)[longest_ann], gp = gpar(...))) + unit(12, "bigpts")
@@ -80,11 +81,25 @@ lo = function(rown, coln, nrow, ncol, cellheight = NA, cellwidth = NA, treeheigh
   if(!is.na(row_annotation[[1]][1])){
     #width of the annotation beside the rows
     row_annotation_width = unit(ncol(row_annotation) * (8 + 2) + 2,"bigpts")
+    
     #width of the legend
-    longest_row_annotation = which.max(nchar(as.matrix(row_annotation)))
-    annot_legend_width = unit(1.2, "grobwidth",textGrob(as.matrix(row_annotation)[longest_row_annotation],gp=gpar(...))) + unit(12,"bigpts")+annot_legend_width
-    if(!row_annotation_legend&!annotation_legend){
-      annot_legend_width = unit(0,"npc")
+    
+    ## name nchars
+    max_nm_nchars <- max(nchar( names(row_annotation) ))
+    max_nm_annot <- max(nchar( as.matrix( row_annotation ) ))
+    if (max_nm_nchars >= max_nm_annot) {
+      annot_legend_width <- unit(1.2, "grobwidth",
+        textGrob( names(row_annotation)[ which.max( nchar( names(row_annotation) ) ) ],
+          gp=gpar(...))) + unit(12,"bigpts")+annot_legend_width
+      if(!row_annotation_legend&!annotation_legend){
+        annot_legend_width = unit(0,"npc")
+      }
+    } else {
+      longest_row_annotation = which.max(nchar(as.matrix(row_annotation)))
+      annot_legend_width = unit(1.2, "grobwidth",textGrob(as.matrix(row_annotation)[longest_row_annotation],gp=gpar(...))) + unit(12,"bigpts")+annot_legend_width
+      if(!row_annotation_legend&!annotation_legend){
+        annot_legend_width = unit(0,"npc")
+      }
     }
   }else{
     row_annotation_width = unit(0,"bigpts")
