@@ -13,18 +13,21 @@ iid_vec <- rep_len( paste0("iid_", 1:(n/10) ), n ) ## individual ids
 data <- replicate(n, {
   nrow <- round(runif(1) * 1E4 + 1000)
   ncol <- k
-  vals <- rexp( nrow * ncol, runif(1, 1E-6, 1E-3) )
-  vals[ vals < 1000 ] <- 0
+  vals <- rexp( nrow * ncol, runif(1, 1E-5, 1E-3) )
+  vals[ vals < 2000 ] <- 0
   output <- matrix(vals, nrow, ncol)
-  colnames(output) <- paste0("C", 1:k)
+  output <- output[ apply(output, 1, sum) > 0, ]
+  colnames(output) <- paste0("M", 1:k)
   return(output)
 })
 names(data) <- sid_vec
+head( data[[1]] )
 
 
 ## ----sim-counts----------------------------------------------------------
 counts <- sapply(data, nrow) + round( rnorm(n, 1E4, 1E3) )
 counts <- setNames( as.integer(counts), names(counts) )
+head(counts)
 
 
 ## ----sim-meta------------------------------------------------------------
@@ -33,6 +36,7 @@ meta <- data.frame(
   iid=iid_vec,
   trt=sample( c("Control", "Treatment"), n, TRUE )
 )
+head(meta)
 
 
 ## ----sim-CC--------------------------------------------------------------
