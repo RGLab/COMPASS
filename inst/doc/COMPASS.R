@@ -13,7 +13,7 @@ iid_vec <- rep_len( paste0("iid_", 1:(n/10) ), n ) ## individual ids
 data <- replicate(n, {
   nrow <- round(runif(1) * 1E4 + 1000)
   ncol <- k
-  vals <- rexp( nrow * ncol, 1/1000 )
+  vals <- rexp( nrow * ncol, runif(1, 1E-6, 1E-3) )
   vals[ vals < 1000 ] <- 0
   output <- matrix(vals, nrow, ncol)
   colnames(output) <- paste0("C", 1:k)
@@ -65,12 +65,21 @@ fit <- COMPASS( CC,
 FS <- FunctionalityScore(fit)
 PFS <- PolyfunctionalityScore(fit)
 
+## Obtain the posterior difference, posterior log ratio from a COMPASSResult
+post <- Posterior(fit)
+
 ## Plot a heatmap of the mean gammas, to visualize differences in expression
 ## for each category
 plot(fit)
 
+## Visualize the posterior difference, log difference with a heatmap
+plot(fit, measure=PosteriorDiff(fit))
+plot(fit, measure=PosteriorLogDiff(fit))
+
+
 
 ## ----citation, echo=FALSE, results='asis'--------------------------------
-cite_package("COMPASS", "flowWorkspace", "openCyto")
+citations <- cite_package("COMPASS", "flowWorkspace", "openCyto", "base")
+invisible(lapply(citations, function(x) cat(x, "\n\n")))
 
 

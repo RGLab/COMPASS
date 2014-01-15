@@ -44,7 +44,7 @@ PosteriorDiff <- function(x) {
   output <- sapply(post, "[[", "diff")
   nm <- colnames( x$data$n_s )
   rownames(output) <- nm[ -length(nm) ]
-  return(output)
+  return( t(output) )
   
 }
 
@@ -60,6 +60,6 @@ PosteriorLogDiff <- function(x) {
   output <- sapply(post, "[[", "logd")
   nm <- colnames( x$data$n_s )
   rownames(output) <- nm[ -length(nm) ]
-  return(output)
+  return( t(output) )
   
 }

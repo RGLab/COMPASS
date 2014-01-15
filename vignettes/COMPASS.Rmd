@@ -60,7 +60,7 @@ marker are included.
 data <- replicate(n, {
   nrow <- round(runif(1) * 1E4 + 1000)
   ncol <- k
-  vals <- rexp( nrow * ncol, 1/1000 )
+  vals <- rexp( nrow * ncol, runif(1, 1E-6, 1E-3) )
   vals[ vals < 1000 ] <- 0
   output <- matrix(vals, nrow, ncol)
   colnames(output) <- paste0("C", 1:k)
@@ -141,9 +141,17 @@ After fitting the `COMPASS` model, we can examine the output in many ways:
 FS <- FunctionalityScore(fit)
 PFS <- PolyfunctionalityScore(fit)
 
+## Obtain the posterior difference, posterior log ratio from a COMPASSResult
+post <- Posterior(fit)
+
 ## Plot a heatmap of the mean gammas, to visualize differences in expression
 ## for each category
 plot(fit)
+
+## Visualize the posterior difference, log difference with a heatmap
+plot(fit, measure=PosteriorDiff(fit))
+plot(fit, measure=PosteriorLogDiff(fit))
+
 ```
 
 `COMPASS` also packages a Shiny application for interactive visualization of
@@ -170,10 +178,11 @@ their data with `COMPASS` can do so by first loading and parsing their
 workspace with `flowWorkspace`, and next generating the `COMPASSContainer`
 through `COMPASSContainerFromGatingSet`.
 
-Citation
---------
+Citations
+---------
 
 ```{r citation, echo=FALSE, results='asis'}
-cite_package("COMPASS", "flowWorkspace", "openCyto")
+citations <- cite_package("COMPASS", "flowWorkspace", "openCyto", "base")
+invisible(lapply(citations, function(x) cat(x, "\n\n")))
 ```
 
