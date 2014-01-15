@@ -51,9 +51,9 @@ of these components next.
 ### data
 
 This is a list of matrices, with each matrix
-representing a population of cells drawn from a particular sample. Each row is a
-cell, each column is a marker, and each cell is an intensity measure associated
-with a particular cell and cytokine. Only cells that have expressed at least one
+representing a population of cells drawn from a particular sample. Each row is an
+individual cell, each column is a marker (cytokine), and each matrix element is an intensity measure associated
+with a particular cell and marker. Only cells that express at least one
 marker are included.
 
 ```{r sim-data}
@@ -182,7 +182,9 @@ Citations
 ---------
 
 ```{r citation, echo=FALSE, results='asis'}
+suppressPackageStartupMessages(library(Kmisc))
 citations <- cite_package("COMPASS", "flowWorkspace", "openCyto", "base")
+citations <- c(citations[1:2],"Greg Finak, Andrew McDavid, Pratip Chattopadhyay, Maria Dominguez, Steve De Rosa, Mario Roederer, Raphael Gottardo. Mixture models for single-cell assays with applications to vaccine studies. Biostatistics 2014 Jan;15(1):87-101",citations[3:4])
 invisible(lapply(citations, function(x) cat(x, "\n\n")))
 ```
 
