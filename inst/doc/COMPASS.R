@@ -83,7 +83,9 @@ plot(fit, measure=PosteriorLogDiff(fit))
 
 
 ## ----citation, echo=FALSE, results='asis'--------------------------------
+suppressPackageStartupMessages(library(Kmisc))
 citations <- cite_package("COMPASS", "flowWorkspace", "openCyto", "base")
+citations <- c(citations[1:2],"Greg Finak, Andrew McDavid, Pratip Chattopadhyay, Maria Dominguez, Steve De Rosa, Mario Roederer, Raphael Gottardo. Mixture models for single-cell assays with applications to vaccine studies. Biostatistics 2014 Jan;15(1):87-101",citations[3:4])
 invisible(lapply(citations, function(x) cat(x, "\n\n")))
 
 
