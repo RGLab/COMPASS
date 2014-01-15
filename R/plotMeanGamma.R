@@ -1,9 +1,9 @@
 ##' Plot a Heatmap of the Mean Gammas
 ##' 
 ##' This function plots the mean gammas.
-##' 
 ##' @method plot COMPASSResult
 ##' @S3method plot COMPASSResult
+##' @aliases plot
 ##' @param x An object of class \code{COMPASSResult}.
 ##' @param y This argument gets passed to \code{row_annotation}, if
 ##'   \code{row_annotation} is missing.
@@ -55,10 +55,9 @@ plot.COMPASSResult <- function(x, y, subset,
   nc <- ncol(x$fit$gamma)
   M <- x$fit$mean_gamma[, -nc]
   
-  ## compute dof from the colnames of M
-  dof <- sapply( strsplit( colnames(M), "", fixed=TRUE ), function(x) {
-    sum( as.integer(x) )
-  })
+  ## get the dof
+  dof <- x$fit$categories[, "Counts"]
+  dof <- dof[ -length(dof) ]
 
   rowann <- data.frame(.id=rownames(M))
   rowann <- merge(

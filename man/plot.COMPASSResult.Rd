@@ -1,4 +1,5 @@
 \name{plot.COMPASSResult}
+\alias{plot}
 \alias{plot.COMPASSResult}
 \title{Plot a Heatmap of the Mean Gammas}
 \usage{
