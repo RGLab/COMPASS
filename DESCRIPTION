@@ -3,8 +3,12 @@ Type: Package
 Title: Combinatorial Polyfunctionality Analysis of Single Cells
 Version: 0.92
 Date: 2013-10-24
-Author: Lynn Lin <llin@fhcrc.org>
-Maintainer: Kevin Ushey <kushey@fhcrc.org>, Greg Finak <gfinak@fhcrc.org>
+Authors@R: c( person("Lynn", "Lin", role="aut", email="llin@fhcrc.org"),
+    person("Kevin", "Ushey", role=c("aut", "cre"), email="kushey@fhcrc.org"),
+    person("Greg", "Finak", role="aut", email="gfinak@fhcrc.org"),
+    person("Raivo", "Kolde", role="ctb", email="rkolde@gmail.com",
+    comment="Author of 'pheatmap', which was modified and now used internally
+    in COMPASS") )
 Description: Combinatorial polyfunctionality analysis of
     single-cells (COMPASS)
 License: Artistic-2.0
