@@ -97,15 +97,17 @@ data <- replicate(10, simplify=FALSE, {
 names(data) <- sample(letters, 10)
 
 combos <- list(1, 2, 3, 4, 5, 6) ## marginal cell counts
-cc <- cell_counts(data, combos)
+names(combos) <- letters[1:6]
+cc <- .CellCounts(data, combos)
 f <- function(data) {
   do.call(rbind, lapply(data, function(x) apply(x, 2, function(x) sum(x > 0))))
 }
 cc2 <- f(data)
+colnames(cc2) <- names(combos)
 identical(cc, cc2)
 library(microbenchmark)
 microbenchmark(
-  cell_counts(data, combos),
+  .CellCounts(data, combos),
   f(data)
 )
 */
