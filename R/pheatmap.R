@@ -87,8 +87,8 @@ lo = function(rown, coln, nrow, ncol, cellheight = NA, cellwidth = NA, treeheigh
     ## name nchars
     max_nm_nchars <- max(nchar( names(row_annotation) ))
     max_nm_annot <- max(nchar( as.matrix( row_annotation ) ))
-    if (max_nm_nchars >= max_nm_annot) {
-      annot_legend_width <- unit(1.2, "grobwidth",
+    if (max_nm_nchars > max_nm_annot) {
+      annot_legend_width <- unit(1.5, "grobwidth",
         textGrob( names(row_annotation)[ which.max( nchar( names(row_annotation) ) ) ],
           gp=gpar(...))) + unit(12,"bigpts")+annot_legend_width
       if(!row_annotation_legend&!annotation_legend){
