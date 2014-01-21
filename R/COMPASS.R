@@ -47,7 +47,8 @@
 ##' @param ... Other arguments; currently unused.
 ##' 
 ##' @seealso \code{\link{COMPASSContainer}}, for constructing the data object
-##'   required by \code{COMPASS}.
+##'   required by \code{COMPASS}, and \code{\link{SimpleCOMPASS}}, for fitting
+##'   the \code{COMPASS} model on a set of pre-calculated counts matrices.
 ##' @return A \code{list} with class \code{COMPASSResult} with two components,
 ##'   the \code{fit} containing parameter estimates and parameter acceptance
 ##'   rates, and \code{data} containing the generated data used as input for
