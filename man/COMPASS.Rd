@@ -96,6 +96,8 @@ This function fits the \code{COMPASS} model.
 }
 \seealso{
 \code{\link{COMPASSContainer}}, for constructing the data
-object required by \code{COMPASS}.
+object required by \code{COMPASS}, and
+\code{\link{SimpleCOMPASS}}, for fitting the \code{COMPASS}
+model on a set of pre-calculated counts matrices.
 }
 

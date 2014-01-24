@@ -1,38 +1,37 @@
 #include <Rcpp.h>
+using namespace Rcpp;
 
 // cpp codes for generate posterior ps and pu for each subject i
 RcppExport SEXP samplePuPs(SEXP alphau, SEXP alphas, SEXP gammat,  SEXP T, SEXP K , SEXP nsi, SEXP nui, SEXP d, SEXP M)
 {
     BEGIN_RCPP
     
-    Rcpp::IntegerVector xnsi(nsi); // n_s[i,]
-    Rcpp::IntegerVector xnui(nui); //n_u[i,]
-    Rcpp::NumericMatrix xalphau(alphau); // posterior samples for alpha_u
-    Rcpp::NumericMatrix xalphas(alphas); // posterior samples for alpha_s
-    Rcpp::IntegerMatrix xgammat(gammat); // posterior samples for gamma_i
-    Rcpp::IntegerMatrix xd(d); //cytokine combination indicator matrix
+    IntegerVector xnsi(nsi); // n_s[i,]
+    IntegerVector xnui(nui); //n_u[i,]
+    NumericMatrix xalphau(alphau); // posterior samples for alpha_u
+    NumericMatrix xalphas(alphas); // posterior samples for alpha_s
+    IntegerMatrix xgammat(gammat); // posterior samples for gamma_i
+    IntegerMatrix xd(d); // cytokine combination indicator matrix
     
-    // int xM = Rcpp::as<int>(M); // # markers
-    int xT = Rcpp::as<int>(T); // # MCMC iterations used
-    int xK = Rcpp::as<int>(K); // # Categories
-    int K1 = xK-1; 
-    Rcpp::NumericVector xpu(xK);
-    Rcpp::NumericVector xps(xK);
-
-    Rcpp::NumericVector DIFF(K1); // Ps-Pu
-    Rcpp::NumericVector LogD(K1); // LogPs-logPu
-      
+    // int xM = as<int>(M); // # markers
+    int xT = as<int>(T); // # MCMC iterations used
+    int xK = as<int>(K); // # Categories
+    int K1 = xK-1;
+    
+    NumericVector DIFF(K1); // Ps-Pu
+    NumericVector LogD(K1); // LogPs-logPu  
   
     int sum = 0;
     std::vector<double> alpha_u(xK);
     std::vector<double> alpha_s(xK);
     
-    Rcpp::NumericMatrix psi(xT,xK);
-    Rcpp::NumericMatrix pui(xT,xK);
+    NumericMatrix psi(xT,xK);
+    NumericMatrix pui(xT,xK);
+    
     std::vector<double> diff(xK);
     std::vector<double> logd(xK);
     double tmp = 0.;
-    Rcpp::RNGScope scope;
+    RNGScope scope;
     double sau = 0.;
     double sas = 0.;
     double sass = 0.;
@@ -108,8 +107,22 @@ RcppExport SEXP samplePuPs(SEXP alphau, SEXP alphas, SEXP gammat,  SEXP T, SEXP 
        }
 
     }
+    
+    // compute colmeans psi, pui
+    Function colMeans("colMeans");
+    NumericVector p_s = colMeans(psi);
+    NumericVector p_u = colMeans(pui);
+    
+    p_s = p_s[ seq(0, p_s.size()-2) ];
+    p_u = p_u[ seq(0, p_s.size()-2) ];
    
-    return Rcpp::List::create(Rcpp::Named("diff") = DIFF, Rcpp::Named("logd") = LogD);
+    return List::create(
+      _["p_s"] = p_s,
+      _["p_u"] = p_u,
+      _["diff"] = DIFF,
+      _["logd"] = LogD
+    );
+    
     END_RCPP
 
 }

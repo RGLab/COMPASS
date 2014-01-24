@@ -38,8 +38,8 @@ system.time(discrete1 <- COMPASS(
   treatment="92TH023 Env",
   control="negctrl 1",
   model="discrete",
-  iterations=1E3,
-  replications=1
+  iterations=1E2,
+  replications=4
 ))
 
 set.seed(123)

@@ -6,6 +6,7 @@
 ##' @docType package
 ##' @name COMPASS
 ##' @useDynLib COMPASS
+##' @importFrom Rcpp evalCpp
 ##' @import data.table
 ##' @import grid
 NULL

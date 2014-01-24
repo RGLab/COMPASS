@@ -63,3 +63,35 @@ PosteriorLogDiff <- function(x) {
   return( t(output) )
   
 }
+
+##' @rdname Posterior
+##' @export
+PosteriorPs <- function(x) {
+  
+  if (!inherits(x, "COMPASSResult")) {
+    stop("'x' must be an object of class 'COMPASSResult'")
+  }
+  
+  post <- x$fit$posterior
+  output <- sapply(post, "[[", "p_s")
+  nm <- colnames( x$data$n_s )
+  rownames(output) <- nm[ -length(nm) ]
+  return( t(output) )
+  
+}
+
+##' @rdname Posterior
+##' @export
+PosteriorPu <- function(x) {
+  
+  if (!inherits(x, "COMPASSResult")) {
+    stop("'x' must be an object of class 'COMPASSResult'")
+  }
+  
+  post <- x$fit$posterior
+  output <- sapply(post, "[[", "p_u")
+  nm <- colnames( x$data$n_s )
+  rownames(output) <- nm[ -length(nm) ]
+  return( t(output) )
+  
+}

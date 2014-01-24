@@ -34,6 +34,12 @@ SimpleCOMPASS(n_s, n_u, meta, individual_id, sample_id, iterations = 10000L,
   \item{verbose}{Boolean; if \code{TRUE} we output progress
   information.}
 }
+\value{
+A \code{list} with class \code{COMPASSResult} with two
+components, the \code{fit} containing parameter estimates
+and parameter acceptance rates, and \code{data} containing
+the generated data used as input for the model.
+}
 \description{
 This function fits the \code{COMPASS} model from a
 user-provided set of stimulated / unstimulated matrices.

@@ -153,6 +153,11 @@ COMPASSContainer <- function(data, counts, meta,
   meta[[individual_id]] <- as.character( meta[[individual_id]] )
   meta[[sample_id]] <- as.character( meta[[sample_id]] )
   
+  ## Check for negative values in the data
+  if (any(sapply(data, function(x) any(x < 0)))) {
+    warning("There appear to be negative intensities in the 'data' supplied.")
+  }
+  
   output <- list(
     data=data,
     counts=counts,
