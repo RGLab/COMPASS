@@ -1,5 +1,6 @@
 lo = function(rown, coln, nrow, ncol, cellheight = NA, cellwidth = NA, treeheight_col, treeheight_row, legend, annotation, annotation_colors, annotation_legend, main, fontsize, fontsize_row, fontsize_col,row_annotation,row_annotation_legend,row_annotation_colors, cytokine_annotation, polar=FALSE,...){
   annot_legend_width = unit(0, "npc")
+  
   #cytokine labels
   if(!is.na(cytokine_annotation[[1]][1])){
     cytn<-colnames(cytokine_annotation)
@@ -268,21 +269,35 @@ draw_legend = function(color, breaks, legend, ...){
   upViewport()
 }
 
-convert_cytokine_annotations = function(annotation){
-  ck_degree<-apply(annotation,1,function(x)sum(as.numeric(as.character(x))))
-  mdegree<-max(ck_degree)
-  udegrees<-unique(setdiff(ck_degree,0))
-  new_annotation<-matrix("#FFFFFF",ncol=ncol(annotation),nrow=nrow(annotation))
-  pal<-brewer.pal("Paired",n=mdegree)
-  for(i in udegrees){
-    ind<-which(annotation==1,TRUE)[,1]%in%which(ck_degree%in%i)
-    for(j in which(ind)){
-      new_annotation[which(annotation==1,TRUE)[j,1],which(annotation==1,TRUE)[j,2]]<-pal[i]
-    }
-  }
-  colnames(new_annotation)<-colnames(annotation)
-  rownames(new_annotation)<-rownames(annotation)
-  new_annotation
+## Convert the cytokine annotations matrix of 0s and 1s to a matrix
+## of appropriate colors.
+convert_cytokine_annotations <- function(annotation) {
+  
+  ## Convert the annotation matrix to numeric
+  annot <- as.matrix( as.data.frame( lapply(annotation, function(x) {
+    as.integer( as.character(x) )
+  })))
+  
+  ## Swap each number with its degree of functionality (ie, number
+  ## of markers expressed in that category)
+  dof <- apply(annot, 1, sum)
+  annot <- apply(annot, 2, function(x) {
+    x[ x == 1 ] <- dof[ x == 1]
+    return(x)
+  })
+  
+  ## Swap these numbers with appropriate colors
+  pal <- brewer.pal( ncol(annot), "Paired" )
+  annot <- as.data.frame(annot)
+  annot[] <- lapply(annot, function(x) {
+    swap(x, 0:5, c("#FFFFFF", pal))
+  })
+  
+  ## Return the annotations
+  rownames(annot) <- rownames(annotation)  
+  stopifnot( identical( rownames(annot), rownames(annotation) ) )
+  return( as.matrix(annot) )
+  
 }
 
 convert_annotations = function(annotation, annotation_colors){
@@ -927,7 +942,7 @@ kmeans_pheatmap = function(mat, k = min(nrow(mat), 150), sd_limit = NA, ...){
 #' pheatmap(test, clustering_distance_rows = drows, clustering_distance_cols = dcols)
 #' @importFrom RColorBrewer brewer.pal
 #' @export
-pheatmap = function(mat, color = colorRampPalette(rev(brewer.pal(n = 7, name = "RdYlBu")))(100), kmeans_k = NA, breaks = NA, border_color = "grey60", cellwidth = NA, cellheight = NA, scale = "none", cluster_rows = TRUE, cluster_cols = TRUE, clustering_distance_rows = "euclidean", clustering_distance_cols = "euclidean", clustering_method = "complete",  treeheight_row = ifelse(cluster_rows, 50, 0), treeheight_col = ifelse(cluster_cols, 50, 0), legend = TRUE, legend_breaks = NA, legend_labels = NA, annotation = NA, annotation_colors = NA, annotation_legend = TRUE, drop_levels = TRUE, show_rownames = T, show_colnames = T, main = NA, fontsize = 10, fontsize_row = fontsize, fontsize_col = fontsize, display_numbers = F, number_format = "%.2f", fontsize_number = 0.8 * fontsize, filename = NA, width = NA, height = NA, row_annotation = NA, row_annotation_legend = TRUE, row_annotation_colors=NA, cytokine_annotation=NA, headerplot=NA, polar=FALSE,...){
+pheatmap = function(mat, color = colorRampPalette(rev(brewer.pal(n = 7, name = "RdYlBu")))(100), kmeans_k = NA, breaks = NA, border_color = "grey60", cellwidth = NA, cellheight = NA, scale = "none", cluster_rows = TRUE, cluster_cols = TRUE, clustering_distance_rows = "euclidean", clustering_distance_cols = "euclidean", clustering_method = "complete",  treeheight_row = ifelse(cluster_rows, 50, 0), treeheight_col = ifelse(cluster_cols, 50, 0), legend = TRUE, legend_breaks = NA, legend_labels = NA, annotation = NA, annotation_colors = NA, annotation_legend = TRUE, drop_levels = TRUE, show_rownames = T, show_colnames = T, main = NA, fontsize = 10, fontsize_row = fontsize, fontsize_col = fontsize, display_numbers = F, number_format = "%.2f", fontsize_number = 0.8 * fontsize, filename = NA, width = NA, height = NA, row_annotation = NA, row_annotation_legend = TRUE, row_annotation_colors=NA, cytokine_annotation=NA, headerplot=NA, polar=FALSE, order_by_max_functionality=TRUE, ...){
   #Do the arguments even make sense?
   oldwarn<-options("warn")
   options("warn"=-1)
@@ -1059,11 +1074,13 @@ pheatmap = function(mat, color = colorRampPalette(rev(brewer.pal(n = 7, name = "
   
   #prepare cytokine annotations
   if(!is.na(cytokine_annotation[[1]][1])){
-    cytokine_annotation = cytokine_annotation[colnames(mat),ncol(cytokine_annotation):1,drop=FALSE]
+    cytokine_annotation = cytokine_annotation[colnames(mat), ,drop=FALSE]
     
     #order the columns by max functionality 
-    cka<-apply(cytokine_annotation,2,function(x)sum(as.numeric(as.character(x))))
-    cytokine_annotation = cytokine_annotation[,order(cka,decreasing=TRUE),drop=FALSE]
+    if (order_by_max_functionality) {
+      cka<-apply(cytokine_annotation,2,function(x)sum(as.numeric(as.character(x))))
+      cytokine_annotation = cytokine_annotation[,order(cka,decreasing=TRUE),drop=FALSE]
+    }
     
     if(!cluster_cols&is.na(headerplot)){
       ckr<-apply(cytokine_annotation,1,function(x)sum(as.numeric(as.character(x))))
