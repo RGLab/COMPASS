@@ -29,6 +29,7 @@ Imports:
     abind
 Suggests:
     flowWorkspace (>= 3.9.36),
-    shiny
+    shiny,
+    Kmisc
 LazyLoad: yes
 LazyData: yes

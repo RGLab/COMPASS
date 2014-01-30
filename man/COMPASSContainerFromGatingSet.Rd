@@ -61,7 +61,7 @@ the node names by removing various symobls that are often
 added to gates, \{+/-\}. The user can provide their own
 function to do string cleanup. Counts are extracted as well
 as metadata and single cell data, and these are fed into
-the COMPASSContainer constructor.
+the \code{COMPASSContainer} constructor.
 }
 \details{
 There is likely not sufficient error checking.

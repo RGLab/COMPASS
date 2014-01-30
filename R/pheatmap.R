@@ -867,6 +867,8 @@ kmeans_pheatmap = function(mat, k = min(nrow(mat), 150), sd_limit = NA, ...){
 #' Cytokine ordering is ignored when the headerplot argument is passed.
 #' @param \dots graphical parameters for the text used in plot. Parameters passed to 
 #' \code{\link{grid.text}}, see \code{\link{gpar}}. 
+#' @param order_by_max_functionality Boolean; re-order the cytokine labels by
+#' maximum functionality?
 #' 
 #' @return 
 #' Invisibly a list of components 
