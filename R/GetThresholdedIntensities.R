@@ -16,6 +16,9 @@
 ##' \dontrun{
 ##'   GetThresholdedIntensities(gs, "4+")
 ##' }
+##' @return A \code{list} with two components:
+##' \item{\code{intensity:}}{A \code{list} of thresholded intensity measures.}
+##' \item{\code{counts:}}{A named vector of total cell counts at the node \code{node}.}
 ##' @export
 GetThresholdedIntensities <- function(
   gs,
@@ -36,6 +39,7 @@ GetThresholdedIntensities <- function(
     for (i in 1:length(gs)) {
       gslist[[i]] <- gs[[i]]
     }
+    names(gslist) <- sampleNames(gs)
   } else {
     stop("Internal Error: not implemented for GatingSetList's yet.", call.=FALSE)
   }
