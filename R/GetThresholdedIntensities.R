@@ -68,9 +68,9 @@ GetThresholdedIntensities <- function(
   
   # extract all the counts
   message("Extracting cell counts")
-  counts <- lapply(gslist, function(x) {
+  counts <- unlist(lapply(gslist, function(x) {
     getTotal(x, path)
-  })
+  }))
   
   # Get the children of that parent and filter out boolean gates Test if
   # children exist, and test if non-empty set returned.
