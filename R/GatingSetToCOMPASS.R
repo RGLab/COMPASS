@@ -1,9 +1,3 @@
-## debugging
-if (FALSE) {
-  library(flowWorkspace)
-  gs <- load_gs("../shinyGate/gs/LoveLab")
-}
-
 ##' Create a COMPASS Container from a GatingSet
 ##' 
 ##' This code expects a \code{GatingSet} or \code{GatingSetList}. 
