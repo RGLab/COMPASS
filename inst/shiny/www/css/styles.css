@@ -64,7 +64,7 @@ div.controls  > * {
 }
 
 #stats {
-  height: 290px !important;
+  height: 300px !important;
   margin: 0 auto;
   overflow: auto;
 }
@@ -119,4 +119,10 @@ button.ui-multiselect {
 /* align the checkboxes */
 .ui-corner-all input {
   margin-bottom: 8px;
+}
+
+/* Make the DataTable fit */
+#DataTables_Table_0_wrapper {
+  margin-left: 20px;
+  margin-right: 20px;
 }

@@ -1,13 +1,3 @@
-## debug
-if (FALSE) {
-  library(COMPASS)
-  x <- readRDS("data/RV144_CD4_results_discrete.rds")
-  dir <- "shinyTest"
-  stimulated <- "92TH023 Env"
-  unstimulated <- "negctrl 1"
-  shinyCOMPASS(x, dir, stimulated, unstimulated)
-}
-
 ##' Start a Shiny Application for Visualizing COMPASS Results
 ##' 
 ##' This function takes a \code{COMPASSResult} object, and generates
@@ -16,27 +6,24 @@ if (FALSE) {
 ##' @param x An object of class \code{COMPASSResult}.
 ##' @param dir A location to write out the \code{.rds} files that
 ##'   will be loaded and used by the Shiny application.
-##' @param stimulated The name of the positive stimulation, as available
-##'   in the metadata column specified by the \code{stimulation_id}.
-##' @param unstimulated The name of the negative stimulation, as
-##'   available in the metadata column specified by the \code{stimulation_id}.
+##' @param meta.vars A character vector of column names that should be used
+##'   for potential facetting in the Shiny app. By default, we take all
+##'   metadata variables; you may want to limit this if you know certain
+##'   variables are not of interest.
+##' @param obfuscate Boolean; if \code{TRUE} we replace the patient IDs
+##'   used with a randomly generated set of IDs. This is useful if you wish
+##'   to display the data you are using externally but don't wish to make
+##'   available the IDs used.
 ##' @export
-shinyCOMPASS <- function(x, dir=NULL,
-  stimulated, unstimulated) {
+shinyCOMPASS <- function(x, dir=NULL, meta.vars, obfuscate=FALSE) {
   
   if (!require(shiny)) {
-    stop("You must have 'shiny' installed to run the Shiny application -- try 'install.packages(\"shiny\")'.")
+    stop("You must have 'shiny' installed to run the Shiny application -- try 'install.packages(\"shiny\")'.",
+      call.=FALSE)
   }
   
-  if (missing(stimulated)) {
-    stop("'stimulated' must be supplied; it is necessary for calculations of ",
-      "Log Fold Change and other variables used in the Shiny application")
-  }
-  
-  if (missing(stimulated)) {
-    stop("'unstimulated' must be supplied; it is necessary for calculations of ",
-      "Log Fold Change and other variables used in the Shiny application")
-  }
+  if (!inherits(x, "COMPASSResult"))
+    stop("'shinyCOMPASS' can only be called on a COMPASSResult object", call.=FALSE)
   
   message("Preparing data for the Shiny application, please wait a moment...")
   
@@ -44,11 +31,6 @@ shinyCOMPASS <- function(x, dir=NULL,
     dir <- tempdir()
     on.exit(unlink(dir, recursive=TRUE))
   }
-  
-  if (!inherits(x, "COMPASSResult"))
-    stop("shinyCOMPASS can only be called on a COMPASSResult object")
-  
-  call <- match.call()
   
   ## We must pre-process the data to get it into Shiny
   dat <- x$orig$data
@@ -61,17 +43,42 @@ shinyCOMPASS <- function(x, dir=NULL,
   sid <- x$orig$sample_id
   stid <- x$orig$stimulation_id
   
+  ## Obfuscate the ptids
+  if (obfuscate) {
+    
+    n <- length( unique( meta[[iid]] ) )
+    logn <- floor( log10(n) )
+    .swap <- function(x) swap(x, from, to)
+    
+    from <- unique( meta[[ iid ]] )
+    to <- paste("Individual", sprintf( paste0("%0", logn, "i"), 1:n))
+    
+    meta[[ iid ]] <- .swap( meta[[iid]] )
+    rownames(Mgamma) <- .swap( rownames(Mgamma) )
+    
+  }
+  
+  ## Get the stimulated, unstimulated calls from the fit call
+  call <- x$fit$call
+  stimulated <- call[["treatment"]]
+  unstimulated <- call[["control"]]
+  
+  if (!missing(meta.vars)) {
+    meta <- meta[c(meta.vars, iid, sid, stid)]
+  }
+  
   colnames(Mgamma) <- apply(categories[, -ncol(categories)], 1, function(x) {
     paste0( swap(x, c("0", "1"), c("-", "+")), collapse="")
   })
   
   ## Compute the joint distribution of counts
-  combos <- discrete_combinations(length(markers))
+  k <- length(markers)
+  combos <- COMPASS:::discrete_combinations(k)
   
   d_counts <- CellCounts(dat, combos)
   rownames(d_counts) <- names(dat)
   colnames(d_counts) <- sapply(combos, function(x) {
-    paste0( swap(x, c(1:6, -1:-6), c(rep("+", 6), rep("-", 6))), collapse="" )
+    paste0( swap(x, c(1:k, -1:-k), c(rep("+", k), rep("-", k))), collapse="" )
   })
   
   ## Only grab the metadata for which we have samples
@@ -113,11 +120,11 @@ shinyCOMPASS <- function(x, dir=NULL,
   ## Compute the Log Fold Change
   stim <- x$orig$stimulation_id
   d[, LogFoldChange := log2(
-    (Counts+1) / (Counts[ .SD[[stim]] == unstimulated ] + 1)
+    (Counts+1) / (mean(Counts[ eval(unstimulated) ]) + 1)
   ), by=c(iid, "Marker")]
   
   ## Compute the difference in proportions
-  d[, PropDiff := Proportion - Proportion[ .SD[[stim]] == unstimulated ],
+  d[, PropDiff := Proportion - mean(Proportion[ eval(unstimulated) ]),
     by=c(iid, "Marker")]
   
   ## Compute the degree (== number of positive markers)

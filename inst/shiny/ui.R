@@ -2,7 +2,7 @@ library(lattice)
 library(shinyGridster)
 
 zoomButton <- function(inputId) {
-  tags$i(class="icon-zoom-in", style="position: absolute; right: 10px; bottom: 10px")
+  tags$i(class="icon-zoom-in", id=inputId, style="position: absolute; right: 10px; bottom: 10px")
 }
 
 splomOutput <- function(outputId) {
@@ -18,9 +18,12 @@ meta <- DATA$meta
 sid <- DATA$COMPASS$data$sample_id
 iid <- DATA$COMPASS$data$individual_id
 
+facet_vars <- names(meta)
+facet_vars <- facet_vars[ !(facet_vars %in% c(sid, iid)) ]
+
 ## width, height for gridster + plot elements
 width <- 430
-height <- 300
+height <- 320
 
 ## svg output
 svgOutput <- function(outputId, width, height) {
@@ -73,8 +76,8 @@ shinyUI( bootstrapPage(
     tags$div(
       id='controls-container', 
       selectInput("phenotype", label="Phenotype", choices=list(
-        `Log Fold Change`="LogFoldChange",
         `Posterior Probability of Expression`="MeanGamma",
+        `Log Fold Change`="LogFoldChange",
         `COMPASS-Estimated ps - pu`="ModelDiff",
         `COMPASS-Estimated log(ps) - log(pu)`="ModelLogDiff"
       )),
@@ -130,21 +133,21 @@ shinyUI( bootstrapPage(
         tags$div( style="width: 33%; float: left;",
           selectInput("facet1",
             label="Facet 1",
-            choices=c("Original Ordering", names(meta))
+            choices=c("Original Ordering", facet_vars)
           )
         ),
         
         tags$div( style="width: 33%; float: left;",
           selectInput("facet2",
             label="Facet 2",
-            choices=c("None", names(meta))
+            choices=c("None", facet_vars)
           )
         ),
         
         tags$div( style="width: 33%; float: left;",
           selectInput("facet3",
             label="Facet 3",
-            choices=c("None", names(meta))
+            choices=c("None", facet_vars)
           )
         )
         
@@ -152,7 +155,7 @@ shinyUI( bootstrapPage(
       
       selectInput("filter1",
         label="Filter 1",
-        choices=c("None", names(meta))
+        choices=c("None", facet_vars)
       ),
       
       ## this panel will be updated by server.R -- displays available
@@ -183,8 +186,8 @@ shinyUI( bootstrapPage(
           label="Individual",
           choices=sort(unique(as.character(meta[[iid]])))
         ),
-        plotOutput("linechart", width=width, height=height-85),
-        checkboxInput("flip_linechart", "Flip Axes?", value=FALSE)
+        plotOutput("linechart", width=width, height=height-65)
+        #checkboxInput("flip_linechart", "Flip Axes?", value=FALSE)
       ),
       zoomButton("zoom-linechart")
     ),
@@ -256,17 +259,17 @@ shinyUI( bootstrapPage(
         ),
         zoomButton("zoom-boxplot")
       )
-    ),
-    
-    gridsterItem(row=3, col=1, sizex=2, sizey=2,
-      splomOutput("splom"),
-      zoomButton("zoom-splom")
-    ),
-    
-    gridsterItem(row=7, col=1, sizex=2, sizey=1,
-      plotOutput("polyfunctionality"),
-      zoomButton("zoom-polyfunctionality")
     )
+    
+#     gridsterItem(row=3, col=1, sizex=2, sizey=2,
+#       splomOutput("splom"),
+#       zoomButton("zoom-splom")
+#     ),
+#     
+#     gridsterItem(row=7, col=1, sizex=2, sizey=1,
+#       plotOutput("polyfunctionality", height=height),
+#       zoomButton("zoom-polyfunctionality")
+#     )
     
   )
   

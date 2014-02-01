@@ -180,6 +180,9 @@ pheatmap(mat, color = colorRampPalette(rev(brewer.pal(n = 7, name =
   \item{\dots}{graphical parameters for the text used in
   plot. Parameters passed to \code{\link{grid.text}}, see
   \code{\link{gpar}}.}
+
+  \item{order_by_max_functionality}{Boolean; re-order the
+  cytokine labels by maximum functionality?}
 }
 \value{
 Invisibly a list of components \itemize{ \item

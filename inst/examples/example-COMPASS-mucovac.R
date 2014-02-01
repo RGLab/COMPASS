@@ -22,7 +22,8 @@ filter<-unique(c(filter,na.omit(CD4$meta[Stim%in%"negctrl",nrow(.SD),list(PTID,V
 
 ## debug
 data <- CD4
-treatment <- quote(Stim == "ENV-1-MUCO")
+x <- "ENV-1-MUCO"
+treatment <- quote(Stim == x)
 control <- quote(Stim == "negctrl")
 category_filter <- function(x) colSums(x>4) > 2
 verbose <- TRUE
@@ -31,12 +32,11 @@ subset <- quote( !PTID %in% filter & !is.na(PTID) )
 #all visits
 CD4_results <- COMPASS(
   data=CD4,
-  treatment=Stim == "ENV-1-MUCO",
+  treatment=Stim == x,
   control=Stim == "negctrl",
   category_filter=function(x) colSums(x>4) > 2, 
   verbose=TRUE,
-  subset=!PTID%in%filter&!is.na(PTID),
-  iterations=40000,
+  iterations=10,
   filter_lowest_frequency=2,
   filter_specific_markers="IL4"
 )

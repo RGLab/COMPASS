@@ -8,7 +8,7 @@ COMPASS(data, treatment, control, subset = NULL,
   category_filter = function(x) colSums(x > 5) > 2,
   filter_lowest_frequency = 0, filter_specific_markers = NULL,
   model = c("discrete", "continuous"), iterations = 40000,
-  replications = 8, keep_original_data = FALSE, verbose = TRUE, ...)
+  replications = 8, keep_original_data = TRUE, verbose = TRUE, ...)
 }
 \arguments{
   \item{data}{An object of class \code{COMPASSContainer}.}
@@ -57,7 +57,10 @@ COMPASS(data, treatment, control, subset = NULL,
 
   \item{keep_original_data}{Keep the original
   \code{COMPASSContainer} as part of the \code{COMPASS}
-  output?}
+  output? Note that if you want to run \code{shinyCOMPASS}
+  later, it is necessary that you set this as \code{TRUE}.
+  If memory or disk space is an issue, you may set this to
+  \code{FALSE}.}
 
   \item{verbose}{Boolean; if \code{TRUE} we output progress
   information.}

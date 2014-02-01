@@ -42,7 +42,9 @@
 ##' @param replications The number of 'replications' to perform. In order to
 ##'   conserve memory, we only keep the model estimates from the last replication.
 ##' @param keep_original_data Keep the original \code{COMPASSContainer} 
-##'   as part of the \code{COMPASS} output?
+##'   as part of the \code{COMPASS} output? Note that if you want to run
+##'   \code{shinyCOMPASS} later, it is necessary that you set this as \code{TRUE}.
+##'   If memory or disk space is an issue, you may set this to \code{FALSE}.
 ##' @param verbose Boolean; if \code{TRUE} we output progress information.
 ##' @param ... Other arguments; currently unused.
 ##' 
@@ -60,12 +62,12 @@ COMPASS <- function(data, treatment, control, subset=NULL,
   filter_lowest_frequency=0, filter_specific_markers=NULL, 
   model=c("discrete", "continuous"), 
   iterations=40000, replications=8,
-  keep_original_data=FALSE,
+  keep_original_data=TRUE,
   verbose=TRUE, ...) {
   
-  if (class(data) != "COMPASSContainer") {
+  if (!inherits(data, "COMPASSContainer")) {
     stop("'data' must be an object of class 'COMPASSContainer'; see the ",
-      "constructor 'COMPASSContainer' for more details.")
+      "constructor 'COMPASSContainer' for more details.", call.=FALSE)
   }
   
   ## used for brevity in later parts of code
@@ -165,7 +167,7 @@ COMPASS <- function(data, treatment, control, subset=NULL,
   }
   
   if (length(y_s) == 0 || length(y_u) == 0) {
-    stop("Filtering has removed all samples.")
+    stop("Filtering has removed all samples.", call.=FALSE)
   }
   
   ## reorder y_u to match order of y_s
@@ -327,7 +329,7 @@ COMPASS <- function(data, treatment, control, subset=NULL,
   }
   
   if (nrow(categories) < 2) {
-    stop("There must be at least 2 categories (including the null categoy) for testing.")
+    stop("There must be at least 2 categories (including the null categoy) for testing.", call.=FALSE)
   }
   
   vmessage("There are a total of ", nrow(categories), " categories to be tested.")
@@ -367,16 +369,34 @@ COMPASS <- function(data, treatment, control, subset=NULL,
   vmessage("Computing the posterior difference in proportions, posterior log ratio...")
   output$fit$posterior <- compute_posterior(output)
   vmessage("Done!")
-  #Filter metadata
-  #Here, we subset on individual_id (in case any were filtered out), and subset on treatment group. 
-  #control is generally fixed and needs to be matched to treatment anyway.
-  #May be missing something..we'll see.
-  output$data$meta<-with(output$data,{
-    meta.sub<-meta[with(meta,get(individual_id))%in%rownames(n_s)&eval(treatment,meta,parent.frame(n=4)),]
+  
+  ## Filter metadata
+  ## Here, we subset on individual_id (in case any were filtered out), and subset on treatment group. 
+  ## control is generally fixed and needs to be matched to treatment anyway.
+  output$data$meta <- with(output$data, {
+    meta.sub <-meta[with(meta,get(individual_id))%in%rownames(n_s)&eval(treatment,meta,parent.frame(n=4)),]
     meta.sub[match(rownames(n_s),meta.sub[,individual_id]),]
+  })
+  
+  call <- match.call()
+  
+  ## Make sure that the symbols in the 'treatment', 'control' are evaluated
+  
+  ## if 'treatment' is a call, make sure the right side gets evaluated
+  if (is.call(call[["treatment"]])) {
+    if (is.symbol( call[["treatment"]][[3]] )) {
+      call[["treatment"]][[3]] <- eval( call[["treatment"]][[3]] )
     }
-  )
-  output$fit$call <- match.call()
+  }
+  
+  ## similarily for 'control'
+  if (is.call(call[["control"]])) {
+    if (is.symbol( call[["control"]][[3]] )) {
+      call[["control"]][[3]] <- eval( call[["control"]][[3]] )
+    }
+  }
+  
+  output$fit$call <- call
 
   class(output) <- "COMPASSResult"
   return(output)
