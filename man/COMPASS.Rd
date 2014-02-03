@@ -1,8 +1,6 @@
-\docType{package}
 \name{COMPASS}
 \alias{COMPASS}
-\alias{COMPASS-package}
-\title{COMPASS (Combinatorial Polyfunctionality Analysis of Single-Cells)}
+\title{Fit the COMPASS Model}
 \usage{
 COMPASS(data, treatment, control, subset = NULL,
   category_filter = function(x) colSums(x > 5) > 2,
@@ -77,9 +75,6 @@ data is also returned as a component of the list, with name
 \code{orig}.
 }
 \description{
-This package implements a model for the analysis of
-polyfunctionality in single-cell experiments.
-
 This function fits the \code{COMPASS} model.
 }
 \section{Category Filter}{
@@ -98,9 +93,10 @@ This function fits the \code{COMPASS} model.
   particular combination of markers.
 }
 \seealso{
-\code{\link{COMPASSContainer}}, for constructing the data
-object required by \code{COMPASS}, and
-\code{\link{SimpleCOMPASS}}, for fitting the \code{COMPASS}
-model on a set of pre-calculated counts matrices.
+\itemize{ \item \code{\link{COMPASSContainer}}, for
+constructing the data object required by \code{COMPASS}
+\item \code{\link{SimpleCOMPASS}}, for fitting the
+\code{COMPASS} model on a set of pre-calculated counts
+matrices.  }
 }
 

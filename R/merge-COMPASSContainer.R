@@ -55,7 +55,6 @@ merge.COMPASSContainer <- function(x, y, ...) {
   ## Check the metadata information
   stopifnot(x$individual_id == y$individual_id)
   stopifnot(x$sample_id == y$sample_id)
-  stopifnot(x$stimulation_id == y$stimulation_id)
   
   ## Make a new COMPASSContainer
   return( COMPASSContainer(
@@ -63,8 +62,7 @@ merge.COMPASSContainer <- function(x, y, ...) {
     counts=counts,
     meta=meta,
     individual_id=x$individual_id,
-    sample_id=x$sample_id,
-    stimulation_id=x$stimulation_id
+    sample_id=x$sample_id
   ) )
   
 }

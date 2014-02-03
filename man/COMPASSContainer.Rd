@@ -2,7 +2,7 @@
 \alias{COMPASSContainer}
 \title{Generate the Data Object used by COMPASS}
 \usage{
-COMPASSContainer(data, counts, meta, individual_id, sample_id, stimulation_id)
+COMPASSContainer(data, counts, meta, individual_id, sample_id)
 }
 \arguments{
   \item{data}{A list of matrices. Each matrix \code{M_i} is
@@ -30,10 +30,6 @@ COMPASSContainer(data, counts, meta, individual_id, sample_id, stimulation_id)
   \item{sample_id}{The name of the vector in \code{meta}
   that denotes the samples.  This vector should contain all
   of the names in the \code{data} input.}
-
-  \item{stimulation_id}{The name of the vector in
-  \code{meta} that denotes the type of stimulation each
-  sample received.}
 }
 \description{
 This function generates the data container suitable for use
@@ -41,9 +37,6 @@ with \code{COMPASS}.
 }
 \details{
 The \code{names} attributes for the \code{data} and
-\code{counts} objects passed should match, and these should
-be contained in the metadata \code{meta} in the column
-\code{meta[[stimulation_id]]}. It is through this link that
-the model interface in \code{\link{COMPASS}} functions.
+\code{counts} objects passed should match.
 }
 

@@ -105,8 +105,7 @@ CC <- COMPASSContainer(
   counts=counts,
   meta=meta,
   individual_id="iid", ## name of individual id vector in metadata
-  sample_id="sid", ## name of sample id vector in metadata
-  stimulation_id="trt" ## what treatment was applied to each sample?
+  sample_id="sid" ## name of sample id vector in metadata
 )
 ```
 
@@ -133,7 +132,7 @@ model fitting function is doing, in order to minimize potential errors.
 fit <- COMPASS( CC,
   treatment=trt == "Treatment",
   control=trt == "Control",
-  iterations=1000
+  iterations=100
 )
 ```
 

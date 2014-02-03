@@ -48,9 +48,14 @@
 ##' @param verbose Boolean; if \code{TRUE} we output progress information.
 ##' @param ... Other arguments; currently unused.
 ##' 
-##' @seealso \code{\link{COMPASSContainer}}, for constructing the data object
-##'   required by \code{COMPASS}, and \code{\link{SimpleCOMPASS}}, for fitting
+##' @seealso 
+##'   \itemize{
+##'   \item \code{\link{COMPASSContainer}}, for constructing the data object
+##'   required by \code{COMPASS}
+##'   \item \code{\link{SimpleCOMPASS}}, for fitting
 ##'   the \code{COMPASS} model on a set of pre-calculated counts matrices.
+##'   }
+##'   
 ##' @return A \code{list} with class \code{COMPASSResult} with two components,
 ##'   the \code{fit} containing parameter estimates and parameter acceptance
 ##'   rates, and \code{data} containing the generated data used as input for
@@ -73,7 +78,6 @@ COMPASS <- function(data, treatment, control, subset=NULL,
   ## used for brevity in later parts of code
   sid <- data$sample_id
   iid <- data$individual_id
-  stid <- data$stimulation_id
   
   vmessage <- function(...) if (verbose) message(...) else invisible(NULL)
   
@@ -93,17 +97,17 @@ COMPASS <- function(data, treatment, control, subset=NULL,
     data$meta <- data$meta[ !(data$meta[[sid]] %in% bad_samples), ]
   }
   
-  ## We allow the user to either pass just a character vector of
-  ## names (with the understanding that it's pulled from the stimulation vector
-  ## in the meta-data), or we allow them to pass an expression
+  ## The user _must_ pass an expression!
   treatment <- call$treatment
-  if (is.symbol(treatment) || is.character(treatment)) {
-    treatment <- substitute(x %in% treatment, list(x=as.name(stid), treatment=treatment))
+  if (!is.language(treatment)) {
+    stop("'treatment' must be an expression that defined the samples encompassing ",
+      "the treatment group.", call.=FALSE)
   }
   
   control <- call$control
-  if (is.symbol(control) || is.character(control)) {
-    control <- substitute(x %in% control, list(x=as.name(stid), control=control))
+  if (!is.language(control)) {
+    stop("'control' must be an expression that defined the samples encompassing ",
+      "the control group.", call.=FALSE)
   }
   
   subset <- call$subset

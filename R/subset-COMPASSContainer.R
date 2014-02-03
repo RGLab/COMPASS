@@ -25,8 +25,7 @@ subset.COMPASSContainer <- function(x, subset, ...) {
     counts=x$counts[good_samples],
     meta=x$meta[keep, ],
     individual_id=x$individual_id,
-    sample_id=x$sample_id,
-    stimulation_id=x$stimulation_id
+    sample_id=x$sample_id
   )
   setattr(output, "class", "COMPASSContainer")
   return(output)

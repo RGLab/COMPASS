@@ -41,7 +41,6 @@ shinyCOMPASS <- function(x, dir=NULL, meta.vars, obfuscate=FALSE) {
   markers <- unname(colnames(x$orig$data[[1]]))
   iid <- x$orig$individual_id
   sid <- x$orig$sample_id
-  stid <- x$orig$stimulation_id
   
   ## Obfuscate the ptids
   if (obfuscate) {
@@ -64,7 +63,7 @@ shinyCOMPASS <- function(x, dir=NULL, meta.vars, obfuscate=FALSE) {
   unstimulated <- call[["control"]]
   
   if (!missing(meta.vars)) {
-    meta <- meta[c(meta.vars, iid, sid, stid)]
+    meta <- meta[c(meta.vars, iid, sid)]
   }
   
   colnames(Mgamma) <- apply(categories[, -ncol(categories)], 1, function(x) {

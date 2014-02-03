@@ -4,10 +4,7 @@
 ##' \code{COMPASS}. 
 ##' 
 ##' The \code{names} attributes for the \code{data} and \code{counts}
-##' objects passed should match, and these should be contained in the 
-##' metadata \code{meta} in the column \code{meta[[stimulation_id]]}.
-##' It is through this link that the model interface in
-##' \code{\link{COMPASS}} functions.
+##' objects passed should match.
 ##' 
 ##' @param data A list of matrices. Each matrix \code{M_i} is made up of 
 ##'   \code{N_i} cells by \code{K} markers; for example, it could be the 
@@ -26,20 +23,18 @@
 ##'   individuals from which samples were drawn. 
 ##' @param sample_id The name of the vector in \code{meta} that denotes the samples.
 ##'   This vector should contain all of the names in the \code{data} input.
-##' @param stimulation_id The name of the vector in \code{meta} that denotes
-##'   the type of stimulation each sample received.
 ##' @export
 COMPASSContainer <- function(data, counts, meta, 
-  individual_id, sample_id, stimulation_id) {
+  individual_id, sample_id) {
   
   ## check names
   if (is.null(names(data)))
     stop( "'", deparse(substitute(data)), "' must have its 'names' ",
-      "attribute set")
+      "attribute set", call.=FALSE)
   
   if (is.null(names(counts)))
     stop("'", deparse(substitute(counts)), "' must have its 'names' ",
-      "attribute set")
+      "attribute set", call.=FALSE)
   
   ## remove NULLs
   null_data <- names(data)[sapply(data, is.null)]
@@ -85,27 +80,30 @@ COMPASSContainer <- function(data, counts, meta,
   ## ensure that the number of markers, names are identical
   n_markers_all <- sapply(data, ncol)
   if (length(unique(n_markers_all)) != 1) {
-    stop("The number of markers is not identical across samples!")
+    stop("The number of markers is not identical across samples.", call.=FALSE)
   }
   
   names_all <- lapply(data, colnames)
   if (!identical( Reduce(union, names_all), Reduce(intersect, names_all))) {
-    stop("The marker names are not identical across samples!")
+    stop("The marker names are not identical across samples.", call.=FALSE)
   }
   
   ## type checking
   .type_check <- function(y) {
     yy <- deparse(substitute(y))
-    if (is.null(names(y))) stop("'", yy, "' must have the 'names' attribute set")
-    if (!is.list(y)) stop("'", yy, "' must be a named list")
+    if (is.null(names(y))) 
+      stop("'", yy, "' must have the 'names' attribute set", call.=FALSE)
+    if (!is.list(y)) 
+      stop("'", yy, "' must be a named list", call.=FALSE)
     if (!all(sapply(y, is.matrix)))
-      stop("All elements in '", yy, "' must be matrices")
+      stop("All elements in '", yy, "' must be matrices", call.=FALSE)
     if (any(sapply(y, function(x) is.null(colnames(x)))))
-      stop("All matrices in '", yy, "' must have column names")
+      stop("All matrices in '", yy, "' must have column names", call.=FALSE)
     nm <- colnames(y[[1]])
     for (i in seq_along(y)) {
       if (!all(nm %in% colnames(y[[i]])))
-        stop("All matrices in '", yy, "' must share the same column (marker) names")
+        stop("All matrices in '", yy, 
+          "' must share the same column (marker) names", call.=FALSE)
     }
   }
   
@@ -128,7 +126,8 @@ COMPASSContainer <- function(data, counts, meta,
   .check_has_names <- function(y, counts) {
     yy <- deparse(substitute(y))
     if (!all(names(y) %in% names(counts))) {
-      stop("Not all names in 'counts' are in the names of '", yy, "'.")
+      stop("Not all names in 'counts' are in the names of '", yy, "'.",
+        call.=FALSE)
     }
     return( invisible(NULL) )
   }
@@ -138,7 +137,7 @@ COMPASSContainer <- function(data, counts, meta,
   ## check the metadata
     
   if (!is.data.frame(meta))
-    stop("'meta' must be a 'data.frame'")
+    stop("'meta' must be a 'data.frame'.", call.=FALSE)
   
   ## ensure that the names in y_s, y_u are also in the names of meta
   all_names <- names(data)
@@ -162,7 +161,6 @@ COMPASSContainer <- function(data, counts, meta,
     data=data,
     counts=counts,
     meta=meta,
-    stimulation_id=stimulation_id,
     individual_id=individual_id,
     sample_id=sample_id
   )

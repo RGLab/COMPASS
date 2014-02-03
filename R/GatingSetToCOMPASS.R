@@ -5,7 +5,7 @@
 ##' (i.e. '/4\\+$' would match '/4+' in a node name with the plus
 ##' sign at the end of the string. Alternatively, you can supply a
 ##' partial path.
-##' The user must supply the individual_id, sample_id, and stimulation_id, 
+##' The user must supply the individual_id and sample_id,
 ##' but they have default values suitable for the data we commonly see.
 ##' Sometimes the child node names don't match the marker names exactly.
 ##' This function will try to make some guesses about how to match these up. 
@@ -24,7 +24,6 @@
 ##' match against the \code{parameters} slot of the \code{flowFrames} in \code{gs}
 ##' @param individual_id a \code{character} identifying the subject id column in the \code{gs} metadata
 ##' @param sample_id a \code{character} idetifying the sample id column in the \code{gs} metadata.
-##' @param stimulation_id a \code{character} identifying the stimulation or treatment columnin the \code{gs} metadata.
 ##' @param mp a \code{list} mapping node names to markers. This function tries to guess, but may fail. The user can override the guesswork.
 ##' @param countFilterThreshold Numeric; if the number of cells expressing at
 ##'   least one marker of interest is less than this threshold, we remove that
@@ -42,7 +41,7 @@
 ##' @importFrom clue solve_LSAP
 ##' @export
 COMPASSContainerFromGatingSet <- function(gs = NULL, node = NULL, filter.fun = NULL, 
-                                          individual_id = "PTID", sample_id = "name", stimulation_id = "Stim", 
+                                          individual_id = "PTID", sample_id = "name",
                                           mp = NULL, countFilterThreshold = 5000, matchmethod = c("Levenshtein","regex"), 
                                           markers = NA) {
   if (require(flowWorkspace)) {
@@ -88,12 +87,10 @@ COMPASSContainerFromGatingSet <- function(gs = NULL, node = NULL, filter.fun = N
     
     pd <- pData(gs)
     # Do the expected columns exist?
-    if (!all(c(sample_id, individual_id, stimulation_id) %in% colnames(pd))) {
+    if (!all(c(sample_id, individual_id) %in% colnames(pd))) {
       message("Some columns not found in metadata")
-      message(sprintf("Expected: %s %s %s", sample_id, individual_id, 
-                      stimulation_id))
-      message(sprintf("Missing: %s\n", c(sample_id, individual_id, 
-                                         stimulation_id)[which(!c(sample_id, individual_id, stimulation_id) %in% 
+      message(sprintf("Expected: %s %s", sample_id, individual_id))
+      message(sprintf("Missing: %s\n", c(sample_id, individual_id)[which(!c(sample_id, individual_id) %in% 
                                                                  colnames(pd))]))
       stop("Quitting")
     }
@@ -314,7 +311,7 @@ COMPASSContainerFromGatingSet <- function(gs = NULL, node = NULL, filter.fun = N
     
     message("Creating COMPASS Container")
     cc <- COMPASSContainer(data = sc_data, counts = counts, meta = pd, 
-                           individual_id = individual_id, sample_id = sample_id, stimulation_id = stimulation_id)
+                           individual_id = individual_id, sample_id = sample_id)
     return(cc)
   }
   stop("This function requires flowWorkspace to be installed")
