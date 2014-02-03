@@ -97,15 +97,17 @@ COMPASS <- function(data, treatment, control, subset=NULL,
     data$meta <- data$meta[ !(data$meta[[sid]] %in% bad_samples), ]
   }
   
-  ## The user _must_ pass an expression!
+  ## If the object in the call is a symbol, try evaluating it partially
+  if (is.symbol(call$treatment)) call$treatment <- eval(call$treatment)
   treatment <- call$treatment
-  if (!is.language(treatment)) {
+  if (!is.call(treatment)) {
     stop("'treatment' must be an expression that defined the samples encompassing ",
       "the treatment group.", call.=FALSE)
   }
   
+  if (is.symbol(call$control)) call$control <- eval(call$control)
   control <- call$control
-  if (!is.language(control)) {
+  if (!is.call(control)) {
     stop("'control' must be an expression that defined the samples encompassing ",
       "the control group.", call.=FALSE)
   }
@@ -381,8 +383,6 @@ COMPASS <- function(data, treatment, control, subset=NULL,
     meta.sub <-meta[with(meta,get(individual_id))%in%rownames(n_s)&eval(treatment,meta,parent.frame(n=4)),]
     meta.sub[match(rownames(n_s),meta.sub[,individual_id]),]
   })
-  
-  call <- match.call()
   
   ## Make sure that the symbols in the 'treatment', 'control' are evaluated
   

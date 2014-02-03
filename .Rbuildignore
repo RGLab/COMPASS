@@ -1,8 +1,8 @@
 .Rhistory$
-COMPASS.Rproj
-.travis.yml
+COMPASS.Rproj$
+.travis.yml$
 .Rproj.user/
-data/.*.rds
+data/.*.rds$
 incubator/
 refactor/
 shinyTest/

@@ -30,6 +30,7 @@ Imports:
 Suggests:
     flowWorkspace (>= 3.9.36),
     shiny,
+    testthat,
     Kmisc
 LazyLoad: yes
 LazyData: yes
