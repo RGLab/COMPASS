@@ -62,8 +62,10 @@ shinyCOMPASS <- function(x, dir=NULL, meta.vars, obfuscate=FALSE) {
   stimulated <- call[["treatment"]]
   unstimulated <- call[["control"]]
   
+  ## Get the stimulation variable name from the call
+  stid <- as.character(call[["treatment"]][[2]])
   if (!missing(meta.vars)) {
-    meta <- meta[c(meta.vars, iid, sid)]
+    meta <- meta[c(meta.vars, iid, sid, stid)]
   }
   
   colnames(Mgamma) <- apply(categories[, -ncol(categories)], 1, function(x) {
