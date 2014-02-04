@@ -822,7 +822,14 @@ shinyServer( function(input, output, session) {
     
     options=list(
       iDisplayLength=3,
-      bLengthChange=0
+      bSortClasses=TRUE,
+      bAutoWidth=FALSE,
+      aoColumnDefs=list(
+        list(
+          sWidth=c("500px"),
+          aTargets=c( list(0) )
+        )
+      )
     ), {
     
     markers <- getMarkers()
