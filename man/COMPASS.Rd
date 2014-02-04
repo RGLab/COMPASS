@@ -17,7 +17,8 @@ COMPASS(data, treatment, control, subset = NULL,
   samples that received a positive stimulation were named
   \code{"92TH023 Env"} within a variable in \code{meta}
   called \code{Stim}, you could write \code{Stim ==
-  "92TH023 Env"}.}
+  "92TH023 Env"}.  The expression should have the name of
+  the stimulation vector on the left hand side.}
 
   \item{control}{An \R expression, evaluated within the
   metadata, that returns \code{TRUE} for those samples that
