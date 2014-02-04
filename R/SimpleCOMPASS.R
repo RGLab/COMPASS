@@ -50,7 +50,7 @@ SimpleCOMPASS <- function(n_s, n_u, meta, individual_id, sample_id,
   n_u <- as.matrix(n_u)
   counts_u <- rowSums(n_u)
   
-  .fit <- COMPASS:::.COMPASS.discrete(
+  .fit <- .COMPASS.discrete(
     n_s=n_s,
     n_u=n_u,
     categories=cats,
