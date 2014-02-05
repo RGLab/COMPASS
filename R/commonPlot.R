@@ -14,12 +14,12 @@
 ##' @examples
 ##'\dontrun{
 ##' #X is a list of COMPASSResult objects
-##' X<-makeComparable(X)
+##' X<-MakeComparable(X)
 ##' #These should show the same categories.
 ##' plot(X[[1]],remove_unexpressed_categories=FALSE)
 ##' plot(X[[2]],remove_unexpressed_categories=FALSE)
 ##'}
-makeComparable <- function(X,
+MakeComparable <- function(X,
                        subset, 
                         ...) {
   
@@ -36,7 +36,7 @@ makeComparable <- function(X,
   }
   
   subset_expr <- match.call()$subset
-  .makeComparableTwoCOMPASSResults<-function(x,y){
+  .MakeComparableTwoCOMPASSResults<-function(x,y){
     nc_x <- ncol(x$fit$gamma)
     M_x <- x$fit$mean_gamma[, -nc_x]
     
@@ -178,7 +178,7 @@ makeComparable <- function(X,
   for(i in 1:ncol(combo)){
     j<-combo[1,i]
     k<-combo[2,i]
-    res<-.makeComparableTwoCOMPASSResults(X[[j]],X[[k]])
+    res<-.MakeComparableTwoCOMPASSResults(X[[j]],X[[k]])
     X[[j]]<-res[[1]]
     X[[k]]<-res[[2]]
   }

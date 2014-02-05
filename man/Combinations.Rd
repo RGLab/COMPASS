@@ -1,8 +1,8 @@
-\name{discrete_combinations}
-\alias{discrete_combinations}
+\name{Combinations}
+\alias{Combinations}
 \title{Generate all possible combinations of integers from -n:n}
 \usage{
-discrete_combinations(n)
+Combinations(n)
 }
 \arguments{
   \item{n}{An integer.}
@@ -22,6 +22,6 @@ data <- replicate(10, simplify=FALSE, {
 })
 names(data) <- sample(letters, 10)
 str(data)
-CellCounts(data, discrete_combinations(K)) ## all possible combos
+CellCounts(data, Combinations(K)) ## all possible combos
 }
 

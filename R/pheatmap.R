@@ -242,6 +242,8 @@ draw_rownames = function(rown, ...){
 ##' @importFrom plyr .
 .polarLegend<-function(R=0.25,N=11,C=0.5){
  
+  ## R CMD check silencing
+  r <- theta <- NULL
   
   polar.grid<-expand.grid(r=seq(0,R,l=N),theta=seq(0,pi,l=N))
   cart.grid<-do.call(cbind,.toCart(polar.grid$r,polar.grid$theta,C=0))/R

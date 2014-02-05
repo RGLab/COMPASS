@@ -46,6 +46,9 @@ COMPASSContainerFromGatingSet <- function(gs = NULL, node = NULL, filter.fun = N
                                           markers = NA) {
   if (require(flowWorkspace)) {
     
+    ## R CMD check silencing
+    desc.upper <- desc <- name <- NULL
+    
     if (is.null(gs) | is.null(node)) {
       stop("Must specify a gating set and parent node.")
     }
@@ -154,7 +157,7 @@ COMPASSContainerFromGatingSet <- function(gs = NULL, node = NULL, filter.fun = N
                    parent.node))
     }
     
-    child.nodes <- child.nodes[!sapply(child.nodes, function(x) flowWorkspace:::.isBoolGate(gs[[1]], 
+    child.nodes <- child.nodes[!sapply(child.nodes, function(x) .isBoolGate(gs[[1]], 
                                                                                             x))]
     if (length(child.nodes) == 0) {
       stop(sprintf("All the children of %s are boolean gates. Choose a population with non-boolean child gates.", 

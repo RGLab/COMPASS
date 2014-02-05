@@ -64,6 +64,43 @@
 ##'   the model. If \code{keep_original_data} is \code{TRUE}, then the original
 ##'   data is also returned as a component of the list, with name \code{orig}.
 ##' @export
+##' @examples \dontrun{
+##' set.seed(123)
+##' n <- 30 ## number of samples
+##' k <- 6 ## number of markers
+##' 
+##' ## generate some sample data
+##' sid_vec <- paste0("sid_", 1:n) ## sample ids; unique names used to denote samples
+##' iid_vec <- rep_len( paste0("iid_", 1:(n/10) ), n ) ## individual ids
+##' data <- replicate(n, {
+##'   nrow <- round(runif(1) * 1E4 + 1000)
+##'   ncol <- k
+##'   vals <- rexp( nrow * ncol, runif(1, 1E-5, 1E-3) )
+##'   vals[ vals < 2000 ] <- 0
+##'   output <- matrix(vals, nrow, ncol)
+##'   output <- output[ apply(output, 1, sum) > 0, ]
+##'   colnames(output) <- paste0("M", 1:k)
+##'   return(output)
+##' })
+##' names(data) <- sid_vec
+##' meta <- data.frame(
+##'   sid=sid_vec,
+##'   iid=iid_vec,
+##'   trt=sample( c("Control", "Treatment"), n, TRUE )
+##' )
+##' 
+##' counts <- sapply(data, nrow) + round( rnorm(n, 1E4, 1E3) )
+##' counts <- setNames( as.integer(counts), names(counts) )
+##' 
+##' CC <- COMPASSContainer(data, counts, meta, "iid", "sid")
+##' fit <- COMPASS(CC,
+##'   category_filter=NULL,
+##'   treatment=trt == "Treatment",
+##'   control=trt == "Control",
+##'   verbose=FALSE
+##' )
+##' plot(fit)
+##' }
 COMPASS <- function(data, treatment, control, subset=NULL, 
   category_filter=function(x) colSums(x > 5) > 2,
   filter_lowest_frequency=0, filter_specific_markers=NULL, 

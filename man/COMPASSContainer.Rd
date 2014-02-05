@@ -39,4 +39,10 @@ with \code{COMPASS}.
 The \code{names} attributes for the \code{data} and
 \code{counts} objects passed should match.
 }
+\examples{
+\dontrun{
+## Please see the vignette for more involved examples: vignette("COMPASS")
+CC <- COMPASSContainer(data, counts, meta, "PTID", "name")
+}
+}
 

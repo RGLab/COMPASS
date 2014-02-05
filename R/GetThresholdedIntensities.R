@@ -81,7 +81,7 @@ GetThresholdedIntensities <- function(gs, node, map) {
   }
   
   child.nodes <- child.nodes[ !sapply(child.nodes, function(x) 
-    flowWorkspace:::.isBoolGate(gs[[1]], x))]
+    .isBoolGate(gs[[1]], x))]
   
   if (length(child.nodes) == 0) {
     stop(sprintf("All the children of %s are boolean gates. Choose a population with non-boolean child gates.", 

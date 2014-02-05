@@ -24,6 +24,10 @@
 ##' @param sample_id The name of the vector in \code{meta} that denotes the samples.
 ##'   This vector should contain all of the names in the \code{data} input.
 ##' @export
+##' @examples \dontrun{
+##' ## Please see the vignette for more involved examples: vignette("COMPASS")
+##' CC <- COMPASSContainer(data, counts, meta, "PTID", "name")
+##' }
 COMPASSContainer <- function(data, counts, meta, 
   individual_id, sample_id) {
   

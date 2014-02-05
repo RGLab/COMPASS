@@ -1,23 +1,34 @@
-##' Compute Total Cell Counts by Stimulation
+##' Compute Total Cell Counts
+##' 
+##' This function is used to compute total cell counts, per individual,
+##' from a \code{COMPASSContainer}.
 ##' 
 ##' @param data A \code{COMPASSContainer}.
 ##' @param subset An expression, evaluated within the metadata, defining
-##'   the subset of \code{data} over which the counts are computed.
+##'   the subset of \code{data} over which the counts are computed. If left
+##'   unspecified, the counts are computed over all samples.
 ##' @param aggregate Boolean; if \code{TRUE} we sum over the individual,
 ##'   to get total counts across samples for each individual.
 ##' @export
-TotalCounts <- function(data, subset, aggregate=TRUE) {
+##' @examples \dontrun{
+##' TotalCellCounts(CC, Stim %like% "Env")
+##' }
+TotalCellCounts <- function(data, subset, aggregate=TRUE) {
+  
+  ## R CMD check silencers
+  Counts <- PTID <- NULL
   
   if (!inherits(data, "COMPASSContainer"))
     stop("'data' must be an object of class 'COMPASSContainer'")
   
-  if (!is.call(subset)) {
-    subset_call <- match.call()$subset
+  subset_call <- match.call()$subset
+  
+  if (is.null(subset_call)) { ## implies subset is missing
+    keep <- rep(TRUE, nrow(data$meta))
   } else {
-    subset_call <- subset
+    keep <- eval(subset_call, envir=data$meta)
   }
   
-  keep <- eval(subset_call, envir=data$meta)
   samples_keep <- unique(data$meta[[ data$sample_id ]][ keep ])
   dt <- data.table(
     Samples=samples_keep
@@ -42,12 +53,12 @@ TotalCounts <- function(data, subset, aggregate=TRUE) {
     dt <- merge(dt, ptid_dt, all.x=TRUE, by="Samples")
     
     ## Sum the counts over PTID
-    output <- dt[, sum(Counts), by=PTID]
+    output <- dt[, sum(Counts, na.rm=TRUE), by=PTID]
     return( setNames(output$V1, output$PTID) )
     
   } else {
     
-    return (setNames(dt$Counts, dt$Samples))
+    return( setNames(dt$Counts, dt$Samples) )
     
   }
   

@@ -1,8 +1,8 @@
-\name{makeComparable}
-\alias{makeComparable}
+\name{MakeComparable}
+\alias{MakeComparable}
 \title{Make a list of COMPASSResults comparable for display as heatamps}
 \usage{
-makeComparable(X, subset, ...)
+MakeComparable(X, subset, ...)
 }
 \arguments{
   \item{X}{An list of \code{COMPASSResult} objects}
@@ -21,7 +21,7 @@ at all pairwise comparisons.
 \examples{
 \dontrun{
 #X is a list of COMPASSResult objects
-X<-makeComparable(X)
+X<-MakeComparable(X)
 #These should show the same categories.
 plot(X[[1]],remove_unexpressed_categories=FALSE)
 plot(X[[2]],remove_unexpressed_categories=FALSE)

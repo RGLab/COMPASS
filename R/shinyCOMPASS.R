@@ -27,6 +27,11 @@ shinyCOMPASS <- function(x, dir=NULL, meta.vars, obfuscate=FALSE) {
   
   message("Preparing data for the Shiny application, please wait a moment...")
   
+  ## These are just R CMD check silencers
+  ## They're all used as naked symbols in data.table code later
+  Marker <- Proportion <- Counts <- LogFoldChange <- PropDiff <- Degree <-
+    DOF <- ModelDiff <- ModelLogDiff <- NULL
+  
   if (is.null(dir)) {
     dir <- tempdir()
     on.exit(unlink(dir, recursive=TRUE))
@@ -74,7 +79,7 @@ shinyCOMPASS <- function(x, dir=NULL, meta.vars, obfuscate=FALSE) {
   
   ## Compute the joint distribution of counts
   k <- length(markers)
-  combos <- discrete_combinations(k)
+  combos <- Combinations(k)
   
   d_counts <- CellCounts(dat, combos)
   rownames(d_counts) <- names(dat)

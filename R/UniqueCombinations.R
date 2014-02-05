@@ -1,32 +1,29 @@
-##' Generate Boolean Subsets
+##' Generate Unique Combinations
 ##' 
-##' Generate all possible boolean subsets (that is, unique rows by index).
-##' 
-##' \itemize{
-##'   \item{\code{\link{BooleanSubsets.COMPASSContainer}}}{ for a \code{COMPASSContainer}},
-##'   \item{\code{\link{BooleanSubsets.default}}}{ for the default method}
-##' }
+##' Generate all possible unique combinations of \code{x}.
+##' Primarily used as a helper function for \code{CellCounts}, but may
+##' be occasionally useful to the end user.
 ##' 
 ##' @param x Either a \code{COMPASSContainer}, or a list of matrices.
 ##' @param as.matrix Boolean; if \code{TRUE} we return results as a matrix;
 ##'   otherwise, we return the results as a list.
 ##' @export
-BooleanSubsets <- function(x, as.matrix) {
-  UseMethod("BooleanSubsets")
+UniqueCombinations <- function(x, as.matrix) {
+  UseMethod("UniqueCombinations")
 }
 
-##' @rdname BooleanSubsets
-##' @method BooleanSubsets COMPASSContainer
-##' @S3method BooleanSubsets COMPASSContainer
-BooleanSubsets.COMPASSContainer <- function(x, as.matrix=FALSE) {
+##' @rdname UniqueCombinations
+##' @method UniqueCombinations COMPASSContainer
+##' @S3method UniqueCombinations COMPASSContainer
+UniqueCombinations.COMPASSContainer <- function(x, as.matrix=FALSE) {
   x <- x$data
-  NextMethod("BooleanSubsets")
+  NextMethod("UniqueCombinations")
 }
 
-##' @rdname BooleanSubsets
-##' @method BooleanSubsets default
-##' @S3method BooleanSubsets default
-BooleanSubsets.default <- function(x, as.matrix=FALSE) {
+##' @rdname UniqueCombinations
+##' @method UniqueCombinations default
+##' @S3method UniqueCombinations default
+UniqueCombinations.default <- function(x, as.matrix=FALSE) {
   
   combinations <- unique( as.data.table(
     lapply( 

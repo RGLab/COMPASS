@@ -15,8 +15,8 @@
 ##' })
 ##' names(data) <- sample(letters, 10)
 ##' str(data)
-##' CellCounts(data, discrete_combinations(K)) ## all possible combos
-discrete_combinations <- function(n) {
+##' CellCounts(data, Combinations(K)) ## all possible combos
+Combinations <- function(n) {
   values <- do.call(expand.grid, replicate(n, c(1, -1), simplify=FALSE))
   for (i in 1:ncol(values)) {
     values[, i] <- values[, i] * i

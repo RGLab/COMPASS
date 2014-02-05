@@ -14,7 +14,7 @@ SimpleCOMPASS(n_s, n_u, meta, individual_id, sample_id, iterations = 10000L,
   the individuals in the experiment. Each row in
   \code{meta} should correspond to a row in \code{data}.
   There should be one row for each sample; i.e., one row
-  for each element of \code{data}.}
+  for each element of \code{n_s} and \code{n_u}.}
 
   \item{individual_id}{The name of the vector in
   \code{meta} that denotes the individuals from which
@@ -43,5 +43,37 @@ the generated data used as input for the model.
 \description{
 This function fits the \code{COMPASS} model from a
 user-provided set of stimulated / unstimulated matrices.
+}
+\examples{
+\dontrun{
+set.seed(123)
+n <- 100 ## number of samples
+k <- 6 ## number of markers
+
+## generate some sample data
+sid_vec <- paste0("sid_", 1:n) ## sample ids; unique names used to denote samples
+iid_vec <- rep_len( paste0("iid_", 1:(n/10) ), n ) ## individual ids
+data <- replicate(n, {
+  nrow <- round(runif(1) * 1E4 + 1000)
+  ncol <- k
+  vals <- rexp( nrow * ncol, runif(1, 1E-5, 1E-3) )
+  vals[ vals < 2000 ] <- 0
+  output <- matrix(vals, nrow, ncol)
+  output <- output[ apply(output, 1, sum) > 0, ]
+  colnames(output) <- paste0("M", 1:k)
+  return(output)
+})
+meta <- data.frame(
+  sid=sid_vec,
+  iid=iid_vec,
+  trt=sample( c("Control", "Treatment"), n, TRUE )
+)
+
+## generate counts for n_s, n_u
+n_s <- CellCounts( data[1:(n/2)], Combinations(6) )
+n_u <- CellCounts( data[(n/2+1):n], Combinations(6) )
+SimpleCOMPASS(n_s, n_u, meta, "iid", "sid")
+
+}
 }
 

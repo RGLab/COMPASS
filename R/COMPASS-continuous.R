@@ -1,3 +1,14 @@
+repmat = function(X,m,n){
+  if (is.matrix(X)) {
+    mx = dim(X)[1]
+    nx = dim(X)[2]
+  } else {
+    mx = 1
+    nx = length(X)
+  }
+  matrix(t(matrix(X,mx,nx*n)),mx*m,nx*n,byrow=T)
+}
+
 .COMPASS.continuous <- function(y_s, y_u, n_s, n_u, categories,
   iterations, replications, verbose=TRUE, ...) {
   
