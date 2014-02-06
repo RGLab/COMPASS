@@ -1,15 +1,16 @@
 $( function() {
   
-  // Some initial setup for the DataTable stats thing
-  var $stats = $("#stats");
+  // Some initial setup for the DataTable stats
   var zoomStatsClicked = false;
   
   // we need to make sure the #stats box expands if the user clicks the expand button
   $("#zoom-stats").click( function() {
     
+    var $stats = $("#stats");
+    
     // get the parent height
     var height = $stats.parent().height();
-    var $dataTable = $("#DataTables_Table_0").dataTable();
+    var $dataTable = $("#stats").find(".dataTable").dataTable();
     var $dtSettings = $dataTable.fnSettings();
     
     if (zoomStatsClicked) {

@@ -1,3 +1,3 @@
 library(testthat)
 library(COMPASS)
-test_package("COMPASS")
+test_dir("testthat")
