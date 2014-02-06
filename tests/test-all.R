@@ -1,2 +1,3 @@
 library(testthat)
-test_check("COMPASS")
+library(COMPASS)
+test_package("COMPASS")

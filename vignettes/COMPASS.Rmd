@@ -104,8 +104,8 @@ CC <- COMPASSContainer(
   data=data,
   counts=counts,
   meta=meta,
-  individual_id="iid", ## name of individual id vector in metadata
-  sample_id="sid" ## name of sample id vector in metadata
+  individual_id="iid",
+  sample_id="sid"
 )
 ```
 
@@ -186,12 +186,15 @@ Citations
 
 ```{r citation, echo=FALSE, results='asis'}
 cite_package <- function(...) {
-  args <- unlist( list(...) )
-  cites <- lapply(args, citation)
-  txt <- sapply(cites, function(x) {
-    attr( unclass(x)[[1]], "textVersion" )
-  })
-  return(txt[order(txt)])
+  tryCatch({
+    args <- unlist( list(...) )
+    cites <- lapply(args, citation)
+    txt <- sapply(cites, function(x) {
+      attr( unclass(x)[[1]], "textVersion" )
+    })
+    return(txt[order(txt)])
+  }, error=function(e) NULL
+  )
 }
 citations <- cite_package("COMPASS", "flowWorkspace", "openCyto", "base")
 citations <- c(citations[1:2],"Greg Finak, Andrew McDavid, Pratip Chattopadhyay, Maria Dominguez, Steve De Rosa, Mario Roederer, Raphael Gottardo. Mixture models for single-cell assays with applications to vaccine studies. Biostatistics 2014 Jan;15(1):87-101",citations[3:4])
