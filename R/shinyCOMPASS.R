@@ -14,8 +14,16 @@
 ##'   used with a randomly generated set of IDs. This is useful if you wish
 ##'   to display the data you are using externally but don't wish to make
 ##'   available the IDs used.
+##' @seealso \code{\link{shinyCOMPASSDeps}}, for identifying packages that you
+##'   need in order to run the Shiny application.
 ##' @export
 shinyCOMPASS <- function(x, dir=NULL, meta.vars, obfuscate=FALSE) {
+  
+  if (length(shinyCOMPASSDeps(verbose=FALSE))) {
+    message("Error: Can't run the Shiny application as required packages ",
+      "are missing. Instructions follow:\n\n")
+    return(shinyCOMPASSDeps())
+  }
   
   if (!require(shiny)) {
     stop("You must have 'shiny' installed to run the Shiny application -- try 'install.packages(\"shiny\")'.",

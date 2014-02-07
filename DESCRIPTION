@@ -37,6 +37,7 @@ Suggests:
     flowWorkspace (>= 3.9.36),
     shiny,
     testthat,
+    devtools,
     Kmisc
 LazyLoad: yes
 LazyData: yes
