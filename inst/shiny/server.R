@@ -198,9 +198,9 @@ shinyServer( function(input, output, session) {
     return( c(input$marker_dof_min, input$marker_dof_max) )
   })
   
-  getCustomFilter <- reactive({
-    return( input$custom_filter )
-  })
+#   getCustomFilter <- reactive({
+#     return( input$custom_filter )
+#   })
   
   getFilter1 <- reactive({
     return( input$filter1 )
@@ -314,7 +314,7 @@ shinyServer( function(input, output, session) {
     phenotype <- getPhenotype()
     filter1 <- getFilter1()
     filter1_cb <- getFilter1Cb()
-    custom_filter <- getCustomFilter()
+#     custom_filter <- getCustomFilter()
     max_combos_to_show <- getMaxCombosToShow()
     markers_to_marginalize_over <- getMarkersToMarginalizeOver()
     
@@ -329,7 +329,7 @@ shinyServer( function(input, output, session) {
       max_combos_to_show
     )
     
-    tmp <- customFilter(tmp, custom_filter)
+#     tmp <- customFilter(tmp, custom_filter)
     tmp <- filter1(tmp, filter1, filter1_cb)
     
     ## Marginalize tmp
@@ -393,97 +393,110 @@ shinyServer( function(input, output, session) {
     
   })
   
+  ## A helper function for rendering views only when the button is clicked
+  renderOnUpdateButtonPress <- function(x, env = parent.frame(), quoted = FALSE) {
+    force(input$update)
+    fun <- exprToFunction(x, env, quoted)
+    isolate( fun() )
+  }
+  
   ## heatmap plot
   output$heatmap <- renderPlot({
     
-    markers <- getMarkers()
-    marker_filter <- getMarkerFilter()
-    marker_dof <- getMarkerOrder()
-    phenotype <- getPhenotype()
-    filter1 <- getFilter1()
-    filter1_cb <- getFilter1Cb()
-    custom_filter <- getCustomFilter()
-    max_combos_to_show <- getMaxCombosToShow()
-    markers_to_marginalize_over <- getMarkersToMarginalizeOver()
-    
-    facet1 <- getFacet1()
-    facet2 <- getFacet2()
-    facet3 <- getFacet3()
-    heatmap_level <- getHeatmapLevel()
-    phenotype <- getPhenotype()
-    
-    ## A quick function used for getting a nice color palette
-    heatmap_color <- function(phenotype) {
-      switch(phenotype,
-        `MeanGamma`=colorRampPalette(brewer.pal(n=9, name="Purples")[2:7])(100),
-        #`ModelLogDiff`=colorRampPalette(brewer.pal(n=9, name="Purples")[2:7])(100),
-        #`ModelDiff`=colorRampPalette(brewer.pal(n=9, name="Purples")[2:7])(100),
-        colorRampPalette(brewer.pal(n=7, name="PuOr"))(100)
-      )
-    }
-    
-    heatmap_breaks <- function(m, color, phenotype) {
-      if (phenotype %in% c("LogFoldChange", "ModelLogDiff", "ModelDiff")) {
-        top <- max( max(m), abs(min(m)) )
-        return( seq(-top, top, length.out=length(color)+1) )
-      } else if (phenotype %in% c("MeanGamma")) {
-        return( seq(0, 1, length.out=length(color)+1) )
-      } else {
-        stop("Unrecognized phenotype!")
+    renderOnUpdateButtonPress({
+      
+      markers <- getMarkers()
+      marker_filter <- getMarkerFilter()
+      marker_dof <- getMarkerOrder()
+      phenotype <- getPhenotype()
+      filter1 <- getFilter1()
+      filter1_cb <- getFilter1Cb()
+      #     custom_filter <- getCustomFilter()
+      max_combos_to_show <- getMaxCombosToShow()
+      markers_to_marginalize_over <- getMarkersToMarginalizeOver()
+      
+      facet1 <- getFacet1()
+      facet2 <- getFacet2()
+      facet3 <- getFacet3()
+      heatmap_level <- getHeatmapLevel()
+      phenotype <- getPhenotype()
+      
+      ## A quick function used for getting a nice color palette
+      heatmap_color <- function(phenotype) {
+        switch(phenotype,
+          `MeanGamma`=colorRampPalette(brewer.pal(n=9, name="Purples")[2:7])(100),
+          #`ModelLogDiff`=colorRampPalette(brewer.pal(n=9, name="Purples")[2:7])(100),
+          #`ModelDiff`=colorRampPalette(brewer.pal(n=9, name="Purples")[2:7])(100),
+          colorRampPalette(brewer.pal(n=7, name="PuOr"))(100)
+        )
       }
-    }
-    
-    if (facet1 == "Original Ordering") facet1 <- NULL
-    if (facet2 == "None") facet2 <- NULL
-    if (facet3 == "None") facet3 <- NULL
-    
-    color <- heatmap_color(phenotype)
-    breaks <- heatmap_breaks(m, color, phenotype)
-    
-    if (any( !is.null( c(facet1, facet2, facet3) ) )) {
       
-      row_annot <- d[, c(sid, facet1, facet2, facet3), with=FALSE]
-      row_annot <- as.data.frame(row_annot[ row_annot[, .I[1], by=c(sid)]$V1 ])
-      row_annot[[sid]] <- as.character(row_annot[[sid]])
-      row_annot <- row_annot[ match( rownames(m), row_annot[[sid]] ), ]
-      rownames(row_annot) <- row_annot[[sid]]
-      row_annot[[sid]] <- NULL
+      heatmap_breaks <- function(m, color, phenotype) {
+        if (phenotype %in% c("LogFoldChange", "ModelLogDiff", "ModelDiff")) {
+          top <- max( max(m), abs(min(m)) )
+          return( seq(-top, top, length.out=length(color)+1) )
+        } else if (phenotype %in% c("MeanGamma")) {
+          return( seq(0, 1, length.out=length(color)+1) )
+        } else {
+          stop("Unrecognized phenotype!")
+        }
+      }
       
-      row_order <<- do.call(order, row_annot[ c(facet1, facet2, facet3) ])
+      if (facet1 == "Original Ordering") facet1 <- NULL
+      if (facet2 == "None") facet2 <- NULL
+      if (facet3 == "None") facet3 <- NULL
       
-      pheatmap(m[row_order, col_order, drop=FALSE], 
-        color=color,
-        breaks=breaks,
-        cluster_rows=FALSE,
-        cluster_cols=FALSE,
-        show_rownames=FALSE,
-        show_colnames=FALSE,
-        cytokine_annotation=annot[col_order, , drop=FALSE],
-        row_annotation=row_annot[row_order, , drop=FALSE],
-        main=paste(phenoToLabel(phenotype), "by Sample"),
-        order_by_max_functionality=FALSE
-      )
+      color <- heatmap_color(phenotype)
+      breaks <- heatmap_breaks(m, color, phenotype)
       
-    } else {
+      if (any( !is.null( c(facet1, facet2, facet3) ) )) {
+        
+        row_annot <- d[, c(sid, facet1, facet2, facet3), with=FALSE]
+        row_annot <- as.data.frame(row_annot[ row_annot[, .I[1], by=c(sid)]$V1 ])
+        row_annot[[sid]] <- as.character(row_annot[[sid]])
+        row_annot <- row_annot[ match( rownames(m), row_annot[[sid]] ), ]
+        rownames(row_annot) <- row_annot[[sid]]
+        row_annot[[sid]] <- NULL
+        
+        row_order <<- do.call(order, row_annot[ c(facet1, facet2, facet3) ])
+        
+        pheatmap(m[row_order, col_order, drop=FALSE], 
+          color=color,
+          breaks=breaks,
+          cluster_rows=FALSE,
+          cluster_cols=FALSE,
+          show_rownames=FALSE,
+          show_colnames=FALSE,
+          cytokine_annotation=annot[col_order, , drop=FALSE],
+          row_annotation=row_annot[row_order, , drop=FALSE],
+          main=paste(phenoToLabel(phenotype), "by Sample"),
+          order_by_max_functionality=FALSE
+        )
+        
+      } else {
+        
+        pheatmap(m[, col_order, drop=FALSE], 
+          color=color,
+          breaks=breaks,
+          cluster_rows=FALSE,
+          cluster_cols=FALSE,
+          show_rownames=FALSE,
+          show_colnames=FALSE,
+          cytokine_annotation=annot[col_order, , drop=FALSE],
+          main=paste(phenoToLabel(phenotype), "by Sample"),
+          order_by_max_functionality=FALSE
+        )
+        
+      }
       
-      pheatmap(m[, col_order, drop=FALSE], 
-        color=color,
-        breaks=breaks,
-        cluster_rows=FALSE,
-        cluster_cols=FALSE,
-        show_rownames=FALSE,
-        show_colnames=FALSE,
-        cytokine_annotation=annot[col_order, , drop=FALSE],
-        main=paste(phenoToLabel(phenotype), "by Sample"),
-        order_by_max_functionality=FALSE
-      )
-      
-    }
+    })
     
   })
   
   ## linechart
   output$linechart <- renderPlot({
+    
+    renderOnUpdateButtonPress({
     
     markers <- getMarkers()
     if (is.null(markers)) {
@@ -494,7 +507,7 @@ shinyServer( function(input, output, session) {
     phenotype <- getPhenotype()
     filter1 <- getFilter1()
     filter1_cb <- getFilter1Cb()
-    custom_filter <- getCustomFilter()
+    #     custom_filter <- getCustomFilter()
     max_combos_to_show <- getMaxCombosToShow()
     markers_to_marginalize_over <- getMarkersToMarginalizeOver()
     
@@ -607,28 +620,32 @@ shinyServer( function(input, output, session) {
     
     ## fill in the annotations
     
-#     if( facet1 != "Original Ordering" ) {
-#       p <- p + aes_string(x="Marker", y=phenotype, group=sid, color=facet1)
-#       if( facet2 != "None" ) {
-#         p <- p + facet_wrap(facet2)
-#       }
-#     }
-#     
-#     ## y label -- for some reason, it has to occur after the facetting code
-#     p <- p +
-#       ylab( phenoToLabel(phenotype) )
-#     
-#     if (flip_linechart) {
-#       p <- p +
-#         coord_flip() +
-#         theme(
-#           title=element_text(family="Gill Sans")
-#         )
-#     }
+    #     if( facet1 != "Original Ordering" ) {
+    #       p <- p + aes_string(x="Marker", y=phenotype, group=sid, color=facet1)
+    #       if( facet2 != "None" ) {
+    #         p <- p + facet_wrap(facet2)
+    #       }
+    #     }
+    #     
+    #     ## y label -- for some reason, it has to occur after the facetting code
+    #     p <- p +
+    #       ylab( phenoToLabel(phenotype) )
+    #     
+    #     if (flip_linechart) {
+    #       p <- p +
+    #         coord_flip() +
+    #         theme(
+    #           title=element_text(family="Gill Sans")
+    #         )
+    #     }
+    
+  })
     
   })
   
   output$dofplot <- renderPlot({
+    
+    renderOnUpdateButtonPress({
     
     markers <- getMarkers()
     marker_filter <- getMarkerFilter()
@@ -636,7 +653,7 @@ shinyServer( function(input, output, session) {
     phenotype <- getPhenotype()
     filter1 <- getFilter1()
     filter1_cb <- getFilter1Cb()
-    custom_filter <- getCustomFilter()
+    #     custom_filter <- getCustomFilter()
     max_combos_to_show <- getMaxCombosToShow()
     markers_to_marginalize_over <- getMarkersToMarginalizeOver()
     
@@ -725,9 +742,13 @@ shinyServer( function(input, output, session) {
     plot(p)
     
   })
+    
+  })
   
   ## boxplot by marker
   output$boxplot_by_marker <- renderPlot({
+    
+    renderOnUpdateButtonPress({
     
     markers <- getMarkers()
     marker_filter <- getMarkerFilter()
@@ -735,7 +756,7 @@ shinyServer( function(input, output, session) {
     phenotype <- getPhenotype()
     filter1 <- getFilter1()
     filter1_cb <- getFilter1Cb()
-    custom_filter <- getCustomFilter()
+    #     custom_filter <- getCustomFilter()
     max_combos_to_show <- getMaxCombosToShow()
     markers_to_marginalize_over <- getMarkersToMarginalizeOver()
     
@@ -817,6 +838,8 @@ shinyServer( function(input, output, session) {
     plot(p)
     
   })
+    
+  })
   
   output$stats <- renderDataTable(
     
@@ -831,115 +854,119 @@ shinyServer( function(input, output, session) {
         )
       )
     ), {
-    
-    markers <- getMarkers()
-    marker_filter <- getMarkerFilter()
-    marker_dof <- getMarkerOrder()
-    phenotype <- getPhenotype()
-    filter1 <- getFilter1()
-    filter1_cb <- getFilter1Cb()
-    custom_filter <- getCustomFilter()
-    max_combos_to_show <- getMaxCombosToShow()
-    markers_to_marginalize_over <- getMarkersToMarginalizeOver()
-    
-    individual <- getIndividual()
-    facet1 <- getFacet1()
-    facet2 <- getFacet2()
-    facet3 <- getFacet3()
-    heatmap_level <- getHeatmapLevel()
-    
-    if (nrow(d) == 0) {
-      return("Empty data")
-    }
-    
-    ## construct 'by' from the included facets
-    by <- "Marker"
-    
-    if (facet1 != "Original Ordering") {
-      by <- paste(by, facet1, sep=",")
-    }
-    
-    if (facet2 != "None") {
-      by <- paste(by, facet2, sep=",")
-    }
-    
-    if (facet3 != "None") {
-      by <- paste(by, facet3, sep=",")
-    }
-    
-    m <- d[, list(
-      Mean=mean( get(phenotype), na.rm=TRUE ),
-      Median=median( get(phenotype), na.rm=TRUE ),
-      SD=sd( get(phenotype), na.rm=TRUE ),
-      N=.N
-    ), keyby=by]
       
-    ## Make the values nicer to present
-    m$Mean <- sprintf("%.3G", m$Mean)
-    m$Median <- sprintf("%.3G", m$Median)
-    m$SD <- sprintf("%.3G", m$SD)
-    
-    return(m)
-    
-  })
+      renderOnUpdateButtonPress({
+      
+      markers <- getMarkers()
+      marker_filter <- getMarkerFilter()
+      marker_dof <- getMarkerOrder()
+      phenotype <- getPhenotype()
+      filter1 <- getFilter1()
+      filter1_cb <- getFilter1Cb()
+      #     custom_filter <- getCustomFilter()
+      max_combos_to_show <- getMaxCombosToShow()
+      markers_to_marginalize_over <- getMarkersToMarginalizeOver()
+      
+      individual <- getIndividual()
+      facet1 <- getFacet1()
+      facet2 <- getFacet2()
+      facet3 <- getFacet3()
+      heatmap_level <- getHeatmapLevel()
+      
+      if (nrow(d) == 0) {
+        return("Empty data")
+      }
+      
+      ## construct 'by' from the included facets
+      by <- "Marker"
+      
+      if (facet1 != "Original Ordering") {
+        by <- paste(by, facet1, sep=",")
+      }
+      
+      if (facet2 != "None") {
+        by <- paste(by, facet2, sep=",")
+      }
+      
+      if (facet3 != "None") {
+        by <- paste(by, facet3, sep=",")
+      }
+      
+      m <- d[, list(
+        Mean=mean( get(phenotype), na.rm=TRUE ),
+        Median=median( get(phenotype), na.rm=TRUE ),
+        SD=sd( get(phenotype), na.rm=TRUE ),
+        N=.N
+      ), keyby=by]
+      
+      ## Make the values nicer to present
+      m$Mean <- sprintf("%.3G", m$Mean)
+      m$Median <- sprintf("%.3G", m$Median)
+      m$SD <- sprintf("%.3G", m$SD)
+      
+      return(m)
+      
+    })
+      
+    })
   
-#   output$splom <- renderSplom({
-#     
-#     individual <- getIndividual()
-#     facet1 <- getFacet1()
-#     facet2 <- getFacet2()
-#     heatmap_level <- getHeatmapLevel()
-#     phenotype <- getPhenotype()
-#     filter1 <- getFilter1()
-#     filter1_cb <- getFilter1Cb()
-#     custom_filter <- getCustomFilter()
-#     markers_to_marginalize_over <- getMarkersToMarginalizeOver()
-#     max_combos_to_show <- getMaxCombosToShow()
-#     
-#     ## take the selected individual
-#     
-#     samples <- as.character(unique(d[[sid]][ d[[iid]] == individual ]))
-#     dat <- cell_data[ names(cell_data) %in% samples ]
-#     dat <- lapply(dat, as.data.frame)
-#     m <- rbindlistn(dat, TRUE)
-#     setnames(m, ".Names", sid)
-#     list(m, sid)
-#     
-#   })
+  #   output$splom <- renderSplom({
+  #     
+  #     individual <- getIndividual()
+  #     facet1 <- getFacet1()
+  #     facet2 <- getFacet2()
+  #     heatmap_level <- getHeatmapLevel()
+  #     phenotype <- getPhenotype()
+  #     filter1 <- getFilter1()
+  #     filter1_cb <- getFilter1Cb()
+  #     custom_filter <- getCustomFilter()
+  #     markers_to_marginalize_over <- getMarkersToMarginalizeOver()
+  #     max_combos_to_show <- getMaxCombosToShow()
+  #     
+  #     ## take the selected individual
+  #     
+  #     samples <- as.character(unique(d[[sid]][ d[[iid]] == individual ]))
+  #     dat <- cell_data[ names(cell_data) %in% samples ]
+  #     dat <- lapply(dat, as.data.frame)
+  #     m <- rbindlistn(dat, TRUE)
+  #     setnames(m, ".Names", sid)
+  #     list(m, sid)
+  #     
+  #   })
   
-#   output$polyfunctionality <- renderPlot({
-#     
-#     individual <- getIndividual()
-#     facet1 <- getFacet1()
-#     facet2 <- getFacet2()
-#     
-#     if (facet1 != "Original Ordering") {
-#       
-#       if (facet2 != "None") {
-#         
-#         p <- ggplot(pf, aes_string(y="Score", x=facet2, fill=facet1)) +
-#           geom_boxplot() +
-#           facet_wrap(~ FunctionalityType)
-#         
-#       } else {
-#         
-#         p <- ggplot(pf, aes_string(y="Score", x=factor(1), fill=facet1)) +
-#           geom_boxplot() +
-#           facet_wrap(~ FunctionalityType) +
-#           xlab("")
-#         
-#       }
-#       
-#     } else {
-#       
-#       p <- ggplot(pf, aes_string(x=factor(1), y="Score")) +
-#         geom_boxplot() +
-#         facet_wrap(~ FunctionalityType) +
-#         xlab("")
-#     }
-#     
-#     print(p)
-#     
-#   })
+  #   output$polyfunctionality <- renderPlot({
+  #     
+  #     individual <- getIndividual()
+  #     facet1 <- getFacet1()
+  #     facet2 <- getFacet2()
+  #     
+  #     if (facet1 != "Original Ordering") {
+  #       
+  #       if (facet2 != "None") {
+  #         
+  #         p <- ggplot(pf, aes_string(y="Score", x=facet2, fill=facet1)) +
+  #           geom_boxplot() +
+  #           facet_wrap(~ FunctionalityType)
+  #         
+  #       } else {
+  #         
+  #         p <- ggplot(pf, aes_string(y="Score", x=factor(1), fill=facet1)) +
+  #           geom_boxplot() +
+  #           facet_wrap(~ FunctionalityType) +
+  #           xlab("")
+  #         
+  #       }
+  #       
+  #     } else {
+  #       
+  #       p <- ggplot(pf, aes_string(x=factor(1), y="Score")) +
+  #         geom_boxplot() +
+  #         facet_wrap(~ FunctionalityType) +
+  #         xlab("")
+  #     }
+  #     
+  #     print(p)
+  #     
+  #   })
   
 })

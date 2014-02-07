@@ -65,14 +65,6 @@ shinyUI( bootstrapPage(
   ## Controls exist separate of gridster layout
   tags$div( id="gridster-control-container",
     
-    tags$button( type="button", id="gridster-control-hide",
-      "Show Controls"
-    ),
-    
-    tags$button( type="button", id="gridster-control",
-      "Gridster Enabled"
-    ),
-    
     tags$div(
       id='controls-container', 
       selectInput("phenotype", label="Phenotype", choices=list(
@@ -84,6 +76,9 @@ shinyUI( bootstrapPage(
       
       ## multiselect requires the attribute 'multiple' to be set; can't set
       ## this thru regular shiny HTML functions
+      
+      h3("Marker Filters"),
+      
       HTML("<select id='markers' multiple='multiple'>"),
       HTML(
         paste0("<option value='", markers_positive, "'> ",
@@ -127,7 +122,8 @@ shinyUI( bootstrapPage(
         )
       ),
       
-      #h3("Facets"),
+      h3("Facets"),
+      
       tags$div(
         
         tags$div( style="width: 33%; float: left;",
@@ -153,8 +149,10 @@ shinyUI( bootstrapPage(
         
       ),
       
+      h3("Variable Filters"),
+      
       selectInput("filter1",
-        label="Filter 1",
+        label="Filter by Qualitative Variable",
         choices=c("None", facet_vars)
       ),
       
@@ -164,12 +162,19 @@ shinyUI( bootstrapPage(
         checkboxGroupInput("filter1_cb", label='', choices='')
       ),
       
-      textInput("custom_filter",
-        label="Custom Filter",
-        value=""
-      )
+      h3("View Controls"),
+      HTML("<br />")
       
-    )
+#       textInput("custom_filter",
+#         label="Custom Filter",
+#         value=""
+#       )
+      
+    ),
+    
+    actionButton("gridster-control", "Gridster Enabled"),
+    actionButton("update", "Update View"),
+    actionButton("gridster-control-hide", "Show Controls")
   ),
   
   ## Actual gridster object

@@ -1,3 +1,7 @@
+body {
+  min-height: 1460px;
+}
+
 .overflow-auto {
   width: 100%;
   overflow: auto;
@@ -66,7 +70,7 @@ div.controls  > * {
 #stats {
   height: 300px !important;
   margin: 0 auto;
-  overflow: auto;
+  overflow: hidden;
 }
 
 #icon-zoom-in {
@@ -80,8 +84,9 @@ div.controls  > * {
   height: 620px !important;
 }
 
-#gridster-control {
-  margin-bottom: 10px;
+#update {
+  margin-left: 10px;
+  text-align: center;
 }
 
 #gridster-control-hide {
@@ -100,6 +105,21 @@ div.controls  > * {
   background-color: white;
   box-shadow: 0 0 2px 2px #888;
   border-radius: 10px 10px 0 0;
+  overflow: auto;
+}
+
+#update-container {
+  z-index: 1000;
+  height: 25px;
+  width: auto;
+  position: fixed;
+  padding: 10px;
+  left: 1%;
+  bottom: 0px;
+  background-color: white;
+  box-shadow: 0 0 2px 2px #888;
+  border-radius: 10px 10px 0 0;
+  overflow: hidden;
 }
 
 #splom-container {
@@ -122,7 +142,17 @@ button.ui-multiselect {
 }
 
 /* Make the DataTable fit */
-#DataTables_Table_0_wrapper {
+.dataTables_wrapper {
   margin-left: 20px;
   margin-right: 20px;
+}
+
+/* Hide the results */
+.dataTables_length {
+  display: none;
+}
+
+h3 {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
 }
