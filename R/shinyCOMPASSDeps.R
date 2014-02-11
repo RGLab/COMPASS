@@ -61,13 +61,13 @@ shinyCOMPASSDeps <- function(verbose=TRUE) {
   }
   if (!flag_install_required) {
     message("Your system is ready to run the COMPASS Shiny application!\n",
-      "Try running 'shinyCOMPASS' on a COMPASS fit object to start the Shiny application.")
+      "Try calling 'shinyCOMPASS' on a COMPASS fit object to start the Shiny application.")
     return (invisible(NULL))
   }
   
   return( list(
     CRAN=CRAN_install,
-    KGitHub=kevin_install,
-    WGitHub=winston_install
+    KevinGitHub=kevin_install,
+    WinstonGitHub=winston_install
   ) )
 }
