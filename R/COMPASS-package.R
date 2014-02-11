@@ -7,7 +7,7 @@
 ##' 
 ##' @docType package
 ##' @name COMPASS-package
-##' @useDynLib COMPASS
+##' @useDynLib COMPASS, .registration=TRUE
 ##' @importFrom Rcpp evalCpp
 ##' @import data.table
 ##' @import grid

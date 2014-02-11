@@ -278,7 +278,7 @@ COMPASS <- function(data, treatment, control, subset=NULL,
       )
     }))
     
-    m <- .Call("COMPASS_CellCounts", y, combos, PACKAGE="COMPASS")
+    m <- .Call(C_COMPASS_CellCounts, y, combos)
     
     ## set the last column to be the 'null'
     m[, ncol(m)] <- counts[ names(y) ] - apply(m[,-ncol(m), drop=FALSE], 1, sum)

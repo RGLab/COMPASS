@@ -3,6 +3,7 @@
 #include <R.h>
 #include <Rinternals.h>
 
+// [[register]]
 SEXP transpose_list(SEXP x) {
   
   int n = length(x);

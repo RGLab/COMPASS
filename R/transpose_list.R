@@ -9,5 +9,5 @@
 ##'   transpose_list( transpose_list(l) ), l
 ##' ) )
 transpose_list <- function(x) {
-  return( .Call("transpose_list", as.list(x), PACKAGE="COMPASS") )
+  return( .Call(C_transpose_list, as.list(x)) )
 }

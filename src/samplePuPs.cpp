@@ -1,7 +1,7 @@
 #include <Rcpp.h>
 using namespace Rcpp;
 
-// cpp codes for generate posterior ps and pu for each subject i
+// [[register]]
 RcppExport SEXP samplePuPs(SEXP alphau, SEXP alphas, SEXP gammat,  SEXP T, SEXP K , SEXP nsi, SEXP nui, SEXP d, SEXP M)
 {
     BEGIN_RCPP
@@ -114,7 +114,7 @@ RcppExport SEXP samplePuPs(SEXP alphau, SEXP alphas, SEXP gammat,  SEXP T, SEXP 
     NumericVector p_u = colMeans(pui);
     
     p_s = p_s[ seq(0, p_s.size()-2) ];
-    p_u = p_u[ seq(0, p_s.size()-2) ];
+    p_u = p_u[ seq(0, p_u.size()-2) ];
    
     return List::create(
       _["p_s"] = p_s,

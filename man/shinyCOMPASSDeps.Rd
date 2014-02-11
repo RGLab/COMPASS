@@ -4,6 +4,10 @@
 \usage{
 shinyCOMPASSDeps(verbose = TRUE)
 }
+\arguments{
+  \item{verbose}{Boolean; if \code{TRUE} we print
+  installation instructions to the screen.}
+}
 \description{
 This function can be used to identify the packages still
 needed in order to launch the Shiny app.

@@ -3,6 +3,7 @@
 #include <R_ext/Utils.h>
 #include <stdlib.h>
 
+// [[register]]
 RcppExport SEXP updategammak_noPu(SEXP n_s,SEXP n_u, SEXP gammat, SEXP I, SEXP K, SEXP SS, SEXP alphau, SEXP alphas, SEXP alpha, SEXP mk, SEXP Istar, 
                                   SEXP mKstar, SEXP pp, SEXP pb1, SEXP pb2, SEXP indi)
 {

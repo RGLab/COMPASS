@@ -15,7 +15,7 @@ Posterior <- function(x) {
 compute_posterior <- function(x, as.matrix=FALSE) {
   
   output <- lapply( 1:nrow(x$data$n_s), function(i) {
-    .Call( "samplePuPs",
+    .Call( C_samplePuPs,
       x$fit$alpha_u,
       x$fit$alpha_s,
       x$fit$gamma[i, , ],

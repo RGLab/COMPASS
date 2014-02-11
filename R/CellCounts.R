@@ -72,10 +72,9 @@ CellCounts.COMPASSContainer <- function(data, combinations) {
 
 .CellCounts_character <- function(data, combinations) {
   
-  output <- .Call("COMPASS_CellCounts_character", 
+  output <- .Call(C_COMPASS_CellCounts_character, 
     data, 
-    lapply(combinations, function(x) parse(text=x)),
-    PACKAGE="COMPASS"
+    lapply(combinations, function(x) parse(text=x))
   )
   rownames(output) <- names(data)
   colnames(output) <- unlist(combinations)
@@ -111,10 +110,10 @@ CellCounts.COMPASSContainer <- function(data, combinations) {
     return( paste(nm[ order(abs(x)) ], collapse="&") )
   })
   
-  return( .Call("COMPASS_CellCounts", 
+  return( .Call(C_COMPASS_CellCounts,
     as.list(data), 
-    lapply(combinations, as.integer), 
-    PACKAGE="COMPASS") )
+    lapply(combinations, as.integer)
+  ) )
 }
 
 ##' @S3method CellCounts default
