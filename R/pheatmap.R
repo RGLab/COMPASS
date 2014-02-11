@@ -980,7 +980,7 @@ pheatmap = function(mat, color = colorRampPalette(rev(brewer.pal(n = 7, name = "
   if(scale != "none"){
     mat = scale_mat(mat, scale)
     if(is.na(breaks)){
-      breaks = generate_breaks(mat, length(color), center = T)
+      breaks = generate_breaks(mat, length(color), center = TRUE)
     }
   }
   

@@ -6,7 +6,7 @@ repmat = function(X,m,n){
     mx = 1
     nx = length(X)
   }
-  matrix(t(matrix(X,mx,nx*n)),mx*m,nx*n,byrow=T)
+  matrix(t(matrix(X,mx,nx*n)),mx*m,nx*n,byrow=TRUE)
 }
 
 .COMPASS.continuous <- function(y_s, y_u, n_s, n_u, categories,

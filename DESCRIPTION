@@ -32,7 +32,9 @@ Imports:
     plyr,
     knitr,
     clue,
-    abind
+    abind,
+    grDevices,
+    utils
 Suggests:
     flowWorkspace (>= 3.9.36),
     shiny,

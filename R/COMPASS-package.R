@@ -9,8 +9,7 @@
 ##' @name COMPASS-package
 ##' @useDynLib COMPASS, .registration=TRUE
 ##' @importFrom Rcpp evalCpp
-##' @import data.table
-##' @import grid
+##' @import data.table grid
 ##' @alias COMPASS-package
 ##' @seealso
 ##'   \itemize{
