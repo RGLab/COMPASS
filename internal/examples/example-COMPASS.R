@@ -35,8 +35,8 @@ verbose <- TRUE
 set.seed(123)
 system.time(discrete1 <- COMPASS(
   data=CC,
-  treatment="92TH023 Env",
-  control="negctrl 1",
+  treatment=Stim == "92TH023 Env",
+  control=Stim == "negctrl 1",
   model="discrete",
   iterations=1E2,
   replications=4

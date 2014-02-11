@@ -6,7 +6,7 @@
   
   ## Initial parameters
   vmessage("Initializing parameters...")
-  T <- iterations ## The number of iterations to run the model
+  N <- iterations ## The number of iterations to run the model
   ttt <- 2000 ## The step size in mode search (fixed)
   SS <- 1L
   
@@ -30,10 +30,10 @@
   Istar = 0;
   mKstar = 0;
   
-  gamma =array(as.integer(0), dim=c(I,K,T));
+  gamma =array(as.integer(0), dim=c(I,K,N));
   
-  alpha_u = array(0, dim=c(T,K));
-  alpha_s = array(0, dim=c(T,K));
+  alpha_u = array(0, dim=c(N,K));
+  alpha_s = array(0, dim=c(N,K));
   
   varp_s1 = array(sqrt(3),dim=c(K,1)); # sqrt(var)
   varp_s2 = array(sqrt(10),dim=c(K,1)); # sqrt(var)
@@ -59,12 +59,12 @@
   alpha_s[1,K] = 100
   
   #################### acceptance rate ###########################
-  A_gm = array(as.integer(0), dim=c(I,T));
-  A_alphau = array(as.integer(0), dim=c(K,T));
-  A_alphas = array(as.integer(0), dim=c(K,T));
+  A_gm = array(as.integer(0), dim=c(I,N));
+  A_alphau = array(as.integer(0), dim=c(K,N));
+  A_alphas = array(as.integer(0), dim=c(K,N));
   
   vmessage("Computing initial parameter estimates...")
-  for (tt in 2:T) {
+  for (tt in 2:N) {
     
     if (tt %% 1000 == 0) vmessage("Iteration ", tt, " of ", iterations, ".")
     
@@ -116,15 +116,15 @@
       }
     }
   }
-  alpha_u[1,] = alpha_u[T,]
-  gamma[,,1] = gamma[,,T]
-  alpha_s[1,] = alpha_s[T,]
+  alpha_u[1,] = alpha_u[N,]
+  gamma[,,1] = gamma[,,N]
+  alpha_s[1,] = alpha_s[N,]
   
-  sTT=replications ## number of 'replications' -- should be user defined
-  vmessage("Fitting model with ", sTT, " replications.")
-  for (stt in 1:sTT) {
-    vmessage("Running replication ", stt, " of ", sTT, "...")
-    for (tt in 2:T) {
+  sNN=replications ## number of 'replications' -- should be user defined
+  vmessage("Fitting model with ", sNN, " replications.")
+  for (stt in 1:sNN) {
+    vmessage("Running replication ", stt, " of ", sNN, "...")
+    for (tt in 2:N) {
       # update alphau
       res2 <- .Call(C_updatealphau_noPu_Exp, alphaut = alpha_u[tt-1,],n_s = n_s,n_u=n_u, I=I, K=K, lambda_u = lambda_u, var_p = varp_u, ttt = ttt,gammat =gamma[,,tt-1])
       alpha_u[tt,] = res2$alphau_tt;
@@ -146,22 +146,22 @@
       A_alphas[,tt] = res3$Aalphas;
       if (tt %% 1000 == 0) vmessage("Iteration ", tt, " of ", iterations, ".")
     }
-    if (stt == sTT) {break}
-    alpha_u[1,] = alpha_u[T,];
-    gamma[,,1] = gamma[,,T];
-    alpha_s[1,] = alpha_s[T,];
+    if (stt == sNN) {break}
+    alpha_u[1,] = alpha_u[N,];
+    gamma[,,1] = gamma[,,N];
+    alpha_s[1,] = alpha_s[N,];
   }
   
   ######################################
   
   dimnames(gamma) <- list(rownames(n_s), NULL, NULL)
-  Tburn=0;
+  Nburn=0;
   Mgamma = mat.or.vec(I,K);
-  Tseq = seq(Tburn+1,T,by=1)
-  for (ttt in Tseq) {
+  Nseq = seq(Nburn+1,N,by=1)
+  for (ttt in Nseq) {
     Mgamma = Mgamma + gamma[,,ttt]; #thining
   }
-  Mgamma = Mgamma/(T-Tburn);
+  Mgamma = Mgamma/(N-Nburn);
   
   vmessage("Done!")
   

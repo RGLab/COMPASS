@@ -140,14 +140,14 @@ COMPASS <- function(data, treatment, control, subset=NULL,
   if (is.symbol(call$treatment)) call$treatment <- eval(call$treatment)
   treatment <- call$treatment
   if (!is.call(treatment)) {
-    stop("'treatment' must be an expression that defined the samples encompassing ",
+    stop("'treatment' must be an expression that defines the samples encompassing ",
       "the treatment group.", call.=FALSE)
   }
   
   if (is.symbol(call$control)) call$control <- eval(call$control)
   control <- call$control
   if (!is.call(control)) {
-    stop("'control' must be an expression that defined the samples encompassing ",
+    stop("'control' must be an expression that defines the samples encompassing ",
       "the control group.", call.=FALSE)
   }
   

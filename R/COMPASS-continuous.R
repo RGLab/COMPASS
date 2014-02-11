@@ -18,10 +18,10 @@ repmat = function(X,m,n){
   ## Initial parameters
   vmessage("Initializing parameters...")
   
-  T <- iterations
+  N <- iterations
   M <- ncol(y_s[[1]]) ## number of 'M'arkers
   d <- categories
-  sTT <- iterations
+  sNN <- iterations
   
   N_s <- rowSums(n_s)
   N_u <- rowSums(n_u)
@@ -62,8 +62,8 @@ repmat = function(X,m,n){
   
   m_s = m_u + 500;
   
-  mu_s = array(0, dim=c(T,M)); mu_s[1,] = m_s;
-  mu_u = array(0, dim=c(T,M)); mu_u[1,] = m_u;
+  mu_s = array(0, dim=c(N,M)); mu_s[1,] = m_s;
+  mu_u = array(0, dim=c(N,M)); mu_u[1,] = m_u;
   
   Sigma_s <- grand_sd ## hyper prior std for mu_s
   Sigma_u <- grand_sd
@@ -79,10 +79,10 @@ repmat = function(X,m,n){
   b =1;
   
   #lambda = lambda_true;
-  gamma = array(0, dim=c(I,K,T));
+  gamma = array(0, dim=c(I,K,N));
   
-  alpha_u = array(0, dim=c(T,K));
-  alpha_s = array(0, dim=c(T,K));
+  alpha_u = array(0, dim=c(N,K));
+  alpha_s = array(0, dim=c(N,K));
   
   varp_s1 = array(sqrt(5),dim=c(K,1)); # sqrt(var) for alpha_s
   varp_s2 = array(sqrt(10),dim=c(K,1)); # sqrt(var)
@@ -195,8 +195,8 @@ repmat = function(X,m,n){
   
   lambda <- mean(temp_var/(mean_sig)^2)
   
-  alpha = array(5, dim = c(T,1))
-  beta = array(5, dim = c(T,1))
+  alpha = array(5, dim = c(N,1))
+  beta = array(5, dim = c(N,1))
   alpha1=mean(alpha1);
   beta1 = mean(beta1);
   alpha[1] = alpha1;
@@ -210,13 +210,13 @@ repmat = function(X,m,n){
   sqrt_beta1 =sig_beta1/3;
   sqrt_beta2 = sig_beta1*3;
   #################### acceptance rate ###########################
-  A_gm = array(0, dim=c(I,T)); A_gm=matrix(as.integer(A_gm),nrow=I)
-  A_alphau = array(0, dim=c(K,T)); A_alphau=matrix(as.integer(A_alphau),nrow=K)
-  A_alphas = array(0, dim=c(K,T));A_alphas=matrix(as.integer(A_alphas),nrow=K)
-  A_mus = array(0,dim=c(M,T)); A_mus=matrix(as.integer(A_mus),nrow=M)
-  A_muu = array(0,dim=c(M,T));A_muu=matrix(as.integer(A_muu),nrow=M)
-  A_alpha = array(0,dim=c(1,T));A_alpha=as.integer(A_alpha)
-  A_beta = array(0,dim=c(1,T));A_beta=as.integer(A_beta)
+  A_gm = array(0, dim=c(I,N)); A_gm=matrix(as.integer(A_gm),nrow=I)
+  A_alphau = array(0, dim=c(K,N)); A_alphau=matrix(as.integer(A_alphau),nrow=K)
+  A_alphas = array(0, dim=c(K,N));A_alphas=matrix(as.integer(A_alphas),nrow=K)
+  A_mus = array(0,dim=c(M,N)); A_mus=matrix(as.integer(A_mus),nrow=M)
+  A_muu = array(0,dim=c(M,N));A_muu=matrix(as.integer(A_muu),nrow=M)
+  A_alpha = array(0,dim=c(1,N));A_alpha=as.integer(A_alpha)
+  A_beta = array(0,dim=c(1,N));A_beta=as.integer(A_beta)
   
   #################### Calculate ybar_sik and ybar_uik #############
   #if (FALSE) {#
@@ -324,8 +324,8 @@ repmat = function(X,m,n){
     m_s = array(0, dim = c(M,1)); #hyper prior mean for mu_s
     m_u = array(0, dim = c(M,1)); 
     
-    mu_s = array(0, dim=c(T,M)); mu_s[1,] = m_s;
-    mu_u = array(0, dim=c(T,M)); mu_u[1,] = m_u;
+    mu_s = array(0, dim=c(N,M)); mu_s[1,] = m_s;
+    mu_u = array(0, dim=c(N,M)); mu_u[1,] = m_u;
   }#
   
   ttt=as.integer(2000)
@@ -340,15 +340,15 @@ repmat = function(X,m,n){
   gammat = apply(gamma,3, function(x) as.integer(x))
   
   ################## parameter tuning ######################
-  vmessage("Tuning parameters...")
+  vmessage("Nuning parameters...")
   ptm <- proc.time()
-  result<-.Call( C_model, T=T,I=I, K=K, M=M, ttt=ttt, SS=as.integer(1),alpha_u=alpha_u, alpha_s=alpha_s, mu_u=mu_u, mu_s=mu_s, alpha=alpha,
+  result<-.Call( C_model, N=N,I=I, K=K, M=M, ttt=ttt, SS=as.integer(1),alpha_u=alpha_u, alpha_s=alpha_s, mu_u=mu_u, mu_s=mu_s, alpha=alpha,
     beta=beta, gamma=gammat,n_s=n_ss, n_u=n_uu,varp_u=varp_u, lambda_u=lambda_u, indi=indi, d=d, ybar_s = ybars, ybar_u=ybaru, 
     ys2_s = ys2s, ys2_u = ys2u, a=a, b=b,lambda=lambda,mk = mk, Istar = Istar, mKstar = mKstar, pp = pp, pb1 = pb1, 
     pb2 = pb2,lambda_s = lambda_s, var_1 = varp_s1,var_2 = varp_s2,p_var = pvar_s, p_vars = pvar_mus,var_1s = sqrt_mus1, var_2s=sqrt_mus2,m_s=m_s,Sigma_s =Sigma_s,
     p_varu=pvar_muu,var_1u=sqrt_muu1,var_2u=sqrt_muu2,m_u=m_u, Sigma_u=Sigma_u,p_vara=pvar_alpha, var_1a=sqrt_alpha1,var_2a=sqrt_alpha2,sig_alpha1=sig_alpha1,alpha1=alpha1,
     p_varb=pvar_beta,var_1b=sqrt_beta1,var_2b=sqrt_beta2,sig_beta1 = sig_beta1, beta1= beta1, A_alphau=A_alphau,A_alphas=A_alphas, A_gm=A_gm, A_mus=A_mus, A_muu=A_muu,  
-    A_alpha=A_alpha,A_beta=A_beta, Tune = as.integer(1), pgamma = 0.4)
+    A_alpha=A_alpha,A_beta=A_beta, Nune = as.integer(1), pgamma = 0.4)
   proc.time() - ptm
   Istar = result$Istar
   mk = result$mk
@@ -358,52 +358,52 @@ repmat = function(X,m,n){
   var_2a = result$var_2a
   var_2b = result$var_2b
   
-  alpha_u[1,] = alpha_u[T,]; alpha_s[1,] = alpha_s[T,]; gammat[,1] = gammat[,T];
-  mu_s[1,] = mu_s[T,]; mu_u[1,]=mu_u[T,];  alpha[1] = alpha[T]; beta[1] = beta[T]; 
+  alpha_u[1,] = alpha_u[N,]; alpha_s[1,] = alpha_s[N,]; gammat[,1] = gammat[,N];
+  mu_s[1,] = mu_s[N,]; mu_u[1,]=mu_u[N,];  alpha[1] = alpha[N]; beta[1] = beta[N]; 
   #######################################################
   
   vmessage("Fitting model...")
-  for (stt in 1:sTT) {
+  for (stt in 1:sNN) {
     if (stt %% 10 == 0) vmessage("Iteration ", stt, " of ", iterations, ".")
-    result<-.Call(C_model,T=T,I=I, K=K, M=M, ttt=ttt, SS=as.integer(1),alpha_u=alpha_u, alpha_s=alpha_s, mu_u=mu_u, mu_s=mu_s, alpha=alpha,
+    result<-.Call(C_model,N=N,I=I, K=K, M=M, ttt=ttt, SS=as.integer(1),alpha_u=alpha_u, alpha_s=alpha_s, mu_u=mu_u, mu_s=mu_s, alpha=alpha,
       beta=beta, gamma=gammat,n_s=n_ss, n_u=n_uu,varp_u=varp_u, lambda_u=lambda_u, indi=indi, d=d, ybar_s = ybars, ybar_u=ybaru, 
       ys2_s = ys2s, ys2_u = ys2u, a=a, b=b,lambda=lambda,mk = mk, Istar = Istar, mKstar = mKstar, pp = pp, pb1 = pb1, 
       pb2 = pb2,lambda_s = lambda_s, var_1 = varp_s1,var_2 = varp_s2,p_var = pvar_s, p_vars = pvar_mus,var_1s = sqrt_mus1, var_2s=sqrt_mus2,m_s=m_s,Sigma_s =Sigma_s,
       p_varu=pvar_muu,var_1u=sqrt_muu1,var_2u=sqrt_muu2,m_u=m_u, Sigma_u=Sigma_u,p_vara=pvar_alpha, var_1a=sqrt_alpha1,var_2a=sqrt_alpha2,sig_alpha1=sig_alpha1,alpha1=alpha1,
       p_varb=pvar_beta,var_1b=sqrt_beta1,var_2b=sqrt_beta2,sig_beta1 = sig_beta1, beta1= beta1, A_alphau=A_alphau,A_alphas=A_alphas, A_gm=A_gm, A_mus=A_mus, A_muu=A_muu,  
-      A_alpha=A_alpha,A_beta=A_beta, Tune = as.integer(0),pgamma = 0.5)
-    #if (stt == sTT) {break}
+      A_alpha=A_alpha,A_beta=A_beta, Nune = as.integer(0),pgamma = 0.5)
+    #if (stt == sNN) {break}
     Istar = result$Istar
     mk = result$mk
     mKstar = result$mKstar
-    alpha_u[1,] = alpha_u[T,]; alpha_s[1,] = alpha_s[T,]; gammat[,1] = gammat[,T];
-    mu_s[1,] = mu_s[T,]; mu_u[1,]=mu_u[T,];  alpha[1] = alpha[T]; beta[1] = beta[T]; 
+    alpha_u[1,] = alpha_u[N,]; alpha_s[1,] = alpha_s[N,]; gammat[,1] = gammat[,N];
+    mu_s[1,] = mu_s[N,]; mu_u[1,]=mu_u[N,];  alpha[1] = alpha[N]; beta[1] = beta[N]; 
   }
   
   ##########################################################
-  for ( tt in 1:T) {
+  for ( tt in 1:N) {
     gamma[,,tt]=matrix(gammat[,tt], nrow=I)
   }
   
   dimnames(gamma) <- list(rownames(n_s), NULL, NULL)
-  Mgamma = apply(gamma,c(1,2),sum)/T
+  Mgamma = apply(gamma,c(1,2),sum)/N
   
-  meanD_T <- array(0,dim=c(I,T))
-  modeF_T <- array(0, dim=c(I,max(d[,M+1])))
-  for (tt in 1:T){
+  meanD_N <- array(0,dim=c(I,N))
+  modeF_N <- array(0, dim=c(I,max(d[,M+1])))
+  for (tt in 1:N){
     for (s in 1:max(d[,M+1])) {
       tp1 <- which(d[,M+1]==s) 
       if (length(tp1)>1) {
-        modeF_T[,s] <- rowSums(gamma[,tp1,tt])/choose(M,s) 
+        modeF_N[,s] <- rowSums(gamma[,tp1,tt])/choose(M,s) 
       } else {
-        modeF_T[,s] <- gamma[,tp1,tt]/choose(M,s)
+        modeF_N[,s] <- gamma[,tp1,tt]/choose(M,s)
       }
     }
-    meanD_T[,tt] <- modeF_T%*%(1:max(d[,M+1]))
+    meanD_N[,tt] <- modeF_N%*%(1:max(d[,M+1]))
   } 
-  PFS <- rowMeans(meanD_T)
+  PFS <- rowMeans(meanD_N)
   
-  FS <- apply(gamma[,1:K1,],1,sum)/(K1*T)
+  FS <- apply(gamma[,1:K1,],1,sum)/(K1*N)
   
   vmessage("Done!")
   

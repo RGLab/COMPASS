@@ -14,6 +14,7 @@
 using namespace Rcpp;
 using namespace std;
 
+// [[register]]
 RcppExport SEXP model(SEXP T, SEXP I, SEXP K, SEXP M, SEXP ttt, SEXP SS, SEXP alpha_u, SEXP alpha_s, SEXP mu_u, SEXP mu_s, SEXP alpha, 
                       SEXP beta, SEXP gamma, SEXP n_s, SEXP n_u, SEXP varp_u, SEXP lambda_u,SEXP indi, SEXP d, SEXP ybar_s, SEXP ybar_u,
                       SEXP ys2_s, SEXP ys2_u, SEXP a, SEXP b, SEXP lambda, SEXP mk, SEXP Istar, SEXP mKstar, SEXP pp, SEXP pb1,

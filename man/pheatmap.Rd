@@ -11,13 +11,13 @@ pheatmap(mat, color = colorRampPalette(rev(brewer.pal(n = 7, name =
   treeheight_col = ifelse(cluster_cols, 50, 0), legend = TRUE,
   legend_breaks = NA, legend_labels = NA, annotation = NA,
   annotation_colors = NA, annotation_legend = TRUE, drop_levels = TRUE,
-  show_rownames = T, show_colnames = T, main = NA, fontsize = 10,
-  fontsize_row = fontsize, fontsize_col = fontsize, display_numbers = F,
-  number_format = "\%.2f", fontsize_number = 0.8 * fontsize,
-  filename = NA, width = NA, height = NA, row_annotation = NA,
-  row_annotation_legend = TRUE, row_annotation_colors = NA,
-  cytokine_annotation = NA, headerplot = NA, polar = FALSE,
-  order_by_max_functionality = TRUE, ...)
+  show_rownames = TRUE, show_colnames = TRUE, main = NA, fontsize = 10,
+  fontsize_row = fontsize, fontsize_col = fontsize,
+  display_numbers = FALSE, number_format = "\%.2f", fontsize_number = 0.8
+  * fontsize, filename = NA, width = NA, height = NA,
+  row_annotation = NA, row_annotation_legend = TRUE,
+  row_annotation_colors = NA, cytokine_annotation = NA, headerplot = NA,
+  polar = FALSE, order_by_max_functionality = TRUE, ...)
 }
 \arguments{
   \item{mat}{numeric matrix of the values to be plotted.}

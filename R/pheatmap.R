@@ -144,8 +144,8 @@ lo = function(rown, coln, nrow, ncol, cellheight = NA, cellwidth = NA, treeheigh
   
   # Get cell dimensions
   pushViewport(vplayout(4, 2))
-  cellwidth = convertWidth(unit(0:1, "npc"), "bigpts", valueOnly = T)[2] / ncol
-  cellheight = convertHeight(unit(0:1, "npc"), "bigpts", valueOnly = T)[2] / nrow
+  cellwidth = convertWidth(unit(0:1, "npc"), "bigpts", valueOnly = TRUE)[2] / ncol
+  cellheight = convertHeight(unit(0:1, "npc"), "bigpts", valueOnly = TRUE)[2] / nrow
   upViewport()
   
   # Return minimal cell dimension in bigpts to decide if borders are drawn
@@ -153,7 +153,7 @@ lo = function(rown, coln, nrow, ncol, cellheight = NA, cellwidth = NA, treeheigh
   return(mindim)
 }
 
-draw_dendrogram = function(hc, horizontal = T){
+draw_dendrogram = function(hc, horizontal = TRUE){
   h = hc$height / max(hc$height) / 1.05
   m = hc$merge
   o = hc$order
@@ -388,10 +388,10 @@ heatmap_motor = function(matrix, border_color, cellwidth, cellheight, tree_col, 
     pushViewport(vplayout(1:5, 1:6)) 
     
     if(is.na(height)){
-      height = convertHeight(unit(0:1, "npc"), "inches", valueOnly = T)[2]
+      height = convertHeight(unit(0:1, "npc"), "inches", valueOnly = TRUE)[2]
     }
     if(is.na(width)){
-      width = convertWidth(unit(0:1, "npc"), "inches", valueOnly = T)[2]
+      width = convertWidth(unit(0:1, "npc"), "inches", valueOnly = TRUE)[2]
     }
     
     # Get file type
@@ -430,7 +430,7 @@ heatmap_motor = function(matrix, border_color, cellwidth, cellheight, tree_col, 
   # Draw tree for the columns
   if(!is.na(tree_col[[1]][1]) & treeheight_col != 0){
     pushViewport(vplayout(2, 2))
-    draw_dendrogram(tree_col, horizontal = T)
+    draw_dendrogram(tree_col, horizontal = TRUE)
     upViewport()
   }
   
@@ -444,7 +444,7 @@ heatmap_motor = function(matrix, border_color, cellwidth, cellheight, tree_col, 
   # Draw tree for the rows
   if(!is.na(tree_row[[1]][1]) & treeheight_row != 0){
     pushViewport(vplayout(4, 1))
-    draw_dendrogram(tree_row, horizontal = F)
+    draw_dendrogram(tree_row, horizontal = FALSE)
     upViewport()
   }
   
@@ -604,20 +604,20 @@ draw_polar_legend <- function(fontsize=NA,treatmentLabel=c("Condition X","Condit
   upViewport()
 }
 
-generate_breaks = function(x, n, center = F){
+generate_breaks = function(x, n, center = FALSE){
   if(center){
-    m = max(abs(c(min(x, na.rm = T), max(x, na.rm = T))))
+    m = max(abs(c(min(x, na.rm = TRUE), max(x, na.rm = TRUE))))
     res = seq(-m, m, length.out = n + 1)
   }
   else{
-    res = seq(min(x, na.rm = T), max(x, na.rm = T), length.out = n + 1)
+    res = seq(min(x, na.rm = TRUE), max(x, na.rm = TRUE), length.out = n + 1)
   }
   
   return(res)
 }
 
 scale_vec_colours = function(x, col = rainbow(10), breaks = NA){
-  return(col[as.numeric(cut(x, breaks = breaks, include.lowest = T))])
+  return(col[as.numeric(cut(x, breaks = breaks, include.lowest = TRUE))])
 }
 
 scale_colours = function(mat, col = rainbow(10), breaks = NA){
@@ -649,8 +649,8 @@ cluster_mat = function(mat, distance, method){
 }
 
 scale_rows = function(x){
-  m = apply(x, 1, mean, na.rm = T)
-  s = apply(x, 1, sd, na.rm = T)
+  m = apply(x, 1, mean, na.rm = TRUE)
+  s = apply(x, 1, sd, na.rm = TRUE)
   return((x - m) / s)
 }
 
@@ -946,7 +946,7 @@ kmeans_pheatmap = function(mat, k = min(nrow(mat), 150), sd_limit = NA, ...){
 #' pheatmap(test, clustering_distance_rows = drows, clustering_distance_cols = dcols)
 #' @importFrom RColorBrewer brewer.pal
 #' @export
-pheatmap = function(mat, color = colorRampPalette(rev(brewer.pal(n = 7, name = "RdYlBu")))(100), kmeans_k = NA, breaks = NA, border_color = "grey60", cellwidth = NA, cellheight = NA, scale = "none", cluster_rows = TRUE, cluster_cols = TRUE, clustering_distance_rows = "euclidean", clustering_distance_cols = "euclidean", clustering_method = "complete",  treeheight_row = ifelse(cluster_rows, 50, 0), treeheight_col = ifelse(cluster_cols, 50, 0), legend = TRUE, legend_breaks = NA, legend_labels = NA, annotation = NA, annotation_colors = NA, annotation_legend = TRUE, drop_levels = TRUE, show_rownames = T, show_colnames = T, main = NA, fontsize = 10, fontsize_row = fontsize, fontsize_col = fontsize, display_numbers = F, number_format = "%.2f", fontsize_number = 0.8 * fontsize, filename = NA, width = NA, height = NA, row_annotation = NA, row_annotation_legend = TRUE, row_annotation_colors=NA, cytokine_annotation=NA, headerplot=NA, polar=FALSE, order_by_max_functionality=TRUE, ...){
+pheatmap = function(mat, color = colorRampPalette(rev(brewer.pal(n = 7, name = "RdYlBu")))(100), kmeans_k = NA, breaks = NA, border_color = "grey60", cellwidth = NA, cellheight = NA, scale = "none", cluster_rows = TRUE, cluster_cols = TRUE, clustering_distance_rows = "euclidean", clustering_distance_cols = "euclidean", clustering_method = "complete",  treeheight_row = ifelse(cluster_rows, 50, 0), treeheight_col = ifelse(cluster_cols, 50, 0), legend = TRUE, legend_breaks = NA, legend_labels = NA, annotation = NA, annotation_colors = NA, annotation_legend = TRUE, drop_levels = TRUE, show_rownames = TRUE, show_colnames = TRUE, main = NA, fontsize = 10, fontsize_row = fontsize, fontsize_col = fontsize, display_numbers = FALSE, number_format = "%.2f", fontsize_number = 0.8 * fontsize, filename = NA, width = NA, height = NA, row_annotation = NA, row_annotation_legend = TRUE, row_annotation_colors=NA, cytokine_annotation=NA, headerplot=NA, polar=FALSE, order_by_max_functionality=TRUE, ...){
   #Do the arguments even make sense?
   oldwarn<-options("warn")
   options("warn"=-1)
@@ -1066,13 +1066,13 @@ pheatmap = function(mat, color = colorRampPalette(rev(brewer.pal(n = 7, name = "
   
   # Preparing annotation colors
   if(!is.na(annotation[[1]][1])){
-    annotation = annotation[colnames(mat), , drop = F]
+    annotation = annotation[colnames(mat), , drop = FALSE]
     annotation_colors = generate_annotation_colours(annotation, annotation_colors, drop = drop_levels)
   }
   
   #Prepare row annotation colors
   if(!is.na(row_annotation[[1]][1])){
-    row_annotation = row_annotation[rownames(mat), , drop=F]
+    row_annotation = row_annotation[rownames(mat), , drop=FALSE]
     row_annotation_colors = generate_row_annotation_colours(row_annotation,row_annotation_colors, drop = drop_levels)
   }
   
