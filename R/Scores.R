@@ -4,7 +4,8 @@
 ##' of a COMPASS model fit.
 ##' 
 ##' @param x An object of class \code{COMPASSResult}, as returned by
-##'   \code{\link{COMPASS}}. Alternatively, a matrix of functionality scores.
+##'   \code{\link{COMPASS}}. Alternatively, a matrix of functionality scores,
+##'   used under the assumption that the 'null' category has been dropped.
 ##' @return A numeric vector of functionality scores.
 ##' @export
 FunctionalityScore <- function(x) {
@@ -15,7 +16,8 @@ FunctionalityScore <- function(x) {
 ##' @method FunctionalityScore COMPASSResult
 ##' @S3method FunctionalityScore COMPASSResult
 FunctionalityScore.COMPASSResult <- function(x) {
-  x <- x$fit$mean_gamma
+  ## we drop the last column as it is the 'NULL' category
+  x <- x$fit$mean_gamma[, -ncol(x$fit$mean_gamma)]
   NextMethod("FunctionalityScore")
 }
 
@@ -23,8 +25,7 @@ FunctionalityScore.COMPASSResult <- function(x) {
 ##' @method FunctionalityScore default
 ##' @S3method FunctionalityScore default
 FunctionalityScore.default <- function(x) {
-  Fscore <- rowMeans(x[, -c(ncol(x))])
-  return(Fscore)
+  return( rowMeans(x) )
 }
 
 ##' Compute the Polyfunctionality Score for each subject fit in a COMPASS model
