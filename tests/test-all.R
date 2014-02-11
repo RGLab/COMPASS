@@ -1,3 +1,5 @@
 library(testthat)
 library(COMPASS)
-test_dir("testthat")
+if (file.exists("testthat")) {
+  test_dir("testthat")
+}
