@@ -90,13 +90,13 @@ div.controls  > * {
 }
 
 #gridster-control-hide {
-  float: right;
+  margin-left: 10px;
 }
 
 #gridster-control-container {
   z-index: 1000;
   height: 25px;
-  width: 400px;
+  width: 430px;
   min-width: 120px;
   position: fixed;
   padding: 10px;

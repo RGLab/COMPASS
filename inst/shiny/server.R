@@ -496,7 +496,7 @@ shinyServer( function(input, output, session) {
   ## linechart
   output$linechart <- renderPlot({
     
-    renderOnUpdateButtonPress({
+    #renderOnUpdateButtonPress({
     
     markers <- getMarkers()
     if (is.null(markers)) {
@@ -507,9 +507,13 @@ shinyServer( function(input, output, session) {
     phenotype <- getPhenotype()
     filter1 <- getFilter1()
     filter1_cb <- getFilter1Cb()
-    #     custom_filter <- getCustomFilter()
     max_combos_to_show <- getMaxCombosToShow()
     markers_to_marginalize_over <- getMarkersToMarginalizeOver()
+    if (length(markers_to_marginalize_over)) {
+      other_markers <- markers[ !(markers %in% markers_to_marginalize_over) ]
+    } else {
+      other_markers <- markers
+    }
     
     individual <- getIndividual()
     facet1 <- getFacet1()
@@ -524,8 +528,20 @@ shinyServer( function(input, output, session) {
     ## Ie, it has to match the column order global
     d_sub$Marker <- factor(d_sub$Marker, levels=col_order)
     
+    ## Marginalize
+    if (length(markers_to_marginalize_over)) {
+      d_sub[, (phenotype) := mean( get(phenotype), na.rm=TRUE), by=c(sid, iid,other_markers)]
+      d_sub <- d_sub[ d_sub[, .I[1], by=c(sid, iid, other_markers)]$V1 ]
+      for (marker in markers_to_marginalize_over) {
+        d_sub[, Marker := gsub( paste0(marker, "+"), "", Marker, fixed=TRUE)]
+        d_sub[, Marker := gsub( paste0(marker, "-"), "", Marker, fixed=TRUE)]
+      }
+    }
+    
     ## We re-order it as well so the colors are properly plotted
-    d_sub <- d_sub[ order(d_sub$Marker), ]
+    d_sub <- d_sub[ order(d_sub$Degree, d_sub$Marker), ]
+    
+    ## Marginalize over the other markers if necessary
     
     p <- ggplot( d_sub, aes_string(x="Marker", y=phenotype, group=sid)) +
       geom_point() +
@@ -554,7 +570,7 @@ shinyServer( function(input, output, session) {
         c("lines", "lines", "null", "lines", "null", "lines")
       ),
       widths=unit(
-        c(2 * str_count(label, "\n") + 4, 1, 1),
+        c(1.9 * str_count(label, "\n") + 4, 1, 1),
         c("lines", "null", "lines")
       )
     )
@@ -579,7 +595,7 @@ shinyServer( function(input, output, session) {
       x <- (1:m)/m - 1/2/m
       y <- ((1:n)-0.5)/n
       for (i in 1:m) {
-        tmp <- unlist( d_sub[i, orig_markers, with=FALSE] )
+        tmp <- unlist( d_sub[i, other_markers, with=FALSE] )
         tmp <- tmp * sum(tmp)
         tmp <- tmp + 1
         fill <- palette[tmp]
@@ -639,7 +655,7 @@ shinyServer( function(input, output, session) {
     #         )
     #     }
     
-  })
+  #})
     
   })
   
