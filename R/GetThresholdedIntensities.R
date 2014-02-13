@@ -40,7 +40,7 @@ GetThresholdedIntensities <- function(gs, node, map) {
     }
     names(gslist) <- sampleNames(gs)
   } else {
-    stop("Internal Error: not implemented for GatingSetList's yet.", call.=FALSE)
+    stop("Internal Error: not implemented for GatingSetLists yet.", call.=FALSE)
   }
   
   ## Make 'node' act more like a regular expression if it isn't one already

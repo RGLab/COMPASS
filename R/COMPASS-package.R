@@ -9,6 +9,7 @@
 ##' @name COMPASS-package
 ##' @useDynLib COMPASS, .registration=TRUE
 ##' @importFrom Rcpp evalCpp
+##' @importFrom utils globalVariables
 ##' @import data.table grid
 ##' @aliases COMPASS-package
 ##' @seealso
