@@ -21,10 +21,10 @@ at all pairwise comparisons.
 \examples{
 \dontrun{
 #X is a list of COMPASSResult objects
-X<-MakeComparable(X)
-#These should show the same categories.
-plot(X[[1]],remove_unexpressed_categories=FALSE)
-plot(X[[2]],remove_unexpressed_categories=FALSE)
+X <- MakeComparable(X)
+# These should show the same categories.
+plot(X[[1]], remove_unexpressed_categories=FALSE)
+plot(X[[2]], remove_unexpressed_categories=FALSE)
 }
 }
 

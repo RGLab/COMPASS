@@ -12,4 +12,7 @@ shinyCOMPASSDeps(verbose = TRUE)
 This function can be used to identify the packages still
 needed in order to launch the Shiny app.
 }
+\examples{
+shinyCOMPASSDeps()
+}
 

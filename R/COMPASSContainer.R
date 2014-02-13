@@ -12,9 +12,7 @@
 ##'   Each element of the list should be named; this name denotes which 
 ##'   sample the cell intensities were measured from.
 ##' @param counts A named integer vector of the cell counts for each
-##'   sample in \code{data}. This element is required if 'null'
-##'   cells; i.e., cells that expressed no markers, are not included in
-##'   \code{data}.
+##'   sample in \code{data}.
 ##' @param meta A \code{data.frame} of metadata, describing the individuals
 ##'   in the experiment. Each row in \code{meta} should correspond to a row
 ##'   in \code{data}. There should be one row for each sample;
@@ -23,11 +21,13 @@
 ##'   individuals from which samples were drawn. 
 ##' @param sample_id The name of the vector in \code{meta} that denotes the samples.
 ##'   This vector should contain all of the names in the \code{data} input.
+##'   
+##' @return A \code{COMPASSContainer} returns a list made up of the same
+##' components as input the model, but checks and sanitizes the supplied data
+##' to ensure that it conforms to the expectations outlied above.
+##' 
 ##' @export
-##' @examples \dontrun{
-##' ## Please see the vignette for more involved examples: vignette("COMPASS")
-##' CC <- COMPASSContainer(data, counts, meta, "PTID", "name")
-##' }
+##' @example examples/GenerateSampleCOMPASSContainer.R
 COMPASSContainer <- function(data, counts, meta, 
   individual_id, sample_id) {
   
@@ -138,6 +138,12 @@ COMPASSContainer <- function(data, counts, meta,
   
   .check_has_names(data, counts)
   
+  ## ensure that the counts are >= the number of rows in the data
+  if (any(sapply(data, nrow) > counts)) {
+    stop("There are entries in 'counts' that are greater than the ",
+      "number of rows included in the 'data' matrices.", call.=FALSE)
+  }
+  
   ## check the metadata
     
   if (!is.data.frame(meta))
@@ -184,8 +190,10 @@ COMPASSContainer <- function(data, counts, meta,
 ##' @method print COMPASSContainer
 ##' @S3method print COMPASSContainer
 ##' @export
+##' @examples
+##' print(CC)
 print.COMPASSContainer <- function(x, ...) {
-  cat("An object of class COMPASSContainer with ", 
+  cat("A COMPASSContainer with ", 
     length(x$data), " samples and ", 
     ncol(x$data[[1]]), " markers.\n", sep='', ...)
 }
@@ -201,6 +209,8 @@ print.COMPASSContainer <- function(x, ...) {
 ##' @param object An object of class \code{COMPASSContainer}.
 ##' @param ... Optional arguments; currently ignored.
 ##' @export
+##' @examples
+##' summary(CC)
 summary.COMPASSContainer <- function(object, ...) {
   print(object)
   cat( sep='', "The metadata describes ", ncol(object$meta), " variables on ",

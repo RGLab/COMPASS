@@ -1,6 +1,6 @@
 \name{Combinations}
 \alias{Combinations}
-\title{Generate all possible combinations of integers from -n:n}
+\title{Generate Combinations}
 \usage{
 Combinations(n)
 }
@@ -8,20 +8,12 @@ Combinations(n)
   \item{n}{An integer.}
 }
 \description{
+Given an intenger \code{n}, generate all binary
+combinations of \code{n} elements, transformed to indices.
 This is primarily for use with the \code{\link{CellCounts}}
-function.
+function, but may be useful for users in some scenarios.
 }
 \examples{
-## generate some example data
-K <- 6 ## number of markers
-data <- replicate(10, simplify=FALSE, {
-  m <- matrix( rnorm(1E4 * K, 2000, 1000 ), ncol=K )
-  m[m < 2500] <- 0
-  colnames(m) <- c("IL2", "IL4", "IL6", "Mip1B", "IFNg", "TNFa")
-  return(m)
-})
-names(data) <- sample(letters, 10)
-str(data)
-CellCounts(data, Combinations(K)) ## all possible combos
+Combinations(3)
 }
 

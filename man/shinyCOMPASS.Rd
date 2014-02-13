@@ -27,6 +27,11 @@ This function takes a \code{COMPASSResult} object, and
 generates a local Shiny application for visualizing the
 results.
 }
+\examples{
+\dontrun{
+shinyCOMPASS(CR)
+}
+}
 \seealso{
 \code{\link{shinyCOMPASSDeps}}, for identifying packages
 that you need in order to run the Shiny application.

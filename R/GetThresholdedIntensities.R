@@ -18,8 +18,9 @@
 ##'   GetThresholdedIntensities(gs, "4+", list("INFg+"="IFNg"))
 ##' }
 ##' @return A \code{list} with two components:
-##' \item{\code{data:}}{A \code{list} of thresholded intensity measures.}
-##' \item{\code{counts:}}{A named vector of total cell counts at the node \code{node}.}
+##' 
+##' \item{data}{A \code{list} of thresholded intensity measures.}
+##' \item{counts}{A named vector of total cell counts at the node \code{node}.}
 ##' 
 ##' @export
 GetThresholdedIntensities <- function(gs, node, map) {

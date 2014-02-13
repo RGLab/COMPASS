@@ -31,9 +31,9 @@
 ##' @param matchmethod a \code{character} either 'regex' or 'Levenshtein' for matching nodes to markers.
 ##' @param markers a \code{character} vector of marker names to include.
 ##' @seealso \code{\link{COMPASSContainer}}
-##' @examples
-##' \dontrun{
-##'   COMPASSContainerFromGatingSet(gatingset,'4+')
+##' @examples \dontrun{
+##' ## gs is a GatingSet from flowWorkspace
+##' COMPASSContainerFromGatingSet(gs, "4+")
 ##' }
 ##' @importFrom plyr laply ldply
 ##' @importFrom knitr kable

@@ -6,6 +6,8 @@
 ##' @param verbose Boolean; if \code{TRUE} we print installation instructions
 ##'   to the screen.
 ##' @export
+##' @examples
+##' shinyCOMPASSDeps()
 shinyCOMPASSDeps <- function(verbose=TRUE) {
   
   message <- function(...) {

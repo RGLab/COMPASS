@@ -1,6 +1,9 @@
-##' Plot a Heatmap of the Mean Gammas
+##' Plot a pair of COMPASSResults
 ##' 
-##' This function plots the mean gammas.
+##' This function can be used to visualize the mean probability of response --
+##' that is, the probability that there is a difference in response between
+##' samples subjected to the 'treatment' condition, and samples subjected
+##' to the 'control' condition.
 ##' 
 ##' @param x An object of class \code{COMPASSResult}.
 ##' @param y An object of class \code{COMPASSResult}.
@@ -21,7 +24,6 @@
 ##'   (ie, the column name associated with a cytokine; typically not needed)
 ##' @param ... Optional arguments passed to \code{pheatmap}.
 ##' @importFrom scales div_gradient_pal
-##' @export
 plot2 <- function(x, y, row_annotation=NULL, 
   remove_unexpressed_categories=TRUE, minimum_dof=1, maximum_dof=Inf, 
   subset, 

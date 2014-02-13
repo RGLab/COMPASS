@@ -10,9 +10,10 @@
 ##' @param aggregate Boolean; if \code{TRUE} we sum over the individual,
 ##'   to get total counts across samples for each individual.
 ##' @export
-##' @examples \dontrun{
-##' TotalCellCounts(CC, Stim %like% "Env")
-##' }
+##' @examples
+##' TotalCellCounts(CC, trt == "Treatment")
+##' TotalCellCounts(CC, trt == "Control")
+##' TotalCellCounts(CC)
 TotalCellCounts <- function(data, subset, aggregate=TRUE) {
   
   ## R CMD check silencers
@@ -47,19 +48,18 @@ TotalCellCounts <- function(data, subset, aggregate=TRUE) {
     ## Merge in the PTID information
     ptid_dt <- data.table(
       Samples=data$meta[[ data$sample_id ]],
-      PTID=data$meta[[ data$individual_id ]]
+      PTID=factor(data$meta[[ data$individual_id ]])
     )
     
     dt <- merge(dt, ptid_dt, all.x=TRUE, by="Samples")
     
     ## Sum the counts over PTID
-    output <- dt[, sum(Counts, na.rm=TRUE), by=PTID]
-    return( setNames(output$V1, output$PTID) )
+    summed <- dt[, sum(Counts, na.rm=TRUE), by=PTID]
+    output <- setNames(summed$V1, summed$PTID)
+    return( output[ order(names(output)) ] )
     
   } else {
-    
     return( setNames(dt$Counts, dt$Samples) )
-    
   }
   
   

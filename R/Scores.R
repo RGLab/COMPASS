@@ -8,6 +8,8 @@
 ##'   used under the assumption that the 'null' category has been dropped.
 ##' @return A numeric vector of functionality scores.
 ##' @export
+##' @examples
+##' FunctionalityScore(CR)
 FunctionalityScore <- function(x) {
   UseMethod("FunctionalityScore")
 }
@@ -31,16 +33,20 @@ FunctionalityScore.default <- function(x) {
 ##' Compute the Polyfunctionality Score for each subject fit in a COMPASS model
 ##' 
 ##' Computes the Polyfunctionality score for each observation from the 
-##' gamma matrix of a COMPASS model fit.
+##' gamma matrix of a \code{COMPASS} model fit.
 ##' 
 ##' @param x An object of class \code{COMPASSResult}, as returned by
-##'   \code{\link{COMPASS}}.
-##' @param degree TODO
+##'   \code{\link{COMPASS}}. Alternatively, a matrix of functionality scores.
+##' @param degree A vector of weights. If missing, this is the 'degree of
+##' functionality', that is, the number of markers expressed in a particular
+##' category.
 ##' @param normalization A \code{character} vector specifying how the score
 ##'  is to be normalized. Either using \code{"all"} possible categories, or 
 ##'  just the \code{"observed"} categories. Defaults to \code{"all"} categories.
 ##' @return A numeric vector of polyfunctionality scores.
 ##' @export
+##' @examples
+##' PolyfunctionalityScore(CR)
 PolyfunctionalityScore <- function(x, degree, normalization) {
   UseMethod("PolyfunctionalityScore")
 }
@@ -50,7 +56,10 @@ PolyfunctionalityScore <- function(x, degree, normalization) {
 ##' @S3method PolyfunctionalityScore COMPASSResult
 PolyfunctionalityScore.COMPASSResult <- function(x, degree, normalization="all") {
   M <- x$fit$mean_gamma
-  degree <- rev(rev(x$fit$categories[,ncol(x$fit$categories)])[-1L])
+  if (missing(degree)) {
+    degree <- x$fit$categories[,ncol(x$fit$categories)]
+    degree <- degree[ -length(degree) ] ## drop the NULL category
+  }
   switch(normalization,
     all = {
       norm <- choose(
@@ -59,7 +68,7 @@ PolyfunctionalityScore.COMPASSResult <- function(x, degree, normalization="all")
       )
     },
     observed = {
-      norm <- table(degree)[degree]
+      norm <- unname(c(table(degree)[degree]))
     }
   )
   degree <- degree / norm[degree]

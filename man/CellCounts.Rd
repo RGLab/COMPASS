@@ -66,7 +66,11 @@ CellCounts(data, "IL2 & !IL4")
 CellCounts(data, list(c(1, -2)))
 
 ## all possible combinations
-CellCounts(data, Combinations(6))
+str(CellCounts(data, Combinations(6)))
+
+## can also call on COMPASSContainers
+data(COMPASS)
+CellCounts(CC, "M1&M2")
 }
 \seealso{
 \code{\link{Combinations}}

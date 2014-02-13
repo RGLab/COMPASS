@@ -13,4 +13,7 @@
 This function prints basic information about the model fit
 by a \code{\link{COMPASS}} call.
 }
+\examples{
+print(CR)
+}
 

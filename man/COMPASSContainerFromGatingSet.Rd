@@ -64,7 +64,8 @@ There is likely not sufficient error checking.
 }
 \examples{
 \dontrun{
-  COMPASSContainerFromGatingSet(gatingset,'4+')
+## gs is a GatingSet from flowWorkspace
+COMPASSContainerFromGatingSet(gs, "4+")
 }
 }
 \seealso{

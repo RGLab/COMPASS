@@ -21,15 +21,14 @@
 ##'   the \code{fit} containing parameter estimates and parameter acceptance
 ##'   rates, and \code{data} containing the generated data used as input for
 ##'   the model.
-##' @export
 ##' @examples \dontrun{
 ##' set.seed(123)
-##' n <- 100 ## number of samples
-##' k <- 6 ## number of markers
+##' n <- 10 ## number of samples
+##' k <- 3 ## number of markers
 ##' 
 ##' ## generate some sample data
 ##' sid_vec <- paste0("sid_", 1:n) ## sample ids; unique names used to denote samples
-##' iid_vec <- rep_len( paste0("iid_", 1:(n/10) ), n ) ## individual ids
+##' iid_vec <- rep_len( paste0("iid_", 1:(n/2) ), n ) ## individual ids
 ##' data <- replicate(n, {
 ##'   nrow <- round(runif(1) * 1E4 + 1000)
 ##'   ncol <- k
@@ -43,17 +42,19 @@
 ##' meta <- data.frame(
 ##'   sid=sid_vec,
 ##'   iid=iid_vec,
-##'   trt=sample( c("Control", "Treatment"), n, TRUE )
+##'   trt=rep( c("Control", "Treatment"), each=(n/2) )
 ##' )
 ##' 
 ##' ## generate counts for n_s, n_u
-##' n_s <- CellCounts( data[1:(n/2)], Combinations(6) )
-##' n_u <- CellCounts( data[(n/2+1):n], Combinations(6) )
-##' SimpleCOMPASS(n_s, n_u, meta, "iid", "sid")
+##' n_s <- CellCounts( data[1:(n/2)], Combinations(k) )
+##' n_u <- CellCounts( data[(n/2+1):n], Combinations(k) )
 ##' 
+##' ## A smaller number of iterations is used here for running speed;
+##' ## prefer using more iterations for a real fit
+##' SimpleCOMPASS(n_s, n_u, meta, "iid", "sid", iterations=100)
 ##' }
 SimpleCOMPASS <- function(n_s, n_u, meta, individual_id, sample_id,
-  iterations=1E4L, replications=8, verbose=TRUE) {
+  iterations=1E4, replications=8, verbose=TRUE) {
   
   if (!all(colnames(n_s) == colnames(n_u))) {
     stop("The column names of 'n_s' and 'n_u' do not match.")
@@ -65,9 +66,19 @@ SimpleCOMPASS <- function(n_s, n_u, meta, individual_id, sample_id,
       "each possible combination of cells is represented in your counts matrix.")
   }
   
+  ## Guess the marker names
+  marker_names <- unique(
+    unlist( strsplit( gsub("!", "", colnames(n_s)), "&", fixed=TRUE ) )
+  )
+  
+  if (length(marker_names) != n_markers) {
+    stop("Internal error: could not infer the marker names from the ",
+      "data supplied!", call.=FALSE)
+  }
+  
   cats <- as.data.frame( matrix(0, nrow=ncol(n_s), ncol=n_markers) )
-  colnames(cats) <- c("2", "17", "G", "T")
   rownames(cats) <- colnames(n_s)
+  colnames(cats) <- 
   for (i in seq_along(cats)) {
     cats[, i] <- as.integer(grepl( paste0( colnames(cats)[i], "+" ), rownames(cats), fixed=TRUE ))
   }
@@ -103,7 +114,7 @@ SimpleCOMPASS <- function(n_s, n_u, meta, individual_id, sample_id,
     )
   )
   
-  class(fit) <- "COMPASSResult"
+  class(fit) <- c("SimpleCOMPASSResult", "COMPASSResult")
   return(fit)
   
 }

@@ -5,8 +5,9 @@
 ##' 
 ##' @param x An object of class \code{COMPASSResult}.
 ##' @param ... Optional arguments; currently unused.
-##' @S3method print COMPASSResult
-##' @method print COMPASSResult
+##' @export
+##' @examples
+##' print(CR)
 print.COMPASSResult <- function(x, ...) {
   n <- nrow(x$data$n_s)
   cat("A COMPASS model fit on", n, "paired samples.\n")
@@ -19,8 +20,9 @@ print.COMPASSResult <- function(x, ...) {
 ##' 
 ##' @param object An object of class \code{COMPASSResult}.
 ##' @param ... Optional arguments; currently unused.
-##' @S3method summary COMPASSResult
-##' @method summary COMPASSResult
+##' @export
+##' @examples
+##' print(CR)
 summary.COMPASSResult <- function(object, ...) {
   n <- nrow(object$data$n_s)
   cat("A COMPASSResult model fit on", n, "paired samples.\n")

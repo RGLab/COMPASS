@@ -4,7 +4,7 @@
 \alias{PosteriorLogDiff}
 \alias{PosteriorPs}
 \alias{PosteriorPu}
-\title{Compute the Posterior Difference, Log Ratio}
+\title{Retrieve Posterior Measures from a COMPASS fit}
 \usage{
 Posterior(x)
 
@@ -20,7 +20,27 @@ PosteriorPu(x)
   \item{x}{An object of class \code{COMPASSResult}.}
 }
 \description{
-Computes the posterior difference and log ratio from a
-\code{COMPASSResult}.
+These functions can be used to retrieve different posterior
+measures from a \code{COMPASS} fit object.
+}
+\details{
+The posterior items retrieved are described as follows::
+
+\describe{ \item{\code{PosteriorPs}:}{The posterior
+probability that the samples subjected to the 'treatment',
+or 'stimulated', condition responded.}
+\item{\code{PosteriorPu:}}{The posterior probability that
+the samples subjected to the 'control', or 'unstimulated',
+condition responded.} \item{\code{PosteriorDiff}:}{The
+difference in posterior response rates, as described
+above.} \item{\code{PosteriorLogDiff}:}{The difference in
+the log response rates, as described above.} }
+}
+\examples{
+Posterior(CR)
+PosteriorPs(CR)
+PosteriorPu(CR)
+PosteriorDiff(CR)
+PosteriorLogDiff(CR)
 }
 

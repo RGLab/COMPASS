@@ -1,12 +1,17 @@
-##' Plot a Heatmap of the Mean Gammas
+##' Plot a COMPASSResult
 ##' 
-##' This function plots the mean gammas.
+##' This function can be used to visualize the mean probability of response --
+##' that is, the probability that there is a difference in response between
+##' samples subjected to the 'treatment' condition, and samples subjected
+##' to the 'control' condition.
+##' 
 ##' @method plot COMPASSResult
 ##' @S3method plot COMPASSResult
 ##' @aliases plot
 ##' @param x An object of class \code{COMPASSResult}.
 ##' @param y This argument gets passed to \code{row_annotation}, if
-##'   \code{row_annotation} is missing.
+##'   \code{row_annotation} is missing. It can be used to group rows (individuals)
+##'   by different conditions as defined in the metadata.
 ##' @param subset An \R expression, evaluated within the metadata, used to
 ##'   determine which individuals should be kept.
 ##' @param remove_unexpressed_categories Boolean, if \code{TRUE} we remove
@@ -24,10 +29,18 @@
 ##'   (ie, the column name associated with a cytokine; typically not needed)
 ##' @param measure Optional. By default, we produce a heatmap of the mean
 ##'   gammas produced in a model fit. We can override this by supplying a
-##'   matrix of suitable dimension as well.
+##'   matrix of suitable dimension as well; these can be generated with
+##'   the \code{Posterior*} functions -- see \code{\link{Posterior}} for
+##'   examples.
 ##' @param ... Optional arguments passed to \code{pheatmap}.
 ##' @importFrom RColorBrewer brewer.pal
 ##' @importFrom grDevices colorRampPalette
+##' @examples
+##' ## visualize the mean probability of reponse
+##' plot(CR)
+##' 
+##' ## visualize the proportion of cells belonging to a category
+##' plot(CR, measure=PosteriorPs(CR))
 plot.COMPASSResult <- function(x, y, subset, 
   remove_unexpressed_categories=TRUE, minimum_dof=1, maximum_dof=Inf, 
   row_annotation,

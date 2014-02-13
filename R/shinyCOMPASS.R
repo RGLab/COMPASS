@@ -17,6 +17,9 @@
 ##' @seealso \code{\link{shinyCOMPASSDeps}}, for identifying packages that you
 ##'   need in order to run the Shiny application.
 ##' @export
+##' @examples \dontrun{
+##' shinyCOMPASS(CR)
+##' }
 shinyCOMPASS <- function(x, dir=NULL, meta.vars, obfuscate=FALSE) {
   
   if (length(shinyCOMPASSDeps(verbose=FALSE))) {
@@ -32,6 +35,11 @@ shinyCOMPASS <- function(x, dir=NULL, meta.vars, obfuscate=FALSE) {
   
   if (!inherits(x, "COMPASSResult"))
     stop("'shinyCOMPASS' can only be called on a COMPASSResult object", call.=FALSE)
+  
+  if (inherits(x, "SimpleCOMPASSResult")) {
+    stop("'shinyCOMPASS' cannot be called on fits generated through 'SimpleCOMPASS'.",
+      call.=FALSE)
+  }
   
   message("Preparing data for the Shiny application, please wait a moment...")
   

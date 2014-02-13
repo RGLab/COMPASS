@@ -8,6 +8,8 @@
 ##' @param ... Optional arguents; currently unused.
 ##' @method subset COMPASSContainer
 ##' @S3method subset COMPASSContainer
+##' @examples
+##' subset(CC, iid == "iid_1")
 subset.COMPASSContainer <- function(x, subset, ...) {
   
   call <- match.call()$subset

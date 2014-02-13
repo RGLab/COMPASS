@@ -23,4 +23,7 @@ Generate all possible unique combinations of \code{x}.
 Primarily used as a helper function for \code{CellCounts},
 but may be occasionally useful to the end user.
 }
+\examples{
+UniqueCombinations(CC)
+}
 

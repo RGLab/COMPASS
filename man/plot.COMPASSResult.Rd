@@ -1,7 +1,7 @@
 \name{plot.COMPASSResult}
 \alias{plot}
 \alias{plot.COMPASSResult}
-\title{Plot a Heatmap of the Mean Gammas}
+\title{Plot a COMPASSResult}
 \usage{
 \method{plot}{COMPASSResult}(x, y, subset,
   remove_unexpressed_categories = TRUE, minimum_dof = 1,
@@ -14,7 +14,8 @@
 
   \item{y}{This argument gets passed to
   \code{row_annotation}, if \code{row_annotation} is
-  missing.}
+  missing. It can be used to group rows (individuals) by
+  different conditions as defined in the metadata.}
 
   \item{subset}{An \R expression, evaluated within the
   metadata, used to determine which individuals should be
@@ -44,11 +45,24 @@
   \item{measure}{Optional. By default, we produce a heatmap
   of the mean gammas produced in a model fit. We can
   override this by supplying a matrix of suitable dimension
-  as well.}
+  as well; these can be generated with the
+  \code{Posterior*} functions -- see
+  \code{\link{Posterior}} for examples.}
 
   \item{...}{Optional arguments passed to \code{pheatmap}.}
 }
 \description{
-This function plots the mean gammas.
+This function can be used to visualize the mean probability
+of response -- that is, the probability that there is a
+difference in response between samples subjected to the
+'treatment' condition, and samples subjected to the
+'control' condition.
+}
+\examples{
+## visualize the mean probability of reponse
+plot(CR)
+
+## visualize the proportion of cells belonging to a category
+plot(CR, measure=PosteriorPs(CR))
 }
 

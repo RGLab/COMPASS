@@ -140,21 +140,22 @@ After fitting the `COMPASS` model, we can examine the output in many ways:
 
 ```{r COMPASS-examine}
 ## Extract the functionality, polyfunctionality scores as described
-## within the COMPASS paper
+## within the COMPASS paper -- these are measures of the overall level
+## of 'functionality' of a cell, which has shown to be correlated with
+## a cell's affinity in immune response
 FS <- FunctionalityScore(fit)
 PFS <- PolyfunctionalityScore(fit)
 
 ## Obtain the posterior difference, posterior log ratio from a COMPASSResult
 post <- Posterior(fit)
 
-## Plot a heatmap of the mean gammas, to visualize differences in expression
-## for each category
+## Plot a heatmap of the mean probability of response, to visualize differences 
+## in expression for each category
 plot(fit)
 
 ## Visualize the posterior difference, log difference with a heatmap
 plot(fit, measure=PosteriorDiff(fit))
 plot(fit, measure=PosteriorLogDiff(fit))
-
 ```
 
 `COMPASS` also packages a Shiny application for interactive visualization of
@@ -174,7 +175,10 @@ able to automatically gate data through flexibly-defined gating templates.
 `flowWorkspace` `GatingSet` object, providing a seamless workflow between
 both data management and analysis for polyfunctionality cytokine data.
 Data can be extracted using `COMPASSContainerFromGatingSet`, with appropriate
-documentation available in `?COMPASSContainerFromGatingSet`.
+documentation available in `?COMPASSContainerFromGatingSet`. As an example,
+a researcher might first gate his data in order to find `CD4+` cells, and then
+gate a number of markers, or cytokines, for these `CD4+` cells, in order to
+identify cells expressing different combinations of markers.
 
 Users who have gated their data with `flowJo` and are interested in analyzing
 their data with `COMPASS` can do so by first loading and parsing their

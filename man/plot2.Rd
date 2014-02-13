@@ -1,6 +1,6 @@
 \name{plot2}
 \alias{plot2}
-\title{Plot a Heatmap of the Mean Gammas}
+\title{Plot a pair of COMPASSResults}
 \usage{
 plot2(x, y, row_annotation = NULL, remove_unexpressed_categories = TRUE,
   minimum_dof = 1, maximum_dof = Inf, subset, palette = NA,
@@ -39,6 +39,10 @@ plot2(x, y, row_annotation = NULL, remove_unexpressed_categories = TRUE,
   \item{...}{Optional arguments passed to \code{pheatmap}.}
 }
 \description{
-This function plots the mean gammas.
+This function can be used to visualize the mean probability
+of response -- that is, the probability that there is a
+difference in response between samples subjected to the
+'treatment' condition, and samples subjected to the
+'control' condition.
 }
 

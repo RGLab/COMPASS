@@ -15,4 +15,7 @@ This function prints summary information about a
 \code{COMPASSContainer} object -- the number of samples,
 basic information about the metadata, and so on.
 }
+\examples{
+summary(CC)
+}
 

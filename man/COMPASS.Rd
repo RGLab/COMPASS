@@ -5,8 +5,8 @@
 COMPASS(data, treatment, control, subset = NULL,
   category_filter = function(x) colSums(x > 5) > 2,
   filter_lowest_frequency = 0, filter_specific_markers = NULL,
-  model = c("discrete", "continuous"), iterations = 40000,
-  replications = 8, keep_original_data = TRUE, verbose = TRUE, ...)
+  model = "discrete", iterations = 40000, replications = 8,
+  keep_original_data = TRUE, verbose = TRUE, ...)
 }
 \arguments{
   \item{data}{An object of class \code{COMPASSContainer}.}
@@ -43,9 +43,8 @@ COMPASS(data, treatment, control, subset = NULL,
   exclude markers.}
 
   \item{model}{A string denoting which model to fit;
-  \code{"discrete"} indicates we should fit the discrete
-  \code{COMPASS} model, while \code{"continuous"} indicates
-  we should fit the continuous \code{COMPASS} model.}
+  currently, only the discrete model (\code{"discrete"}) is
+  available.}
 
   \item{iterations}{The number of iterations (per
   'replication') to perform.}
@@ -67,13 +66,69 @@ COMPASS(data, treatment, control, subset = NULL,
   \item{...}{Other arguments; currently unused.}
 }
 \value{
-A \code{list} with class \code{COMPASSResult} with two
-components, the \code{fit} containing parameter estimates
-and parameter acceptance rates, and \code{data} containing
-the generated data used as input for the model. If
-\code{keep_original_data} is \code{TRUE}, then the original
-data is also returned as a component of the list, with name
-\code{orig}.
+A \code{COMPASSResult} is a list with the following
+components:
+
+\item{fit}{A list of various fitted parameters resulting
+from the \code{COMPASS} model fitting procedure.}
+\item{data}{The data used as input to the \code{COMPASS}
+fitting procedure -- in particular, the counts matrices
+generated for the selected categories, \code{n_s} and
+\code{n_u}, can be extracted from here.} \item{orig}{If
+\code{keep_original_data} was set to \code{TRUE} in the
+\code{COMPASS} fit, then this will be the
+\code{COMPASSContainer} passed in. This is primarily kept
+for easier running of the Shiny app.}
+
+The \code{fit} component is a list with the following
+components:
+
+\item{alpha_s}{The hyperparameter shared across all
+subjects under the stimulated condition. It is updated
+through the \code{COMPASS} model fitting process.}
+\item{A_alphas}{The acceptance rate of \code{alpha_s}, as
+computed through the MCMC sampling process in
+\code{COMPASS}.} \item{alpha_u}{The hyperparameter shared
+across all subjects under the unstimulated condition. It is
+updated through the \code{COMPASS} model fitting process.}
+\item{A_alphau}{The acceptance rate of \code{alpha_u}, as
+computed through the MCMC sampling process in
+\code{COMPASS}.} \item{gamma}{An array of dimensions
+\code{I x K x T}, where \code{I} denotes the number of
+individuals, \code{K} denotes the number of categories /
+subsets, and \code{T} denotes the number of iterations.
+Each cell in a matrix for a given iteration is either zero
+or one, reflecting whether individual \code{i} is
+responding to the stimulation for subset \code{k}.}
+\item{mean_gamma}{A matrix of mean response rates. Each
+cell denotes the mean response of individual \code{i} and
+subset \code{k}.} \item{A_gamma}{The acceptance rate for
+the gamma. Each element corresponds to the number of times
+an individual's \code{gamma} vector was updated.}
+\item{categories}{The category matrix, showing which
+categories entered the model.} \item{model}{The type of
+model called.} \item{posterior}{Posterior measures from the
+sample fit.} \item{call}{The matched call used to generate
+the model fit.}
+
+The \code{data} component is a list with the following
+components:
+
+\item{n_s}{The counts matrix for stimulated samples.}
+\item{n_u}{The counts matrix for unstimulated samples.}
+\item{counts_s}{Total cell counts for stimulated samples.}
+\item{counts_u}{Total cell counts for unstimulated
+samples.} \item{categories}{The categories matrix used to
+define which categories will enter the model.}
+\item{meta}{The metadata.} \item{sample_id}{The name of the
+vector in the metadata used to identify the samples.}
+\item{individual_id}{The name of the vector in the metadata
+used to identify the individuals.}
+
+The \code{orig} component (included if
+\code{keep_original_data} is \code{TRUE}) is the
+\code{\link{COMPASSContainer}} object used in the model
+fit.
 }
 \description{
 This function fits the \code{COMPASS} model.
@@ -94,49 +149,17 @@ This function fits the \code{COMPASS} model.
   particular combination of markers.
 }
 \examples{
-\dontrun{
-set.seed(123)
-n <- 30 ## number of samples
-k <- 6 ## number of markers
-
-## generate some sample data
-sid_vec <- paste0("sid_", 1:n) ## sample ids; unique names used to denote samples
-iid_vec <- rep_len( paste0("iid_", 1:(n/10) ), n ) ## individual ids
-data <- replicate(n, {
-  nrow <- round(runif(1) * 1E4 + 1000)
-  ncol <- k
-  vals <- rexp( nrow * ncol, runif(1, 1E-5, 1E-3) )
-  vals[ vals < 2000 ] <- 0
-  output <- matrix(vals, nrow, ncol)
-  output <- output[ apply(output, 1, sum) > 0, ]
-  colnames(output) <- paste0("M", 1:k)
-  return(output)
-})
-names(data) <- sid_vec
-meta <- data.frame(
-  sid=sid_vec,
-  iid=iid_vec,
-  trt=sample( c("Control", "Treatment"), n, TRUE )
-)
-
-counts <- sapply(data, nrow) + round( rnorm(n, 1E4, 1E3) )
-counts <- setNames( as.integer(counts), names(counts) )
-
-CC <- COMPASSContainer(data, counts, meta, "iid", "sid")
+data(COMPASS) ## loads the COMPASSContainer 'CC'
 fit <- COMPASS(CC,
   category_filter=NULL,
   treatment=trt == "Treatment",
   control=trt == "Control",
-  verbose=FALSE
+  verbose=FALSE,
+  iterations=100 ## set higher for a real analysis
 )
-plot(fit)
-}
 }
 \seealso{
 \itemize{ \item \code{\link{COMPASSContainer}}, for
-constructing the data object required by \code{COMPASS}
-\item \code{\link{SimpleCOMPASS}}, for fitting the
-\code{COMPASS} model on a set of pre-calculated counts
-matrices.  }
+constructing the data object required by \code{COMPASS} }
 }
 

@@ -23,4 +23,7 @@ A numeric vector of functionality scores.
 Computes the functionality score for each observation from
 the gamma matrix of a COMPASS model fit.
 }
+\examples{
+FunctionalityScore(CR)
+}
 

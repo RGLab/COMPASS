@@ -21,8 +21,8 @@ This function is used to compute total cell counts, per
 individual, from a \code{COMPASSContainer}.
 }
 \examples{
-\dontrun{
-TotalCellCounts(CC, Stim \%like\% "Env")
-}
+TotalCellCounts(CC, trt == "Treatment")
+TotalCellCounts(CC, trt == "Control")
+TotalCellCounts(CC)
 }
 

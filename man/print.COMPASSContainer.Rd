@@ -14,4 +14,7 @@ This function prints a \code{COMPASSContainer} object,
 giving basic information about the object and the data it
 encapsulates.
 }
+\examples{
+print(CC)
+}
 

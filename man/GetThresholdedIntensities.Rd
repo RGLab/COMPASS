@@ -13,10 +13,11 @@ GetThresholdedIntensities(gs, node, map)
   \item{map}{A \code{list}, mapping node names to markers.}
 }
 \value{
-A \code{list} with two components: \item{\code{data:}}{A
-\code{list} of thresholded intensity measures.}
-\item{\code{counts:}}{A named vector of total cell counts
-at the node \code{node}.}
+A \code{list} with two components:
+
+\item{data}{A \code{list} of thresholded intensity
+measures.} \item{counts}{A named vector of total cell
+counts at the node \code{node}.}
 }
 \description{
 This function extracts thresholded intensities for children

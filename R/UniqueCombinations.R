@@ -8,6 +8,8 @@
 ##' @param as.matrix Boolean; if \code{TRUE} we return results as a matrix;
 ##'   otherwise, we return the results as a list.
 ##' @export
+##' @examples
+##' UniqueCombinations(CC)
 UniqueCombinations <- function(x, as.matrix) {
   UseMethod("UniqueCombinations")
 }

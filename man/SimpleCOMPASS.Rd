@@ -2,7 +2,7 @@
 \alias{SimpleCOMPASS}
 \title{Fit the discrete COMPASS Model}
 \usage{
-SimpleCOMPASS(n_s, n_u, meta, individual_id, sample_id, iterations = 10000L,
+SimpleCOMPASS(n_s, n_u, meta, individual_id, sample_id, iterations = 10000,
   replications = 8, verbose = TRUE)
 }
 \arguments{
@@ -47,12 +47,12 @@ user-provided set of stimulated / unstimulated matrices.
 \examples{
 \dontrun{
 set.seed(123)
-n <- 100 ## number of samples
-k <- 6 ## number of markers
+n <- 10 ## number of samples
+k <- 3 ## number of markers
 
 ## generate some sample data
 sid_vec <- paste0("sid_", 1:n) ## sample ids; unique names used to denote samples
-iid_vec <- rep_len( paste0("iid_", 1:(n/10) ), n ) ## individual ids
+iid_vec <- rep_len( paste0("iid_", 1:(n/2) ), n ) ## individual ids
 data <- replicate(n, {
   nrow <- round(runif(1) * 1E4 + 1000)
   ncol <- k
@@ -66,14 +66,16 @@ data <- replicate(n, {
 meta <- data.frame(
   sid=sid_vec,
   iid=iid_vec,
-  trt=sample( c("Control", "Treatment"), n, TRUE )
+  trt=rep( c("Control", "Treatment"), each=(n/2) )
 )
 
 ## generate counts for n_s, n_u
-n_s <- CellCounts( data[1:(n/2)], Combinations(6) )
-n_u <- CellCounts( data[(n/2+1):n], Combinations(6) )
-SimpleCOMPASS(n_s, n_u, meta, "iid", "sid")
+n_s <- CellCounts( data[1:(n/2)], Combinations(k) )
+n_u <- CellCounts( data[(n/2+1):n], Combinations(k) )
 
+## A smaller number of iterations is used here for running speed;
+## prefer using more iterations for a real fit
+SimpleCOMPASS(n_s, n_u, meta, "iid", "sid", iterations=100)
 }
 }
 

@@ -10,7 +10,7 @@
 ##' @useDynLib COMPASS, .registration=TRUE
 ##' @importFrom Rcpp evalCpp
 ##' @import data.table grid
-##' @alias COMPASS-package
+##' @aliases COMPASS-package
 ##' @seealso
 ##'   \itemize{
 ##'   \item \code{\link{COMPASSContainer}}, for information on getting your

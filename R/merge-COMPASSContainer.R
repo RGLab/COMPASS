@@ -8,6 +8,13 @@
 ##' @method merge COMPASSContainer
 ##' @S3method merge COMPASSContainer
 ##' @importFrom plyr rbind.fill
+##' @examples
+##' ## Chop the example COMPASSContainer into two, then merge it back together
+##' CC1 <- subset(CC, trt == "Control")
+##' CC2 <- subset(CC, trt == "Treatment")
+##' merged <- merge(CC1, CC2)
+##' res <- identical(CC, merge(CC1, CC2)) ## should return TRUE in this case
+##' stopifnot( isTRUE(res) )
 merge.COMPASSContainer <- function(x, y, ...) {
   
   nx <- names(x$data)
