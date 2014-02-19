@@ -17,8 +17,13 @@
 ##' @seealso \code{\link{shinyCOMPASSDeps}}, for identifying packages that you
 ##'   need in order to run the Shiny application.
 ##' @export
-##' @examples \dontrun{
-##' shinyCOMPASS(CR)
+##' @examples 
+##' if (interactive()) {
+##'   oldOpt <- getOption("example.ask")
+##'   options(example.ask=FALSE)
+##'   on.exit( options(example.ask=oldOpt) )
+##'   shinyCOMPASS(CR)
+##'   options(example.ask=TRUE)
 ##' }
 shinyCOMPASS <- function(x, dir=NULL, meta.vars, obfuscate=FALSE) {
   
@@ -49,7 +54,7 @@ shinyCOMPASS <- function(x, dir=NULL, meta.vars, obfuscate=FALSE) {
     DOF <- ModelDiff <- ModelLogDiff <- NULL
   
   if (is.null(dir)) {
-    dir <- tempdir()
+    dir <- file.path( tempdir(), "shinyCOMPASS" )
     on.exit(unlink(dir, recursive=TRUE))
   }
   
@@ -71,7 +76,7 @@ shinyCOMPASS <- function(x, dir=NULL, meta.vars, obfuscate=FALSE) {
     .swap <- function(x) swap(x, from, to)
     
     from <- unique( meta[[ iid ]] )
-    to <- paste("Individual", sprintf( paste0("%0", logn, "i"), 1:n))
+    to <- paste("Individual", gettextf( paste0("%0", logn, "i"), 1:n))
     
     meta[[ iid ]] <- .swap( meta[[iid]] )
     rownames(Mgamma) <- .swap( rownames(Mgamma) )
@@ -142,11 +147,11 @@ shinyCOMPASS <- function(x, dir=NULL, meta.vars, obfuscate=FALSE) {
   ## Compute the Log Fold Change
   stim <- x$orig$stimulation_id
   d[, LogFoldChange := log2(
-    (Counts+1) / (mean(Counts[ eval(unstimulated) ]) + 1)
+    (Counts+1) / (mean(Counts[ eval(unstimulated, envir=.SD) ]) + 1)
   ), by=c(iid, "Marker")]
   
   ## Compute the difference in proportions
-  d[, PropDiff := Proportion - mean(Proportion[ eval(unstimulated) ]),
+  d[, PropDiff := Proportion - mean(Proportion[ eval(unstimulated, envir=.SD) ]),
     by=c(iid, "Marker")]
   
   ## Compute the degree (== number of positive markers)

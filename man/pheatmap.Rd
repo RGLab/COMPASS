@@ -128,7 +128,7 @@ pheatmap(mat, color = colorRampPalette(rev(brewer.pal(n = 7, name =
   the numbers shown in cells. For example "\code{\%.2f}"
   shows 2 decimal places and "\code{\%.1e}" shows
   exponential notation (see more in
-  \code{\link{sprintf}}).}
+  \code{\link{gettextf}}).}
 
   \item{fontsize_number}{fontsize of the numbers displayed
   in cells}

@@ -42,7 +42,8 @@
 ##' @export
 COMPASSContainerFromGatingSet <- function(gs = NULL, node = NULL, filter.fun = NULL, 
                                           individual_id = "PTID", sample_id = "name",
-                                          mp = NULL, countFilterThreshold = 5000, matchmethod = c("Levenshtein","regex"), 
+                                          mp = NULL, countFilterThreshold = 5000, 
+                                          matchmethod = c("Levenshtein","regex"), 
                                           markers = NA) {
   if (require(flowWorkspace)) {
     
@@ -63,26 +64,26 @@ COMPASSContainerFromGatingSet <- function(gs = NULL, node = NULL, filter.fun = N
     message("Extracting cell counts")
     .getOneStat<-function(x,y){
       parent.counts<-flowWorkspace::lapply(x,function(xx,yy=y){
-        getTotal(xx,yy)
+        flowWorkspace::getTotal(xx,yy)
       })
       parent.counts <- unlist(parent.counts)
-      names(parent.counts) <- sampleNames(x)
+      names(parent.counts) <- flowWorkspace::sampleNames(x)
       parent.counts
     }
     
-    nnames<-getNodes(gs[[1]],isPath=TRUE)
+    nnames <- flowWorkspace::getNodes(gs[[1]],isPath=TRUE)
     parent.pop<-nnames[grepl(node, nnames, fixed = FALSE)]    
     if (length(parent.pop) > 1) {
-      stop(sprintf("The node expression %s is not unique.", node))
+      stop(gettextf("The node expression %s is not unique.", node))
     }
     if (length(parent.pop) == 0) {
-      stop(sprintf("The node expression %s doesn't identify any nodes.", 
+      stop(gettextf("The node expression %s doesn't identify any nodes.", 
                    node))
     }
     
     # Extract the parent node name from the full population name
     parent.node <- laply(strsplit(parent.pop, "/"), function(x) x[length(x)])
-    message(sprintf("Fetching %s", parent.node))
+    message(gettextf("Fetching %s", parent.node))
     
     counts<-.getOneStat(gs,parent.node)
     
@@ -92,8 +93,8 @@ COMPASSContainerFromGatingSet <- function(gs = NULL, node = NULL, filter.fun = N
     # Do the expected columns exist?
     if (!all(c(sample_id, individual_id) %in% colnames(pd))) {
       message("Some columns not found in metadata")
-      message(sprintf("Expected: %s %s", sample_id, individual_id))
-      message(sprintf("Missing: %s\n", c(sample_id, individual_id)[which(!c(sample_id, individual_id) %in% 
+      message(gettextf("Expected: %s %s", sample_id, individual_id))
+      message(gettextf("Missing: %s\n", c(sample_id, individual_id)[which(!c(sample_id, individual_id) %in% 
                                                                  colnames(pd))]))
       stop("Quitting")
     }
@@ -103,10 +104,10 @@ COMPASSContainerFromGatingSet <- function(gs = NULL, node = NULL, filter.fun = N
 #     paths <- getNodes(gs[[1]], isPath=TRUE)
 #     parent.pop <- paths[grepl(node, paths, fixed = FALSE)]
 #     if (length(parent.pop) > 1) {
-#       stop(sprintf("The node expression %s is not unique.", node))
+#       stop(gettextf("The node expression %s is not unique.", node))
 #     }
 #     if (length(parent.pop) == 0) {
-#       stop(sprintf("The node expression %s doesn't identify any nodes.", 
+#       stop(gettextf("The node expression %s doesn't identify any nodes.", 
 #                    node))
 #     }
 #     
@@ -136,10 +137,10 @@ COMPASSContainerFromGatingSet <- function(gs = NULL, node = NULL, filter.fun = N
 
     #parent.pop <- rownames(stats)[grepl(node, rownames(stats), fixed = FALSE)]
     #if (length(parent.pop) > 1) {
-    #  stop(sprintf("The node expression %s is not unique.", node))
+    #  stop(gettextf("The node expression %s is not unique.", node))
     #}
     #if (length(parent.pop) == 0) {
-    #  stop(sprintf("The node expression %s doesn't identify any nodes.", 
+    #  stop(gettextf("The node expression %s doesn't identify any nodes.", 
     #               node))
     #}
     
@@ -150,17 +151,17 @@ COMPASSContainerFromGatingSet <- function(gs = NULL, node = NULL, filter.fun = N
     # Get the children of that parent and filter out boolean gates Test if
     # children exist, and test if non-empty set returned.
     message("Fetching child nodes")
-    child.nodes <- getChildren(gs[[1]], parent.node)
+    child.nodes <- flowWorkspace::getChildren(gs[[1]], parent.node)
     child.nodes <- basename(child.nodes)
     if (length(child.nodes) == 0) {
-      stop(sprintf("Population %s has no children! Choose a different parent population.", 
+      stop(gettextf("Population %s has no children! Choose a different parent population.", 
                    parent.node))
     }
     
     child.nodes <- child.nodes[!sapply(child.nodes, function(x) .isBoolGate(gs[[1]], 
                                                                                             x))]
     if (length(child.nodes) == 0) {
-      stop(sprintf("All the children of %s are boolean gates. Choose a population with non-boolean child gates.", 
+      stop(gettextf("All the children of %s are boolean gates. Choose a population with non-boolean child gates.", 
                    parent.node))
     }
     
@@ -175,14 +176,14 @@ COMPASSContainerFromGatingSet <- function(gs = NULL, node = NULL, filter.fun = N
     .checkMarkerConsistency <- function(xx) {
       if (inherits(xx, "GatingSetList")) {
         mlist <- unlist( recursive=FALSE, lapply(xx@data, function(x) {
-          dat <- getData(x, use.exprs=FALSE)
+          dat <- flowWorkspace::getData(x, use.exprs=FALSE)
           lapply( objects(dat@frames), function(obj) {
             fr <- get(obj, envir=dat@frames)
             return(na.omit( parameters(fr)@data$desc ))
           })
         }) )
       } else if (inherits(xx, "GatingSet")) {
-        dat <- getData(xx, use.exprs=FALSE)
+        dat <- flowWorkspace::getData(xx, use.exprs=FALSE)
         mlist <- lapply( objects(dat@frames), function(obj) {
           fr <- get(obj, envir=dat@frames)
           return(na.omit( parameters(fr)@data$desc ))
@@ -199,7 +200,7 @@ COMPASSContainerFromGatingSet <- function(gs = NULL, node = NULL, filter.fun = N
         warnflag <- TRUE
       }
       message("common markers are: ")
-      message(sprintf("%s ", common))
+      message(gettextf("%s ", common))
       if (!is.na(markers)) {
         if (all(markers %in% common)) {
           warnflag <- FALSE
@@ -210,13 +211,13 @@ COMPASSContainerFromGatingSet <- function(gs = NULL, node = NULL, filter.fun = N
       if (warnflag) {
         warning("Not all markers are shared across files.")
         message("Disparate markers are:")
-        message(sprintf("%s "), setdiff(unyn, common))
+        message(gettextf("%s "), setdiff(unyn, common))
       }
     }
     
     .checkMarkerConsistency(gs)
     if (is.null(mp)) {
-      params <- parameters(getData(gs[[1]], use.exprs = FALSE))@data
+      params <- parameters(flowWorkspace::getData(gs[[1]], use.exprs = FALSE))@data
       params <- data.table(params[, c("name", "desc")])
       # make case consistent
       params[, `:=`(desc.upper, toupper(desc))]
@@ -262,14 +263,14 @@ COMPASSContainerFromGatingSet <- function(gs = NULL, node = NULL, filter.fun = N
         
         # Some error checking
         if (nrow(map) != length(child.nodes[, child.nodes])) {
-          message(sprintf("We failed to guess the mapping between the node %s and the markers in the flowFrame\n", 
+          message(gettextf("We failed to guess the mapping between the node %s and the markers in the flowFrame\n", 
                           child.nodes))
           message("Our best guess was:")
           kable(map)
           message("Expected nodes:")
-          message(sprintf("%s ", child.nodes$child.nodes))
+          message(gettextf("%s ", child.nodes$child.nodes))
           message("Available dyes:")
-          message(sprintf("%s ", na.omit(as.vector(params$desc))))
+          message(gettextf("%s ", na.omit(as.vector(params$desc))))
           message("Try specifying the mapping manually.")
           stop("Quitting")
         }
@@ -292,7 +293,7 @@ COMPASSContainerFromGatingSet <- function(gs = NULL, node = NULL, filter.fun = N
     }
     # Construct the expression
     expr <- as.name(paste(names(mp), collapse = "|"))
-    message(sprintf("Extracting single cell data for %s", as.character(expr)))
+    message(gettextf("Extracting single cell data for %s", as.character(expr)))
     
     # extract the single cell values
     sc_data <- try(getData(obj = gs, y = expr, pop_marker_list = mp))
@@ -309,7 +310,7 @@ COMPASSContainerFromGatingSet <- function(gs = NULL, node = NULL, filter.fun = N
     sc_data <- sc_data[keep.names]
     counts <- counts[keep.names]
     pd <- subset(pd, eval(as.name(sample_id)) %in% keep.names)
-    message(sprintf("Filtering %s samples due to low counts", length(filter) - 
+    message(gettextf("Filtering %s samples due to low counts", length(filter) - 
                       length(keep.names)))
     
     message("Creating COMPASS Container")
@@ -317,5 +318,7 @@ COMPASSContainerFromGatingSet <- function(gs = NULL, node = NULL, filter.fun = N
                            individual_id = individual_id, sample_id = sample_id)
     return(cc)
   }
-  stop("This function requires flowWorkspace to be installed")
+  
+  .needsFlowWorkspace()
+  
 }

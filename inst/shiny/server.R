@@ -13,8 +13,8 @@ library(RColorBrewer)
 library(COMPASS)
 
 DATA <- readRDS("data/data.rds")
-sid <- DATA$COMPASS$data$sample_id
-iid <- DATA$COMPASS$data$individual_id
+..sid.. <- DATA$COMPASS$data$sample_id
+..iid.. <- DATA$COMPASS$data$individual_id
 
 ## read in the data
 ## FIXME: only allocate one reference for the data
@@ -32,10 +32,10 @@ CellCounts <- data.frame(
   names(counts),
   counts
 )
-names(CellCounts) <- c(sid, "counts")
+names(CellCounts) <- c(..sid.., "counts")
 
 ## a dataset for the polyfunctionality score
-tmp <- d[, .I[1], by=c(iid)]
+tmp <- d[, .I[1], by=c(..iid..)]
 pf <- d[ tmp$V1 ]
 pf <- melt(pf, measure.vars=c("PolyfunctionalityScore", "FunctionalityScore"),
   variable.name="FunctionalityType",
@@ -253,9 +253,9 @@ shinyServer( function(input, output, session) {
   ## observers
   observe({
     x <- input$individual
-    samples <- meta[[sid]][ meta[[iid]] == x ]
+    samples <- meta[[..sid..]][ meta[[..iid..]] == x ]
     updateSelectInput(session, "sample",
-      label=sid,
+      label=..sid..,
       choices=samples
     )
   })
@@ -335,8 +335,8 @@ shinyServer( function(input, output, session) {
     ## Marginalize tmp
     if (length(markers_to_marginalize_over)) {
       other_markers <- orig_markers[ !(orig_markers %in% markers_to_marginalize_over) ]
-      tmp[, (phenotype) := mean( get(phenotype), na.rm=TRUE), by=c(sid, iid,other_markers)]
-      tmp <- tmp[ tmp[, .I[1], by=c(sid, iid, other_markers)]$V1 ]
+      tmp[, (phenotype) := mean( get(phenotype), na.rm=TRUE), by=c(..sid.., ..iid..,other_markers)]
+      tmp <- tmp[ tmp[, .I[1], by=c(..sid.., ..iid.., other_markers)]$V1 ]
       for (marker in markers_to_marginalize_over) {
         tmp[, Marker := gsub( paste0(marker, "+"), "", Marker, fixed=TRUE)]
         tmp[, Marker := gsub( paste0(marker, "-"), "", Marker, fixed=TRUE)]
@@ -344,7 +344,7 @@ shinyServer( function(input, output, session) {
     }
     
     ## Cast the marker data down into a matrix
-    form <- as.formula( paste(sid, "~ Marker") )
+    form <- as.formula( paste(..sid.., "~ Marker") )
     m <<- acast(tmp, form, value.var=phenotype)
     
     ## Rows are samples, columns are marker combinations
@@ -451,12 +451,12 @@ shinyServer( function(input, output, session) {
       
       if (any( !is.null( c(facet1, facet2, facet3) ) )) {
         
-        row_annot <- d[, c(sid, facet1, facet2, facet3), with=FALSE]
-        row_annot <- as.data.frame(row_annot[ row_annot[, .I[1], by=c(sid)]$V1 ])
-        row_annot[[sid]] <- as.character(row_annot[[sid]])
-        row_annot <- row_annot[ match( rownames(m), row_annot[[sid]] ), ]
-        rownames(row_annot) <- row_annot[[sid]]
-        row_annot[[sid]] <- NULL
+        row_annot <- d[, c(..sid.., facet1, facet2, facet3), with=FALSE]
+        row_annot <- as.data.frame(row_annot[ row_annot[, .I[1], by=c(..sid..)]$V1 ])
+        row_annot[[..sid..]] <- as.character(row_annot[[..sid..]])
+        row_annot <- row_annot[ match( rownames(m), row_annot[[..sid..]] ), ]
+        rownames(row_annot) <- row_annot[[..sid..]]
+        row_annot[[..sid..]] <- NULL
         
         row_order <<- do.call(order, row_annot[ c(facet1, facet2, facet3) ])
         
@@ -522,7 +522,7 @@ shinyServer( function(input, output, session) {
     phenotype <- getPhenotype()
     flip_linechart <- getFlipLinechart()
     
-    d_sub <- droplevels( d[ d[[iid]] == individual, ] )
+    d_sub <- droplevels( d[ d[[..iid..]] == individual, ] )
     
     ## make Marker a factor now and ensure it has a correct ordering
     ## Ie, it has to match the column order global
@@ -530,8 +530,8 @@ shinyServer( function(input, output, session) {
     
     ## Marginalize
     if (length(markers_to_marginalize_over)) {
-      d_sub[, (phenotype) := mean( get(phenotype), na.rm=TRUE), by=c(sid, iid,other_markers)]
-      d_sub <- d_sub[ d_sub[, .I[1], by=c(sid, iid, other_markers)]$V1 ]
+      d_sub[, (phenotype) := mean( get(phenotype), na.rm=TRUE), by=c(..sid.., ..iid..,other_markers)]
+      d_sub <- d_sub[ d_sub[, .I[1], by=c(..sid.., ..iid.., other_markers)]$V1 ]
       for (marker in markers_to_marginalize_over) {
         d_sub[, Marker := gsub( paste0(marker, "+"), "", Marker, fixed=TRUE)]
         d_sub[, Marker := gsub( paste0(marker, "-"), "", Marker, fixed=TRUE)]
@@ -543,7 +543,7 @@ shinyServer( function(input, output, session) {
     
     ## Marginalize over the other markers if necessary
     
-    p <- ggplot( d_sub, aes_string(x="Marker", y=phenotype, group=sid)) +
+    p <- ggplot( d_sub, aes_string(x="Marker", y=phenotype, group=..sid..)) +
       geom_point() +
       geom_line( aes(x=as.integer( factor(Marker) ))) +
       xlab(paste("Individual:", individual)) +
@@ -637,7 +637,7 @@ shinyServer( function(input, output, session) {
     ## fill in the annotations
     
     #     if( facet1 != "Original Ordering" ) {
-    #       p <- p + aes_string(x="Marker", y=phenotype, group=sid, color=facet1)
+    #       p <- p + aes_string(x="Marker", y=phenotype, group=..sid.., color=facet1)
     #       if( facet2 != "None" ) {
     #         p <- p + facet_wrap(facet2)
     #       }
@@ -681,7 +681,7 @@ shinyServer( function(input, output, session) {
     flip_dofplot <- input$flip_dofplot
     
     ## get the samples belonging to the currently selected individual
-    samples <- cell_data[ names(cell_data) %in% d[[sid]] ]
+    samples <- cell_data[ names(cell_data) %in% d[[..sid..]] ]
     
     ## computing the degree of functionality
     ## for each cell, we compute the number of markers that were
@@ -715,15 +715,15 @@ shinyServer( function(input, output, session) {
       list(counts=counts, order=names(counts))
     }, by=ind]
     ## merge in cell counts
-    dof <- merge.data.frame( samples_dof, CellCounts, by.x="ind", by.y=sid, all.x=TRUE )
+    dof <- merge.data.frame( samples_dof, CellCounts, by.x="ind", by.y=..sid.., all.x=TRUE )
     dof$prop <- dof$counts.x / dof$counts.y
     
     ## merge in meta-info
     dof <- unique( merge( 
       dof, 
-      d[ names(d) %in% c(sid, names(meta)) ], 
+      d[ names(d) %in% c(..sid.., names(meta)) ], 
       by.x="ind", 
-      by.y=sid,
+      by.y=..sid..,
       all.x=TRUE
     ) )
     
@@ -916,9 +916,9 @@ shinyServer( function(input, output, session) {
       ), keyby=by]
       
       ## Make the values nicer to present
-      m$Mean <- sprintf("%.3G", m$Mean)
-      m$Median <- sprintf("%.3G", m$Median)
-      m$SD <- sprintf("%.3G", m$SD)
+      m$Mean <- gettextf("%.3G", m$Mean)
+      m$Median <- gettextf("%.3G", m$Median)
+      m$SD <- gettextf("%.3G", m$SD)
       
       return(m)
       
@@ -941,12 +941,12 @@ shinyServer( function(input, output, session) {
   #     
   #     ## take the selected individual
   #     
-  #     samples <- as.character(unique(d[[sid]][ d[[iid]] == individual ]))
+  #     samples <- as.character(unique(d[[..sid..]][ d[[..iid..]] == individual ]))
   #     dat <- cell_data[ names(cell_data) %in% samples ]
   #     dat <- lapply(dat, as.data.frame)
   #     m <- rbindlistn(dat, TRUE)
-  #     setnames(m, ".Names", sid)
-  #     list(m, sid)
+  #     setnames(m, ".Names", ..sid..)
+  #     list(m, ..sid..)
   #     
   #   })
   

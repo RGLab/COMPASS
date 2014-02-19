@@ -46,15 +46,15 @@ h5write.COMPASSContainer<-function(x=NA,filename=NA,group=NA,overwrite=TRUE){
     #list the empty matrices and fill them with a zero row so that we can store them in hdf5
     #also store the names of the zero samples
     zeros<-names(which(do.call(c,lapply(x$data,function(y)nrow(y)==0))))
-    h5write(zeros,file=filename,sprintf("%s/empty_matrices",group))
+    h5write(zeros,file=filename,gettextf("%s/empty_matrices",group))
     for(i in (zeros)){
       x$data[[i]]<-matrix(0,nrow=1,ncol=ncol(x$data[[i]]),dimnames=dimnames(x$data[[i]]))
     }
-    h5write(x$data,file=filename,sprintf("%s/data",group))
-    h5write(as.data.frame(x$meta),file=filename,sprintf("%s/metadata",group))
-    h5write(x$counts,file=filename,sprintf("%s/counts",group))
-    h5write(x$individual_id,file=filename,sprintf("%s/individual_id",group))
-    h5write(x$sample_id,file=filename,sprintf("%s/sample_id",group))
+    h5write(x$data,file=filename,gettextf("%s/data",group))
+    h5write(as.data.frame(x$meta),file=filename,gettextf("%s/metadata",group))
+    h5write(x$counts,file=filename,gettextf("%s/counts",group))
+    h5write(x$individual_id,file=filename,gettextf("%s/individual_id",group))
+    h5write(x$sample_id,file=filename,gettextf("%s/sample_id",group))
   }else{
     message("Group exists, can't replace, you must set overwrite=TRUE.\n")
   }

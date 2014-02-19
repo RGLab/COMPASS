@@ -310,7 +310,7 @@ convert_annotations = function(annotation, annotation_colors){
     if(is.character(a) | is.factor(a)){
       a = as.character(a)
       if(length(setdiff(a, names(b))) > 0){
-        stop(sprintf("Factor levels on variable %s do not match with annotation_colors", colnames(annotation)[i]))
+        stop(gettextf("Factor levels on variable %s do not match with annotation_colors", colnames(annotation)[i]))
       }
       new[, i] = b[a]
     }
@@ -409,7 +409,7 @@ heatmap_motor = function(matrix, border_color, cellwidth, cellheight, tree_col, 
       stop("File type should be: pdf, png, bmp, jpg, tiff")
     )
     
-    # print(sprintf("height:%f width:%f", height, width))
+    # print(gettextf("height:%f width:%f", height, width))
     f(filename, height = height, width = width)
     heatmap_motor(matrix, cellwidth = cellwidth, cellheight = cellheight, border_color = border_color, tree_col = tree_col, tree_row = tree_row, treeheight_col = treeheight_col, treeheight_row = treeheight_row, breaks = breaks, color = color, legend = legend, annotation = annotation, annotation_colors = annotation_colors, annotation_legend = annotation_legend, filename = NA, main = main, fontsize = fontsize, fontsize_row = fontsize_row, fontsize_col = fontsize_col, fmat = fmat, fontsize_number =  fontsize_number, row_annotation = row_annotation, row_annotation_legend = row_annotation_legend, cytokine_annotation = cytokine_annotation, ...)
     dev.off()
@@ -774,7 +774,7 @@ kmeans_pheatmap = function(mat, k = min(nrow(mat), 150), sd_limit = NA, ...){
   
   # Compose rownames
   t = table(km$cluster)
-  rownames(mat2) = sprintf("cl%s_size_%d", names(t), t)
+  rownames(mat2) = gettextf("cl%s_size_%d", names(t), t)
   
   # Draw heatmap
   pheatmap(mat2, ...)
@@ -845,7 +845,7 @@ kmeans_pheatmap = function(mat, k = min(nrow(mat), 150), sd_limit = NA, ...){
 #' the cells. 
 #' @param number_format format strings (C printf style) of the numbers shown in cells. 
 #' For example "\code{\%.2f}" shows 2 decimal places and "\code{\%.1e}" shows exponential 
-#' notation (see more in \code{\link{sprintf}}).    
+#' notation (see more in \code{\link{gettextf}}).    
 #' @param fontsize_number fontsize of the numbers displayed in cells
 #' @param filename file path where to save the picture. Filetype is decided by 
 #' the extension in the path. Currently following formats are supported: png, pdf, tiff,
@@ -992,7 +992,7 @@ pheatmap = function(mat, color = colorRampPalette(rev(brewer.pal(n = 7, name = "
     
     # Compose rownames
     t = table(km$cluster)
-    rownames(mat) = sprintf("cl%s_size_%d", names(t), t)
+    rownames(mat) = gettextf("cl%s_size_%d", names(t), t)
   }
   else{
     km = NA
@@ -1022,7 +1022,7 @@ pheatmap = function(mat, color = colorRampPalette(rev(brewer.pal(n = 7, name = "
   
   # Format numbers to be displayed in cells 
   if(display_numbers){
-    fmat = matrix(sprintf(number_format, mat), nrow = nrow(mat), ncol = ncol(mat))
+    fmat = matrix(gettextf(number_format, mat), nrow = nrow(mat), ncol = ncol(mat))
     attr(fmat, "draw") = TRUE
   }
   else{

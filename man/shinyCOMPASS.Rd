@@ -28,8 +28,12 @@ generates a local Shiny application for visualizing the
 results.
 }
 \examples{
-\dontrun{
-shinyCOMPASS(CR)
+if (interactive()) {
+  oldOpt <- getOption("example.ask")
+  options(example.ask=FALSE)
+  on.exit( options(example.ask=oldOpt) )
+  shinyCOMPASS(CR)
+  options(example.ask=TRUE)
 }
 }
 \seealso{
