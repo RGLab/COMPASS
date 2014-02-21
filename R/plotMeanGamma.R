@@ -5,8 +5,6 @@
 ##' samples subjected to the 'treatment' condition, and samples subjected
 ##' to the 'control' condition.
 ##' 
-##' @method plot COMPASSResult
-##' @S3method plot COMPASSResult
 ##' @aliases plot
 ##' @param x An object of class \code{COMPASSResult}.
 ##' @param y This argument gets passed to \code{row_annotation}, if
@@ -32,6 +30,9 @@
 ##'   matrix of suitable dimension as well; these can be generated with
 ##'   the \code{Posterior*} functions -- see \code{\link{Posterior}} for
 ##'   examples.
+##' @param order_by Order rows within a group. This should be a function;
+##' e.g. \code{FunctionalityScore}, \code{mean}, \code{median}, and so on.
+##' Set this to \code{NULL} to preserve the original ordering of the data.
 ##' @param ... Optional arguments passed to \code{pheatmap}.
 ##' @importFrom RColorBrewer brewer.pal
 ##' @importFrom grDevices colorRampPalette
@@ -41,15 +42,51 @@
 ##' 
 ##' ## visualize the proportion of cells belonging to a category
 ##' plot(CR, measure=PosteriorPs(CR))
+##' @export
 plot.COMPASSResult <- function(x, y, subset, 
-  remove_unexpressed_categories=TRUE, minimum_dof=1, maximum_dof=Inf, 
+  remove_unexpressed_categories=TRUE, 
+  minimum_dof=1, 
+  maximum_dof=Inf, 
   row_annotation,
   #palette=seq_gradient_pal(low="black", high="red")(seq(0, 1, length=20)),
   palette=colorRampPalette(brewer.pal(10,"Purples"))(20),
   show_rownames=FALSE, 
   show_colnames=FALSE, 
   measure=NULL,
+  order_by=FunctionalityScore,
   ...) {
+  
+  call <- match.call()
+  
+  ## If order_by is missing, then the user is expecting default behavior
+  ## ie, FunctionalityScore
+  if (missing(order_by)) {
+    order_fun <- FunctionalityScore
+  } else {
+    if (!is.null(order_by)) {
+      
+      if (is.symbol(call$order_by)) {
+        if (call$order_by == "PolyfunctionalityScore") {
+          ## .degree is generated downstream
+          order_fun <- function(x) {
+            PolyfunctionalityScore(x, degree=.degree)
+          }
+        } else if (call$order_by == "FunctionalityScore") {
+          order_fun <- FunctionalityScore
+        } else {
+          FUN <- match.fun(order_by)
+          order_fun <- function(x, f=FUN) {
+            apply(x, 1, f)
+          }
+        }
+      } else {
+        FUN <- match.fun(order_by)
+        order_fun <- function(x, f=FUN) {
+          apply(x, 1, f)
+        }
+      }
+    }
+  }
   
   ## try to override mean_gamma with measure
   if (!is.null(measure)) {
@@ -120,15 +157,44 @@ plot.COMPASSResult <- function(x, y, subset,
     rowann <- rowann[ rownames(rowann) %in% keep, , drop=FALSE]
   }
   
-  ## reorder the data
-  if(!is.null(row_annotation)){
-    o <- do.call(order, as.list(rowann[row_annotation]))
-  }else{
-    o<-1:nrow(M)
-    rowann<-NA
+  ## Generate .degree if using PolyfunctionalityScore
+  if (is.symbol(call$order_by) && call$order_by == "PolyfunctionalityScore") {
+    cats_mat <- as.matrix(cats)
+    mode(cats_mat) <- "integer"
+    .degree <- apply(cats_mat, 1, sum)
   }
   
-  pheatmap(M[o, , drop=FALSE],
+  ## Reorder within groups based on 'order_by'
+  if (!is.null(order_by)) {
+    if (!is.null(row_annotation)) {
+      grouping <- as.integer( factor( apply( rowann[row_annotation], 1, paste ) ) )
+    } else {
+      grouping <- rep(1, nrow(M))
+    }
+    groups <- unique(grouping)
+    for (i in seq_along(groups)) {
+      group <- groups[i]
+      ind <- which(group == grouping)
+      score <- order_fun(M[ind, , drop=FALSE])
+      ord <- ind[ order(score, decreasing=TRUE) ]
+      
+      M[ind, ] <- M[ord, ]
+      
+      rownames(M)[ind] <- rownames(M)[ord]
+      rownames(rowann)[ind] <- rownames(rowann)[ord]
+      
+    }
+  }
+  
+  ## Group the data by row annotation
+  if (!is.null(row_annotation)) {
+    o <- do.call(order, as.list(rowann[row_annotation]))
+    M <- M[o, , drop=FALSE]
+  } else {
+    rowann <- NA
+  }
+  
+  pheatmap(M,
     color=palette,
     show_rownames=show_rownames,
     show_colnames=show_colnames,
@@ -139,6 +205,6 @@ plot.COMPASSResult <- function(x, y, subset,
     ...
   )
   
-  return (invisible(M[o, , drop=FALSE]))
+  return (invisible(M))
   
 }
