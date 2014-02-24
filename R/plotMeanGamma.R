@@ -36,6 +36,8 @@
 ##' @param ... Optional arguments passed to \code{pheatmap}.
 ##' @importFrom RColorBrewer brewer.pal
 ##' @importFrom grDevices colorRampPalette
+##' @return The plot as a \code{grid} object (\code{grob}). It can be redrawn
+##' with e.g. \code{grid::grid.draw()}.
 ##' @examples
 ##' ## visualize the mean probability of reponse
 ##' plot(CR)
@@ -193,7 +195,7 @@ plot.COMPASSResult <- function(x, y, subset,
   } else {
     rowann <- NA
   }
-  
+
   pheatmap(M,
     color=palette,
     show_rownames=show_rownames,
@@ -205,6 +207,6 @@ plot.COMPASSResult <- function(x, y, subset,
     ...
   )
   
-  return (invisible(M))
+  return( invisible(grid.grab()) )
   
 }

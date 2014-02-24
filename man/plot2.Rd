@@ -38,6 +38,10 @@ plot2(x, y, row_annotation = NULL, remove_unexpressed_categories = TRUE,
 
   \item{...}{Optional arguments passed to \code{pheatmap}.}
 }
+\value{
+The plot as a \code{grid} object (\code{grob}). It can be
+redrawn with e.g. \code{grid::grid.draw()}.
+}
 \description{
 This function can be used to visualize the mean probability
 of response -- that is, the probability that there is a
