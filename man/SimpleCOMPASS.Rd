@@ -1,0 +1,81 @@
+\name{SimpleCOMPASS}
+\alias{SimpleCOMPASS}
+\title{Fit the discrete COMPASS Model}
+\usage{
+SimpleCOMPASS(n_s, n_u, meta, individual_id, sample_id, iterations = 10000,
+  replications = 8, verbose = TRUE)
+}
+\arguments{
+  \item{n_s}{The cell counts for stimulated cells.}
+
+  \item{n_u}{The cell counts for unstimulated cells.}
+
+  \item{meta}{A \code{data.frame} of metadata, describing
+  the individuals in the experiment. Each row in
+  \code{meta} should correspond to a row in \code{data}.
+  There should be one row for each sample; i.e., one row
+  for each element of \code{n_s} and \code{n_u}.}
+
+  \item{individual_id}{The name of the vector in
+  \code{meta} that denotes the individuals from which
+  samples were drawn.}
+
+  \item{sample_id}{The name of the vector in \code{meta}
+  that denotes the samples.  This vector should contain all
+  of the names in the \code{data} input.}
+
+  \item{iterations}{The number of iterations (per
+  'replication') to perform.}
+
+  \item{replications}{The number of 'replications' to
+  perform. In order to conserve memory, we only keep the
+  model estimates from the last replication.}
+
+  \item{verbose}{Boolean; if \code{TRUE} we output progress
+  information.}
+}
+\value{
+A \code{list} with class \code{COMPASSResult} with two
+components, the \code{fit} containing parameter estimates
+and parameter acceptance rates, and \code{data} containing
+the generated data used as input for the model.
+}
+\description{
+This function fits the \code{COMPASS} model from a
+user-provided set of stimulated / unstimulated matrices.
+}
+\examples{
+\dontrun{
+set.seed(123)
+n <- 10 ## number of samples
+k <- 3 ## number of markers
+
+## generate some sample data
+sid_vec <- paste0("sid_", 1:n) ## sample ids; unique names used to denote samples
+iid_vec <- rep_len( paste0("iid_", 1:(n/2) ), n ) ## individual ids
+data <- replicate(n, {
+  nrow <- round(runif(1) * 1E4 + 1000)
+  ncol <- k
+  vals <- rexp( nrow * ncol, runif(1, 1E-5, 1E-3) )
+  vals[ vals < 2000 ] <- 0
+  output <- matrix(vals, nrow, ncol)
+  output <- output[ apply(output, 1, sum) > 0, ]
+  colnames(output) <- paste0("M", 1:k)
+  return(output)
+})
+meta <- data.frame(
+  sid=sid_vec,
+  iid=iid_vec,
+  trt=rep( c("Control", "Treatment"), each=(n/2) )
+)
+
+## generate counts for n_s, n_u
+n_s <- CellCounts( data[1:(n/2)], Combinations(k) )
+n_u <- CellCounts( data[(n/2+1):n], Combinations(k) )
+
+## A smaller number of iterations is used here for running speed;
+## prefer using more iterations for a real fit
+SimpleCOMPASS(n_s, n_u, meta, "iid", "sid", iterations=100)
+}
+}
+
