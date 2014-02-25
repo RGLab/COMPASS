@@ -19,6 +19,10 @@ subset.COMPASSContainer <- function(x, subset, ...) {
     stop("'subset' should evaluate to a logical result")
   }
   
+  if (!length(keep)) {
+    stop("Subsetting has removed all samples!")
+  }
+  
   good_samples <- unique(x$meta[[ x$sample_id ]][keep])
   
   ## subset everything
