@@ -1,0 +1,46 @@
+\name{Posterior}
+\alias{Posterior}
+\alias{PosteriorDiff}
+\alias{PosteriorLogDiff}
+\alias{PosteriorPs}
+\alias{PosteriorPu}
+\title{Retrieve Posterior Measures from a COMPASS fit}
+\usage{
+Posterior(x)
+
+PosteriorDiff(x)
+
+PosteriorLogDiff(x)
+
+PosteriorPs(x)
+
+PosteriorPu(x)
+}
+\arguments{
+  \item{x}{An object of class \code{COMPASSResult}.}
+}
+\description{
+These functions can be used to retrieve different posterior
+measures from a \code{COMPASS} fit object.
+}
+\details{
+The posterior items retrieved are described as follows::
+
+\describe{ \item{\code{PosteriorPs}:}{The posterior
+probability that the samples subjected to the 'treatment',
+or 'stimulated', condition responded.}
+\item{\code{PosteriorPu:}}{The posterior probability that
+the samples subjected to the 'control', or 'unstimulated',
+condition responded.} \item{\code{PosteriorDiff}:}{The
+difference in posterior response rates, as described
+above.} \item{\code{PosteriorLogDiff}:}{The difference in
+the log response rates, as described above.} }
+}
+\examples{
+Posterior(CR)
+PosteriorPs(CR)
+PosteriorPu(CR)
+PosteriorDiff(CR)
+PosteriorLogDiff(CR)
+}
+

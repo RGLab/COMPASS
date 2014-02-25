@@ -1,0 +1,36 @@
+Package: COMPASS
+Type: Package
+Title: Combinatorial Polyfunctionality Analysis of Single Cells
+Version: 0.99.4
+Date: 2014-02-11
+Authors@R: c( person("Lynn", "Lin", role="aut",
+        email="llin@fhcrc.org"), person("Kevin", "Ushey", role=c("aut",
+        "cre"), email="kushey@fhcrc.org"), person("Greg", "Finak",
+        role="aut", email="gfinak@fhcrc.org"), person("Raivo", "Kolde",
+        role="ctb", email="rkolde@gmail.com", comment="Author of
+        'pheatmap', which was modified and now used internally in
+        COMPASS") )
+Description: COMPASS is a statistical framework that enables unbiased
+        analysis of antigen-specific T-cell subsets. COMPASS uses a
+        Bayesian hierarchical framework to model all observed
+        cell-subsets and select the most likely to be antigen-specific
+        while regularizing the small cell counts that often arise in
+        multi-parameter space. The model provides a posterior
+        probability of specificity for each cell subset and each
+        sample, which can be used to profile a subject's immune
+        response to external stimuli such as infection or vaccination.
+License: Artistic-2.0
+BugReports: https://github.com/RGLab/COMPASS/issues
+VignetteBuilder: knitr
+Depends: R (>= 3.0.1)
+LinkingTo: Rcpp
+Imports: Rcpp, data.table, RColorBrewer, scales, grid, plyr, knitr,
+        abind, clue, grDevices, utils
+Suggests: flowWorkspace (>= 3.9.36), shiny, testthat, devtools, Kmisc
+LazyLoad: yes
+LazyData: yes
+biocViews: FlowCytometry
+Author: Lynn Lin [aut], Kevin Ushey [aut, cre], Greg Finak [aut], Raivo
+        Kolde [ctb] (Author of 'pheatmap', which was modified and now
+        used internally in COMPASS)
+Maintainer: Kevin Ushey <kushey@fhcrc.org>
