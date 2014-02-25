@@ -1,0 +1,14 @@
+*.so
+*.Rproj
+.DS_Store
+.project
+src/*.o
+inst/.DS_Store
+.Rproj.user
+data/*.rds
+.Rhistory
+refactor/*.rds
+.cproject
+*~
+*.rds
+shinyTest

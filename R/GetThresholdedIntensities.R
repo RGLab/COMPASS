@@ -13,10 +13,7 @@
 ##' @param node The name, or path, of a single node in a 
 ##'   \code{GatingSet} / \code{GatingSetList}.
 ##' @param map A \code{list}, mapping node names to markers.
-##' @examples
-##' \dontrun{
-##'   GetThresholdedIntensities(gs, "4+", list("INFg+"="IFNg"))
-##' }
+##' @example examples/GetThresholdedIntensities.R
 ##' @return A \code{list} with two components:
 ##' 
 ##' \item{data}{A \code{list} of thresholded intensity measures.}
@@ -46,10 +43,13 @@ GetThresholdedIntensities <- function(gs, node, map) {
     }
     
     ## Make 'node' act more like a regular expression if it isn't one already
-    n <- nchar(node)
-    if (!substring(node, 1, 1) == "/") node <- paste0("/", node)
-    if (!substring(node, n, n) == "$") node <- paste0(node, "$")
-    node <- gsub("(?<!\\\\)\\+", "\\\\+", node, perl=TRUE)
+    ## But only do this if it's not '/' or 'root'
+    if (!(node %in% c("root", "/"))) {
+      n <- nchar(node)
+      if (!substring(node, 1, 1) == "/") node <- paste0("/", node)
+      if (!substring(node, n, n) == "$") node <- paste0(node, "$")
+      node <- gsub("(?<!\\\\)\\+", "\\\\+", node, perl=TRUE)
+    }
     
     paths <- flowWorkspace::getNodes(gslist[[1]])
     path <- paths[ grepl(node, paths, fixed = FALSE) ]
@@ -125,7 +125,7 @@ GetThresholdedIntensities <- function(gs, node, map) {
       indices <- match(channel_names, params$desc)
     }
     
-    if (.check_match(channel_names, params$name)) {
+    if (!matched_flag && .check_match(channel_names, params$name)) {
       message("Channel names were matched to the 'name' column.")
       matched_flag <- TRUE
       column_to_use <- "name"
@@ -145,7 +145,13 @@ GetThresholdedIntensities <- function(gs, node, map) {
       for (i in seq_along(node_names)) {
         cNode <- node_names[i]
         cChannel <- channel_names[i]
-        gate <- flowWorkspace::getGate(x, file.path(path, cNode))
+        ## Need to handle 'root' specially
+        if (identical(path, "root")) {
+          node_path <- paste0("/", cNode)
+        } else {
+          node_path <- file.path(path, cNode)
+        }
+        gate <- flowWorkspace::getGate(x, node_path)
         thresh <- gate@min
         exprs[, expr_nms[i]][ exprs[, expr_nms[i]] < thresh ] <- 0
       }

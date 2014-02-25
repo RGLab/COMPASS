@@ -7,7 +7,8 @@
   remove_unexpressed_categories = TRUE, minimum_dof = 1,
   maximum_dof = Inf, row_annotation,
   palette = colorRampPalette(brewer.pal(10, "Purples"))(20),
-  show_rownames = FALSE, show_colnames = FALSE, measure = NULL, ...)
+  show_rownames = FALSE, show_colnames = FALSE, measure = NULL,
+  order_by = FunctionalityScore, ...)
 }
 \arguments{
   \item{x}{An object of class \code{COMPASSResult}.}
@@ -49,7 +50,16 @@
   \code{Posterior*} functions -- see
   \code{\link{Posterior}} for examples.}
 
+  \item{order_by}{Order rows within a group. This should be
+  a function; e.g. \code{FunctionalityScore}, \code{mean},
+  \code{median}, and so on. Set this to \code{NULL} to
+  preserve the original ordering of the data.}
+
   \item{...}{Optional arguments passed to \code{pheatmap}.}
+}
+\value{
+The plot as a \code{grid} object (\code{grob}). It can be
+redrawn with e.g. \code{grid::grid.draw()}.
 }
 \description{
 This function can be used to visualize the mean probability
