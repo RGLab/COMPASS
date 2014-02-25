@@ -24,6 +24,8 @@
 ##'   (ie, the column name associated with a cytokine; typically not needed)
 ##' @param ... Optional arguments passed to \code{pheatmap}.
 ##' @importFrom scales div_gradient_pal
+##' @return The plot as a \code{grid} object (\code{grob}). It can be redrawn
+##' with e.g. \code{grid::grid.draw()}.
 plot2 <- function(x, y, row_annotation=NULL, 
   remove_unexpressed_categories=TRUE, minimum_dof=1, maximum_dof=Inf, 
   subset, 
@@ -185,6 +187,6 @@ plot2 <- function(x, y, row_annotation=NULL,
     ...
   )
   
-  return (invisible(M[o, , drop=FALSE]))
+  return (invisible(grid.grab()))
   
 }
