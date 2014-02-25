@@ -1,0 +1,86 @@
+\name{GetThresholdedIntensities}
+\alias{GetThresholdedIntensities}
+\title{Extract Thresholded Intensities from a GatingSet}
+\usage{
+GetThresholdedIntensities(gs, node, map)
+}
+\arguments{
+  \item{gs}{A \code{GatingSet} or \code{GatingSetList}.}
+
+  \item{node}{The name, or path, of a single node in a
+  \code{GatingSet} / \code{GatingSetList}.}
+
+  \item{map}{A \code{list}, mapping node names to markers.}
+}
+\value{
+A \code{list} with two components:
+
+\item{data}{A \code{list} of thresholded intensity
+measures.} \item{counts}{A named vector of total cell
+counts at the node \code{node}.}
+}
+\description{
+This function extracts thresholded intensities for children
+of a node \code{node}, as specified through the \code{map}
+argument.
+}
+\details{
+\code{map} should be an \R \code{list}, mapping node names
+(as specified in the gating hierarchy of the gating set) to
+channel names (as specified in either the \code{desc} or
+\code{name} columns of the parameters of the associated
+\code{flowFrame}s in the \code{GatingSet}).
+}
+\examples{
+if (require(flowWorkspace)) {
+  
+  ## Generate an example GatingSet that could be used with COMPASS
+  ## We then pull out the 'data' and 'counts' components that could
+  ## be used within a COMPASSContainer
+  
+  n <- 10 ## number of samples
+  k <- 4 ## number of markers
+  
+  sid_vec <- paste0("sid_", 1:n) ## sample ids; unique names used to denote samples
+  iid_vec <- rep_len( paste0("iid_", 1:(n/10) ), n ) ## individual ids
+  marker_names <- c("TNFa", "IL2", "IL4", "IL6") 
+  
+  ## Generate n sets of 'flow' data -- a list of matrices, each row
+  ## is a cell, each column is fluorescence intensities on a particular
+  ## channel / marker
+  data <- replicate(n, {
+    nrow <- round(runif(1) * 1E4 + 1000)
+    ncol <- k
+    vals <- rexp( nrow * ncol, runif(1, 1E-5, 1E-3) )
+    output <- matrix(vals, nrow, ncol)
+    colnames(output) <- marker_names
+    return(output)
+  })
+  names(data) <- sid_vec
+  
+  ## Put it into a GatingSet
+  fs <- flowSet( lapply(data, flowFrame) )
+  gs <- GatingSet(fs)
+  
+  ## Make some gates, and apply them
+  invisible(lapply(marker_names, function(marker) {
+    .gate <- setNames( list( c( rexp(1, runif(1, 1E-5, 1E-3)), Inf) ), marker )
+    gate <- rectangleGate(.gate=.gate)
+    add(gs, gate, parent="root", name=paste0(marker, "+"))
+  }))
+  
+  ## Map node names to channel names
+  map=list(
+    "TNFa+"="TNFa",
+    "IL2+"="IL2",
+    "IL4+"="IL4",
+    "IL6+"="IL6"
+  )
+  
+  ## Pull out the data as a COMPASS-friendly dataset
+  output <- GetThresholdedIntensities(gs, "root", map)
+  str(output)
+  
+}
+}
+
