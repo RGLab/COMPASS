@@ -252,7 +252,7 @@ draw_rownames = function(rown, ...){
   head(colors)
   
   
-  pal<-rgb2hsv(colors$A,0,colors$B)
+  pal<-rgb2hsv(colors$A,colors$B,0)
   pal["v",]<-1
   .scale<-function(x){x/max(x)}
   cols<-hsv(pal[1,],colors$saturation,pal[3,],alpha=0.2)
@@ -379,7 +379,13 @@ vplayout = function(x, y){
 
 heatmap_motor = function(matrix, border_color, cellwidth, cellheight, tree_col, tree_row, treeheight_col, treeheight_row, filename, width, height, breaks, color, legend, annotation, annotation_colors, annotation_legend, main, fontsize, fontsize_row, fontsize_col, fmat, fontsize_number, row_annotation, row_annotation_legend, row_annotation_colors, cytokine_annotation, headerplot,polar=polar,...){
   grid.newpage()
-  
+  if(length(list(...))>0){
+    if(exists("trtLabels",list(...))){
+      trtLabels<-get("trtLabels",list(...))
+    }
+  }else{
+    trtLabels<-c("Condition X", "Condition Y")
+  }
   
   # Set layout
   mindim = lo(coln = colnames(matrix), rown = rownames(matrix), nrow = nrow(matrix), ncol = ncol(matrix), cellwidth = cellwidth, cellheight = cellheight, treeheight_col = treeheight_col, treeheight_row = treeheight_row, legend = legend, annotation = annotation, annotation_colors = annotation_colors, annotation_legend = annotation_legend, main = main, fontsize = fontsize, fontsize_row = fontsize_row, fontsize_col = fontsize_col, row_annotation = row_annotation, row_annotation_legend = row_annotation_legend, row_annotation_colors = row_annotation_colors, cytokine_annotation = cytokine_annotation,headerplot=headerplot,polar=polar,...)
@@ -546,7 +552,7 @@ heatmap_motor = function(matrix, border_color, cellwidth, cellheight, tree_col, 
     if(!(polar)){
       draw_legend(color, breaks, legend, fontsize = fontsize, ...)
     }else{
-      draw_polar_legend(fontsize=fontsize)
+      draw_polar_legend(fontsize=fontsize,treatmentLabel=trtLabels)
     }
     upViewport()
   }
@@ -554,7 +560,7 @@ heatmap_motor = function(matrix, border_color, cellwidth, cellheight, tree_col, 
   
 }
 #Todo pass stim condition labels
-draw_polar_legend <- function(fontsize=NA,treatmentLabel=c("Condition X","Condition Y")){
+draw_polar_legend <- function(fontsize=NA,treatmentLabel=trtLabels){
   #if we could get the size of the window or root viewport, we could set the size of the legend so
   #that it is scaled to look like a circle in any aspect ratio.
   height =unit(0.25,"npc")

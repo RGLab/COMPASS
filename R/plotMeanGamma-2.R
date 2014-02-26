@@ -26,6 +26,7 @@
 ##' @importFrom scales div_gradient_pal
 ##' @return The plot as a \code{grid} object (\code{grob}). It can be redrawn
 ##' with e.g. \code{grid::grid.draw()}.
+##' @export
 plot2 <- function(x, y, row_annotation=NULL, 
   remove_unexpressed_categories=TRUE, minimum_dof=1, maximum_dof=Inf, 
   subset, 
@@ -166,7 +167,7 @@ plot2 <- function(x, y, row_annotation=NULL,
     x/max(x)
   }
   
-  palette<-rgb2hsv(as.vector(as.matrix(M_x)),0,as.vector(as.matrix(M_y)))
+  palette<-rgb2hsv(as.vector(as.matrix(M_x)),as.vector(as.matrix(M_y)),0)
   palette["s",]<-.scale(asinh(1*as.vector(as.matrix(M_x))+as.vector(as.matrix(M_y))))
   palette["v",]<-1
   palette<-hsv(h=palette["h",],s=palette["s",],v=palette["v",])
