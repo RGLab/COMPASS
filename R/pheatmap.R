@@ -251,8 +251,11 @@ draw_rownames = function(rown, ...){
   colors<-ddply(saturation,.(theta),function(x)within(x,cbind(A<-theta/pi,B<-1-A)))
   head(colors)
   
+  cr<-colorRamp(RColorBrewer::brewer.pal(name="RdYlBu",n=5),interpolate="linear")
+  pal<-log1p(colors$A)-log1p(colors$B)
+  pal<-(pal+max(pal))/diff(range(pal))
   
-  pal<-rgb2hsv(colors$A,colors$B,0)
+  pal<-rgb2hsv(t(cr(pal)))
   pal["v",]<-1
   .scale<-function(x){x/max(x)}
   cols<-hsv(pal[1,],colors$saturation,pal[3,],alpha=0.2)
@@ -757,8 +760,8 @@ generate_row_annotation_colours = function(annotation, annotation_colors, drop){
         factor_colors = factor_colors[-ind]
       }
       else{
-        r = runif(1)
-        annotation_colors[[colnames(annotation)[i]]] = hsv(r, c(0.1, 1), 1)
+        #r = runif(1)
+        annotation_colors[[colnames(annotation)[i]]] = c("#EEEEEE","#111111")
       }
     }
   }
