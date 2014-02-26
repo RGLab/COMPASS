@@ -167,7 +167,15 @@ plot2 <- function(x, y, row_annotation=NULL,
     x/max(x)
   }
   
-  palette<-rgb2hsv(as.vector(as.matrix(M_x)),as.vector(as.matrix(M_y)),0)
+  cr<-colorRamp(RColorBrewer::brewer.pal(name="RdYlBu",n=5),interpolate="linear")
+  #rgbvals<-apply(matrix(c(1,2,3,4,5,6),ncol=2,byrow=TRUE),1,function(x)as.numeric(as.hexmode(substr(as.hexmode(gsub("#","",RColorBrewer::brewer.pal(name="RdYlBu",n=3))),x[1],x[2]))))
+  #rgbvals<-prop.table(rgbvals,2)
+  
+  #outer(rgbvals[,1],as.vector(as.matrix(M_x)))
+  pal<-log1p(as.vector(as.matrix(M_x)))-log1p(as.vector(as.matrix(M_y)))
+  pal<-(pal+max(pal))/diff(range(pal))
+  
+  palette<-rgb2hsv(t(cr(pal)))
   palette["s",]<-.scale(asinh(1*as.vector(as.matrix(M_x))+as.vector(as.matrix(M_y))))
   palette["v",]<-1
   palette<-hsv(h=palette["h",],s=palette["s",],v=palette["v",])
