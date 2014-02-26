@@ -21,10 +21,6 @@
           <h1 id="project_title">COMPASS</h1>
           <h2 id="project_tagline">Combinatorial Polyfunctionality Analysis of Single Cells</h2>
 
-            <section id="downloads">
-              <a class="zip_download_link" href="https://github.com/RGLab/COMPASS/zipball/master">Download this project as a .zip file</a>
-              <a class="tar_download_link" href="https://github.com/RGLab/COMPASS/tarball/master">Download this project as a tar.gz file</a>
-            </section>
         </header>
     </div>
 
@@ -32,14 +28,20 @@
     <div id="main_content_wrap" class="outer">
       <section id="main_content" class="inner">
         <h1>
-<a name="compass" class="anchor" href="#compass"><span class="octicon octicon-link"></span></a>COMPASS</h1>
-
-<p>An R package for the analysis of polyfunctional cells in single-cell assays.</p>
-
 <h2>
 <a name="introduction" class="anchor" href="#introduction"><span class="octicon octicon-link"></span></a>Introduction</h2>
 
-<p>Rapid advances in flow cytometry and other single-cell technologies have enabled high-dimensional, high-throughput measurements of individual cells. Using these single-cell assays, numerous questions about the heterogeneity of single-cell populations can now be addressed. Unfortunately, there is a lack of computational tools to take full advantage of these new technologies. In this paper, we present COMPASS, a computational framework that enables unbiased polyfunctionality analysis of antigen-specific T-cell subsets. COMPASS uses a Bayesian hierarchical framework to model all observed functional cell-subsets simultaneously, and selects the subsets most likely to exhibit an antigen-specific response, while regularizing the small cell counts that often arise in multi-parameter space. The cell-subset responses are quantified by a set of posterior probabilities, which can be used to profile a subject’s immune response such as to infection or vaccination. We introduce two novel summary statistics that can be correlated directly with a clinical outcome, and describe the quality of an individual’s functional or polyfunctional response across cell-subsets. Using three clinical datasets of cytokine production after vaccination, or in people infected with latent tuberculosis, we demonstrate how COMPASS improves the characterization of antigen-specific T-cells and unveils findings missed by traditional analyses. In particular, COMPASS identifies novel, previously unknown, cellular correlates of protection in the RV144 HIV efficacy trial. COMPASS is available as open-source software that provides an implementation of the model described here as well as a web-based visualization framework for viewing results.</p>
+<p>
+
+  Rapid advances in flow cytometry and other single-cell technologies have enabled high-dimensional, high-throughput measurements of individual cells. Using these single-cell assays, numerous questions about the heterogeneity of single-cell populations can now be addressed. <code>COMPASS</code> provides a computational framework that enables unbiased polyfunctionality analysis of antigen-specific T-cell subsets. 
+
+</p>
+
+<p>
+
+  <code>COMPASS</code> uses a Bayesian hierarchical framework to model all observed functional cell-subsets simultaneously, and selects the subsets most likely to exhibit an antigen-specific response, while regularizing the small cell counts that often arise in multi-parameter space. The cell-subset responses are quantified by a set of posterior probabilities, which can be used to profile a subject’s immune response such as to infection or vaccination. 
+
+</p>
 
 <h2>
 <a name="shiny-application" class="anchor" href="#shiny-application"><span class="octicon octicon-link"></span></a>Shiny Application</h2>
@@ -49,7 +51,7 @@
 <p>Examples of the <code>COMPASS</code> Shiny application are available here:</p>
 
 <ul>
-<li><a href="HVTN078">http://turn.fhcrc.org/HVTN078/</a></li>
+<li><a href="http://turn.fhcrc.org/HVTN078/">HIV Vaccine Trials Network 078</a></li>
 </ul>
       </section>
     </div>
