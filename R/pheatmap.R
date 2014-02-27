@@ -137,7 +137,7 @@ lo = function(rown, coln, nrow, ncol, cellheight = NA, cellwidth = NA, treeheigh
   
   
   # Produce layout()
-  pushViewport(viewport(layout = 
+  pushViewport(viewport(name="layout", layout = 
       grid.layout(nrow = 6, ncol = 6, 
         widths = unit.c(treeheight_row, matwidth, row_annotation_width, rown_width, legend_width, annot_legend_width), 
         heights = unit.c(main_height, treeheight_col, annot_height, matheight, coln_height, cytokine_height)), gp = do.call(gpar, gp)))
@@ -146,7 +146,7 @@ lo = function(rown, coln, nrow, ncol, cellheight = NA, cellwidth = NA, treeheigh
   pushViewport(vplayout(4, 2))
   cellwidth = convertWidth(unit(0:1, "npc"), "bigpts", valueOnly = TRUE)[2] / ncol
   cellheight = convertHeight(unit(0:1, "npc"), "bigpts", valueOnly = TRUE)[2] / nrow
-  upViewport()
+  popViewport()
   
   # Return minimal cell dimension in bigpts to decide if borders are drawn
   mindim = min(cellwidth, cellheight) 
@@ -184,18 +184,21 @@ draw_dendrogram = function(hc, horizontal = TRUE){
   
   else{
     gr = rectGrob()
-    pushViewport(viewport(height = unit(1, "grobwidth", gr), width = unit(1, "grobheight", gr), angle = 90))
+    browser()
+    pushViewport(viewport(name="left_dendrogram",
+      height = unit(1, "grobwidth", gr), width = unit(1, "grobheight", gr), angle = 90))
     dist[, 1] = 1 - dist[, 1] 
     for(i in 1:nrow(m)){
       draw_connection(dist[m[i, 1], 1], dist[m[i, 2], 1], dist[m[i, 1], 2], dist[m[i, 2], 2], h[i])
     }
-    upViewport()
+    popViewport()
   }
 }
 
 draw_headerplot = function(order,data,ylabel){
   gr<-rectGrob(y=0.4,height=0.9)
-  pushViewport(viewport(height = unit(1, "grobheight", gr), width = unit(1, "grobwidth", gr)))
+  pushViewport(viewport(name="headerplot",
+    height = unit(1, "grobheight", gr), width = unit(1, "grobwidth", gr)))
   pushViewport(dataViewport(1:length(data),data,extension=c(1/length(data)/2,0.05)))
   grid.rect()
   grid.points(x=1:length(data),y=data[order],gp=gpar(cex=0.25,col="red",lwd=3))
@@ -265,13 +268,13 @@ draw_rownames = function(rown, ...){
 
 draw_legend = function(color, breaks, legend, ...){
   height = min(unit(1, "npc"), unit(150, "bigpts"))
-  pushViewport(viewport(x = 0, y = unit(1, "npc"), just = c(0, 1), height = height))
+  pushViewport(viewport(name="legend", x = 0, y = unit(1, "npc"), just = c(0, 1), height = height))
   legend_pos = (legend - min(breaks)) / (max(breaks) - min(breaks))
   breaks = (breaks - min(breaks)) / (max(breaks) - min(breaks))
   h = breaks[-1] - breaks[-length(breaks)]
   grid.rect(x = 0, y = breaks[-length(breaks)], width = unit(10, "bigpts"), height = h, hjust = 0, vjust = 0, gp = gpar(fill = color, col = "#FFFFFF00"))
   grid.text(names(legend), x = unit(12, "bigpts"), y = legend_pos, hjust = 0, gp = gpar(...))
-  upViewport()
+  popViewport()
 }
 
 ## Convert the cytokine annotations matrix of 0s and 1s to a matrix
@@ -376,8 +379,8 @@ draw_main = function(text, ...){
   grid.text(text, gp = gpar(fontface = "bold", ...))
 }
 
-vplayout = function(x, y){
-  return(viewport(layout.pos.row = x, layout.pos.col = y))
+vplayout = function(x, y, ...){
+  return(viewport(layout.pos.row = x, layout.pos.col = y, ...))
 }
 
 heatmap_motor = function(matrix, border_color, cellwidth, cellheight, tree_col, tree_row, treeheight_col, treeheight_row, filename, width, height, breaks, color, legend, annotation, annotation_colors, annotation_legend, main, fontsize, fontsize_row, fontsize_col, fmat, fontsize_number, row_annotation, row_annotation_legend, row_annotation_colors, cytokine_annotation, headerplot,polar=polar,...){
@@ -422,7 +425,7 @@ heatmap_motor = function(matrix, border_color, cellwidth, cellheight, tree_col, 
     f(filename, height = height, width = width)
     heatmap_motor(matrix, cellwidth = cellwidth, cellheight = cellheight, border_color = border_color, tree_col = tree_col, tree_row = tree_row, treeheight_col = treeheight_col, treeheight_row = treeheight_row, breaks = breaks, color = color, legend = legend, annotation = annotation, annotation_colors = annotation_colors, annotation_legend = annotation_legend, filename = NA, main = main, fontsize = fontsize, fontsize_row = fontsize_row, fontsize_col = fontsize_col, fmat = fmat, fontsize_number =  fontsize_number, row_annotation = row_annotation, row_annotation_legend = row_annotation_legend, cytokine_annotation = cytokine_annotation, ...)
     dev.off()
-    upViewport()
+    popViewport()
     return()
   }
   
@@ -431,108 +434,108 @@ heatmap_motor = function(matrix, border_color, cellwidth, cellheight, tree_col, 
   
   # Draw title
   if(!is.na(main)){
-    pushViewport(vplayout(1, 2))
+    pushViewport(vplayout(1, 2, name="main"))
     draw_main(main, fontsize = 1.3 * fontsize, ...)
-    upViewport()
+    popViewport()
   }
   
   # Draw tree for the columns
   if(!is.na(tree_col[[1]][1]) & treeheight_col != 0){
-    pushViewport(vplayout(2, 2))
+    pushViewport(vplayout(2, 2, name="dendrogram"))
     draw_dendrogram(tree_col, horizontal = TRUE)
-    upViewport()
+    popViewport()
   }
   
   #draw headerplot
   if(!is.na(headerplot) & treeheight_col != 0){
-    pushViewport(vplayout(2 , 2))
+    pushViewport(vplayout(2 , 2, name="headerplot"))
     draw_headerplot(headerplot$order,headerplot$data,headerplot$ylabel)
-    upViewport()
+    popViewport()
   }
   
   # Draw tree for the rows
   if(!is.na(tree_row[[1]][1]) & treeheight_row != 0){
-    pushViewport(vplayout(4, 1))
+    pushViewport(vplayout(4, 1, name="tree_row"))
     draw_dendrogram(tree_row, horizontal = FALSE)
-    upViewport()
+    popViewport()
   }
   
   # Draw matrix
-  pushViewport(vplayout(4, 2))
+  pushViewport(vplayout(4, 2, name="matrix"))
   draw_matrix(matrix, border_color, fmat, fontsize_number)
-  upViewport()
+  popViewport()
   
   # Draw colnames
   if(length(colnames(matrix)) != 0){
-    pushViewport(vplayout(5, 2))
+    pushViewport(vplayout(5, 2, name="colnames"))
     pars = list(colnames(matrix), fontsize = fontsize_col, ...)
     do.call(draw_colnames, pars)
-    upViewport()
+    popViewport()
   }
   
   # Draw rownames
   if(length(rownames(matrix)) != 0){
-    pushViewport(vplayout(4, 4)) 
+    pushViewport(vplayout(4, 4, name="rownames")) 
     pars = list(rownames(matrix), fontsize = fontsize_row, ...)
     do.call(draw_rownames, pars)
-    upViewport()
+    popViewport()
   }
   
   # Draw annotation tracks
   if(!is.na(annotation[[1]][1])){
-    pushViewport(vplayout(3, 2))
+    pushViewport(vplayout(3, 2, name="annotation_track"))
     converted_annotation = convert_annotations(annotation, annotation_colors)
     draw_annotations(converted_annotation, border_color)
-    upViewport()
+    popViewport()
   }
   
   #Draw row annotation tracks
   if(!is.na(row_annotation[[1]][1])){
-    pushViewport(vplayout(4,3))
+    pushViewport(vplayout(4,3, name="row_annotation"))
     converted_row_annotations = convert_annotations(row_annotation, row_annotation_colors)
     draw_row_annotations(converted_row_annotations, border_color)
-    upViewport()
+    popViewport()
     #label the rows
-    pushViewport(vplayout(5,3))
+    pushViewport(vplayout(5,3, name="row_labels"))
     pars_row_annotations = list(colnames(converted_row_annotations), fontsize = fontsize_col, ...)
     do.call(draw_colnames, pars_row_annotations)
-    upViewport()
+    popViewport()
   }
   
   #Draw cytokine annotation tracks
   if(!is.na(cytokine_annotation[[1]][1])){
-    pushViewport(vplayout(6,2))
+    pushViewport(vplayout(6,2, name="cytokine_annotation"))
     
     converted_cytokine_annotations = convert_cytokine_annotations(cytokine_annotation)
     draw_annotations(converted_cytokine_annotations, border_color)
-    upViewport()
+    popViewport()
     
     #label the rows
-    pushViewport(vplayout(6,1))
+    pushViewport(vplayout(6,1, name="cytokine_labels"))
     pars_cytokine_annotations = list(rev(colnames(converted_cytokine_annotations)), fontsize = fontsize_col, ...)
     do.call(draw_rownames, pars_cytokine_annotations)
-    upViewport()
+    popViewport()
   }
   
   # Draw annotation legend
   if(!is.na(annotation[[1]][1]) & annotation_legend){
     if(length(rownames(matrix)) != 0){
-      pushViewport(vplayout(4:5, 6)) 
+      pushViewport(vplayout(4:5, 6, name="annotation_legend")) 
     }
     else{
-      pushViewport(vplayout(3:5, 6)) 
+      pushViewport(vplayout(3:5, 6, name="annotation_legend")) 
     }
     draw_annotation_legend(annotation, annotation_colors, border_color, fontsize = fontsize, ...)
-    upViewport()
+    popViewport()
   }
   
   #  Draw row_annotation legend
   if(!is.na(row_annotation[[1]][1]) & row_annotation_legend){
     if(length(rownames(matrix)) != 0){
-      pushViewport(vplayout(4:5, 6)) 
+      pushViewport(vplayout(4:5, 6, name="row_annotation_legend")) 
     }
     else{
-      pushViewport(vplayout(3:5, 6)) 
+      pushViewport(vplayout(3:5, 6, name="row_annotation_legend")) 
     }
     if(!is.na(annotation[[1]][1]) & annotation_legend){
       yoff<-c(sum(unlist(lapply(annotation,function(x)length(unique(x))))),length(annotation))
@@ -540,24 +543,24 @@ heatmap_motor = function(matrix, border_color, cellwidth, cellheight, tree_col, 
       yoff<-c(0,0)
     }
     draw_annotation_legend(row_annotation, row_annotation_colors, border_color, fontsize = fontsize, yoff=yoff, ...)
-    upViewport()
+    popViewport()
   }
   
   # Draw legend
   if(!is.na(legend[1])){
     length(colnames(matrix))
     if(length(rownames(matrix)) != 0){
-      pushViewport(vplayout(4:5, 5)) 
+      pushViewport(vplayout(4:5, 5, name="legend")) 
     }
     else{
-      pushViewport(vplayout(3:5, 5)) 
+      pushViewport(vplayout(3:5, 5, name="legend")) 
     }
     if(!(polar)){
       draw_legend(color, breaks, legend, fontsize = fontsize, ...)
     }else{
       draw_polar_legend(fontsize=fontsize,treatmentLabel=trtLabels)
     }
-    upViewport()
+    popViewport()
   }
   
   
@@ -568,7 +571,8 @@ draw_polar_legend <- function(fontsize=NA,treatmentLabel=trtLabels){
   #that it is scaled to look like a circle in any aspect ratio.
   height =unit(0.25,"npc")
   width = unit(1,"npc")
-  pushViewport(viewport(x = unit(0,"npc"), y = unit(0.8, "npc"), just = c(0, 1), width=width,height = height))
+  pushViewport(viewport(name="polar_legend",
+    x = unit(0,"npc"), y = unit(0.8, "npc"), just = c(0, 1), width=width,height = height))
   C=0.45 #center
   R=0.25 #radius
   N=51   #number of points
@@ -610,7 +614,7 @@ draw_polar_legend <- function(fontsize=NA,treatmentLabel=trtLabels){
   tx2$y<-tx2$y-offset-unit(10,"bigpts")
   grid.draw(tx1)
   grid.draw(tx2)
-  upViewport()
+  popViewport()
 }
 
 generate_breaks = function(x, n, center = FALSE){
