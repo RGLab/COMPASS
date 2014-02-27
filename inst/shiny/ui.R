@@ -86,9 +86,10 @@ shinyUI( bootstrapPage(
       ),
       HTML("</select>"),
       
+      h4("Marginalize subsets over..."),
       tags$div( class="overflow-auto",
         checkboxGroupInput("markers_to_marginalize_over",
-          label="Marginalize subsets over...",
+          label="",
           choices=markers
         )
       ),
