@@ -12,8 +12,9 @@
 ##'   by different conditions as defined in the metadata.
 ##' @param subset An \R expression, evaluated within the metadata, used to
 ##'   determine which individuals should be kept.
-##' @param remove_unexpressed_categories Boolean, if \code{TRUE} we remove
-##'   any unexpressed categories.
+##' @param threshold A numeric threshold for filtering under-expressed
+##'   categories. Any categories with mean score < \code{threshold} are
+##'   removed.
 ##' @param minimum_dof The minimum degree of functionality for the categories
 ##'   to be plotted.
 ##' @param maximum_dof The maximum degree of functionality for the categories
@@ -46,7 +47,7 @@
 ##' plot(CR, measure=PosteriorPs(CR))
 ##' @export
 plot.COMPASSResult <- function(x, y, subset, 
-  remove_unexpressed_categories=TRUE, 
+  threshold=0.01,
   minimum_dof=1, 
   maximum_dof=Inf, 
   row_annotation,
@@ -142,13 +143,11 @@ plot.COMPASSResult <- function(x, y, subset,
     stop("No categories left after subsetting for 'minimum_dof', 'maximum_dof'")
   }
   
-  ## remove unexpressed categories
-  if (remove_unexpressed_categories) {
-    m <- apply(M, 2, sum)
-    keep <- m != 0
-    M <- M[, keep, drop=FALSE]
-    cats <- cats[keep, ]
-  }
+  ## remove under-expressed categories
+  m <- apply(M, 2, mean)
+  keep <- m > threshold
+  M <- M[, keep, drop=FALSE]
+  cats <- cats[keep, ]
   
   colnames(M) <- rownames(cats)
   
