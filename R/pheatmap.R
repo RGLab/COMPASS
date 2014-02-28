@@ -184,7 +184,6 @@ draw_dendrogram = function(hc, horizontal = TRUE){
   
   else{
     gr = rectGrob()
-    browser()
     pushViewport(viewport(name="left_dendrogram",
       height = unit(1, "grobwidth", gr), width = unit(1, "grobheight", gr), angle = 90))
     dist[, 1] = 1 - dist[, 1] 
