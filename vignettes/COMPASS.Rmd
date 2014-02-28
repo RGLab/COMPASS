@@ -154,8 +154,8 @@ post <- Posterior(fit)
 plot(fit)
 
 ## Visualize the posterior difference, log difference with a heatmap
-plot(fit, measure=PosteriorDiff(fit))
-plot(fit, measure=PosteriorLogDiff(fit))
+plot(fit, measure=PosteriorDiff(fit), threshold=0)
+plot(fit, measure=PosteriorLogDiff(fit), threshold=0)
 ```
 
 `COMPASS` also packages a Shiny application for interactive visualization of
