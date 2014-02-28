@@ -175,10 +175,15 @@ plot2 <- function(x, y, row_annotation=NULL,
   pal<-log1p(as.vector(as.matrix(M_x)))-log1p(as.vector(as.matrix(M_y)))
   pal<-(pal+max(pal))/diff(range(pal))
   
-  palette<-rgb2hsv(t(cr(pal)))
-  palette["s",]<-.scale(asinh(1*as.vector(as.matrix(M_x))+as.vector(as.matrix(M_y))))
-  palette["v",]<-1
-  palette<-hsv(h=palette["h",],s=palette["s",],v=palette["v",])
+  palette<-t(rgb2hsv(t(cr(pal))))
+  #palette<-cr(pal)
+#  palette["s",]<-.scale(asinh(1*as.vector(as.matrix(M_x))+as.vector(as.matrix(M_y))))
+  alpha<-sqrt(as.vector(as.matrix(M_x))^2+as.vector(as.matrix(M_y))^2)/sqrt(2)
+
+  #palette["v",]<-1
+  palette<-hsv(h=palette[,1],s=palette[,2],v=palette[,3],alpha=alpha)
+  #palette<-rgb(palette,alpha=alpha*255,maxColor=255)
+
   m<-matrix(palette,nrow=nrow(M_x),ncol=ncol(M_x))
   m<-m[,keep]
   colnames(m)<-colnames(M)

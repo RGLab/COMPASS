@@ -255,10 +255,17 @@ draw_rownames = function(rown, ...){
   pal<-log1p(colors$A)-log1p(colors$B)
   pal<-(pal+max(pal))/diff(range(pal))
   
-  pal<-rgb2hsv(t(cr(pal)))
-  pal["v",]<-1
+  #pal<-rgb2hsv(t(cr(pal)))
+  #pal<-rgb2hsv(t(cr(pal))/255)
+  pal<-cr(pal)
+  #pal["v",]<-1
   .scale<-function(x){x/max(x)}
-  cols<-hsv(pal[1,],colors$saturation,pal[3,],alpha=0.2)
+  #cols<-hsv(pal[1,],colors$saturation,pal[3,],alpha=0.2)
+  sat<-colors$saturation
+  sat<-sat/max(sat)
+  cols<-rgb(pal,alpha=(sat*255),maxColorValue=255)
+  HSV<-t(rgb2hsv(pal[,1],pal[,2],pal[,3],maxColorValue=255))
+  cols<-hsv((HSV[,1]),(HSV[,2]),(HSV[,3]),alpha=(sat)^4)
   # plot(cart.grid,col=cols,pch=20,cex=4)
   return(list(colors=cols,position=cart.grid))
 }
