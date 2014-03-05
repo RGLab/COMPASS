@@ -70,8 +70,8 @@ shinyUI( bootstrapPage(
       selectInput("phenotype", label="Phenotype", choices=list(
         `Posterior Probability of Expression`="MeanGamma",
         `Log Fold Change`="LogFoldChange",
-        `COMPASS-Estimated ps - pu`="ModelDiff",
-        `COMPASS-Estimated log(ps) - log(pu)`="ModelLogDiff"
+        `COMPASS Estimated ps - pu`="ModelDiff",
+        `COMPASS Estimated log(ps) - log(pu)`="ModelLogDiff"
       )),
       
       ## multiselect requires the attribute 'multiple' to be set; can't set
@@ -130,7 +130,7 @@ shinyUI( bootstrapPage(
         tags$div( style="width: 33%; float: left;",
           selectInput("facet1",
             label="Facet 1",
-            choices=c("Original Ordering", facet_vars)
+            choices=c("None", facet_vars)
           )
         ),
         
@@ -241,7 +241,7 @@ shinyUI( bootstrapPage(
           
           tags$div( style="float: left; display: inline-block;", 
             selectInput("boxplot_by_marker_orientation", 
-              label="Boxplot Orientation",
+              label="Orientation",
               choices=c("Vertical", "Horizontal")
             )
           ),
