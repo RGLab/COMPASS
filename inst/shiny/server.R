@@ -13,8 +13,15 @@ library(RColorBrewer)
 library(COMPASS)
 
 DATA <- readRDS("data/data.rds")
-..sid.. <- DATA$COMPASS$data$sample_id
-..iid.. <- DATA$COMPASS$data$individual_id
+..sid..  <- DATA$COMPASS$data$sample_id
+..iid..  <- DATA$COMPASS$data$individual_id
+
+trt <- DATA$COMPASS$fit$call$treatment
+if (is.language(trt)) {
+  ..stid.. <- as.character(trt[[2]])
+} else {
+  ..stid.. <- as.character(trt)
+}
 
 ## read in the data
 ## FIXME: only allocate one reference for the data
@@ -442,12 +449,13 @@ shinyServer( function(input, output, session) {
         }
       }
       
-      if (facet1 == "Original Ordering") facet1 <- NULL
+      if (facet1 == "None") facet1 <- NULL
       if (facet2 == "None") facet2 <- NULL
       if (facet3 == "None") facet3 <- NULL
       
       color <- heatmap_color(phenotype)
       breaks <- heatmap_breaks(m, color, phenotype)
+      order_fun <- FunctionalityScore
       
       if (any( !is.null( c(facet1, facet2, facet3) ) )) {
         
@@ -460,6 +468,25 @@ shinyServer( function(input, output, session) {
         
         row_order <<- do.call(order, row_annot[ c(facet1, facet2, facet3) ])
         
+        ## Reorder
+        grouping <- as.integer( factor( apply( row_annot, 1, paste ) ) )
+        groups <- unique(grouping)
+        for (i in seq_along(groups)) {
+          group <- groups[i]
+          ind <- which(group == grouping)
+          score <- order_fun(m[ind, , drop=FALSE])
+          ord <- ind[ order(score, decreasing=TRUE) ]
+          
+          m[ind, ] <- m[ord, ]
+          
+          rownames(m)[ind] <- rownames(m)[ord]
+          rownames(row_annot)[ind] <- rownames(row_annot)[ord]
+          
+        }
+        
+#         o <- do.call(order, as.list(row_annot)
+#         m <- m[o, , drop=FALSE]
+        
         pheatmap(m[row_order, col_order, drop=FALSE], 
           color=color,
           breaks=breaks,
@@ -469,11 +496,25 @@ shinyServer( function(input, output, session) {
           show_colnames=FALSE,
           cytokine_annotation=annot[col_order, , drop=FALSE],
           row_annotation=row_annot[row_order, , drop=FALSE],
-          main=paste(phenoToLabel(phenotype), "by Sample"),
+          main=paste(phenoToLabel(phenotype), "by Individual"),
           order_by_max_functionality=FALSE
         )
         
       } else {
+        
+        grouping <- rep(1, nrow(m))
+        groups <- unique(grouping)
+        for (i in seq_along(groups)) {
+          group <- groups[i]
+          ind <- which(group == grouping)
+          score <- order_fun(m[ind, , drop=FALSE])
+          ord <- ind[ order(score, decreasing=TRUE) ]
+          
+          m[ind, ] <- m[ord, ]
+          
+          rownames(m)[ind] <- rownames(m)[ord]
+          
+        }
         
         pheatmap(m[, col_order, drop=FALSE], 
           color=color,
@@ -483,7 +524,7 @@ shinyServer( function(input, output, session) {
           show_rownames=FALSE,
           show_colnames=FALSE,
           cytokine_annotation=annot[col_order, , drop=FALSE],
-          main=paste(phenoToLabel(phenotype), "by Sample"),
+          main=paste(phenoToLabel(phenotype), "by Individual"),
           order_by_max_functionality=FALSE
         )
         
@@ -497,11 +538,8 @@ shinyServer( function(input, output, session) {
   output$linechart <- renderPlot({
     
     #renderOnUpdateButtonPress({
-    
-    markers <- getMarkers()
-    if (is.null(markers)) {
-      markers <- orig_markers
-    }
+    #markers <- getMarkers()
+    markers <- orig_markers
     marker_filter <- getMarkerFilter()
     marker_dof <- getMarkerOrder()
     phenotype <- getPhenotype()
@@ -585,27 +623,32 @@ shinyServer( function(input, output, session) {
     popViewport()
     
     ## push the cytokine annotations
-    border_color <- "grey"
-    draw_annotations <- function(d_sub, 
-      palette=brewer.pal( length(orig_markers), "Paired" ),
-      border_color=NA) {
-      palette <- c("white", palette)
-      n <- length(orig_markers)
-      m <- nrow(d_sub)
-      x <- (1:m)/m - 1/2/m
-      y <- ((1:n)-0.5)/n
+    converted_annotations <-
+      COMPASS:::convert_cytokine_annotations( annot[col_order, , drop=FALSE] )
+    border_color <- "white"
+    
+    draw_annotations = function(converted_annotations) {
+      n = ncol(converted_annotations)
+      m = nrow(converted_annotations)
+      x = (1:m)/m - 1/2/m
+      y = (1:n)/n - 1/2/n
       for (i in 1:m) {
-        tmp <- unlist( d_sub[i, other_markers, with=FALSE] )
-        tmp <- tmp * sum(tmp)
-        tmp <- tmp + 1
-        fill <- palette[tmp]
-        if (!length(fill)) fill <- rep("black", n)
-        grid.rect( x=x[i], y=y, width=1/m, height=1/(n+1), gp=gpar(fill=fill, col=border_color))
+        grid.rect(
+          x = x[i], 
+          y,
+          width = 1/m,
+          height = 1/n,
+          gp = gpar(
+            fill = converted_annotations[i, ],
+            col = border_color
+          )
+        )
       }
     }
     
+    
     pushViewport( viewport(layout.pos.row=5, layout.pos.col=2) )
-    draw_annotations( d_sub )
+    draw_annotations( converted_annotations )
     popViewport()
     
     ## push the cytokine annotation labels
@@ -636,7 +679,7 @@ shinyServer( function(input, output, session) {
     
     ## fill in the annotations
     
-    #     if( facet1 != "Original Ordering" ) {
+    #     if( facet1 != "None" ) {
     #       p <- p + aes_string(x="Marker", y=phenotype, group=..sid.., color=facet1)
     #       if( facet2 != "None" ) {
     #         p <- p + facet_wrap(facet2)
@@ -735,7 +778,7 @@ shinyServer( function(input, output, session) {
       ylab("Proportion of Cells") +
       ggtitle(paste("Degree of Functionality\nIndividual:", individual))
     
-    if( facet1 != "Original Ordering" ) {
+    if( facet1 != "None" ) {
       if( facet2 == "None" ) {
         p <- p + 
           geom_bar( aes_string(fill=facet1), stat="identity", position="dodge" )
@@ -787,7 +830,7 @@ shinyServer( function(input, output, session) {
     boxplot_upper_limit <- getBoxplotUpperLimit()
     plot_type <- getPlotType()
     
-    if( facet1 == "Original Ordering" ) {
+    if( facet1 == "None" ) {
       plot( 1 ~ 1, type='n', axes=FALSE, frame.plot=FALSE, ann=FALSE)
       text( x=1, y=1, labels="Select a Facet to view Boxplots of Proportions by Marker")
       return(NULL)
@@ -896,7 +939,7 @@ shinyServer( function(input, output, session) {
       ## construct 'by' from the included facets
       by <- "Marker"
       
-      if (facet1 != "Original Ordering") {
+      if (facet1 != "None") {
         by <- paste(by, facet1, sep=",")
       }
       
@@ -956,7 +999,7 @@ shinyServer( function(input, output, session) {
   #     facet1 <- getFacet1()
   #     facet2 <- getFacet2()
   #     
-  #     if (facet1 != "Original Ordering") {
+  #     if (facet1 != "None") {
   #       
   #       if (facet2 != "None") {
   #         
