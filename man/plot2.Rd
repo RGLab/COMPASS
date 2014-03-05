@@ -2,9 +2,9 @@
 \alias{plot2}
 \title{Plot a pair of COMPASSResults}
 \usage{
-plot2(x, y, row_annotation = NULL, remove_unexpressed_categories = TRUE,
-  minimum_dof = 1, maximum_dof = Inf, subset, palette = NA,
-  show_rownames = FALSE, show_colnames = FALSE, ...)
+plot2(x, y, subset, threshold = 0.01, minimum_dof = 1, maximum_dof = Inf,
+  row_annotation = NULL, palette = NA, show_rownames = FALSE,
+  show_colnames = FALSE, ...)
 }
 \arguments{
   \item{x}{An object of class \code{COMPASSResult}.}
@@ -14,8 +14,9 @@ plot2(x, y, row_annotation = NULL, remove_unexpressed_categories = TRUE,
   \item{row_annotation}{A vector of names, pulled from the
   metadata, to be used for row annotation.}
 
-  \item{remove_unexpressed_categories}{Boolean, if
-  \code{TRUE} we remove any unexpressed categories.}
+  \item{threshold}{A numeric threshold for filtering
+  under-expressed categories. Any categories with mean
+  score < \code{threshold} are removed.}
 
   \item{minimum_dof}{The minimum degree of functionality
   for the categories to be plotted.}
