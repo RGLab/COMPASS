@@ -9,8 +9,9 @@
 ##' @param y An object of class \code{COMPASSResult}.
 ##' @param row_annotation A vector of names, pulled from the metadata, to be
 ##'   used for row annotation.
-##' @param remove_unexpressed_categories Boolean, if \code{TRUE} we remove
-##'   any unexpressed categories.
+##' @param threshold A numeric threshold for filtering under-expressed
+##'   categories. Any categories with mean score < \code{threshold} are
+##'   removed.
 ##' @param minimum_dof The minimum degree of functionality for the categories
 ##'   to be plotted.
 ##' @param maximum_dof The maximum degree of functionality for the categories
