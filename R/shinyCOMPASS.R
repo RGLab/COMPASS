@@ -147,12 +147,14 @@ shinyCOMPASS <- function(x, dir=NULL, meta.vars, obfuscate=FALSE) {
   ## Compute the Log Fold Change
   stim <- x$orig$stimulation_id
   d[, LogFoldChange := log2(
-    (Counts+1) / (mean(Counts[ eval(unstimulated, envir=.SD) ]) + 1)
+    mean(Counts[ eval(stimulated, envir=.SD) ] + 1) / mean(Counts[ eval(unstimulated, envir=.SD) ] + 1)
   ), by=c(iid, "Marker")]
   
   ## Compute the difference in proportions
-  d[, PropDiff := Proportion - mean(Proportion[ eval(unstimulated, envir=.SD) ]),
-    by=c(iid, "Marker")]
+  d[, PropDiff :=
+      mean(Proportion[ eval(stimulated, envir=.SD) ]) - mean(Proportion[ eval(unstimulated, envir=.SD) ]),
+      by=c(iid, "Marker")
+  ]
   
   ## Compute the degree (== number of positive markers)
   d[, Degree := apply(.SD, 1, sum), .SDcols=markers]
