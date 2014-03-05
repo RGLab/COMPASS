@@ -3,9 +3,8 @@
 \alias{plot.COMPASSResult}
 \title{Plot a COMPASSResult}
 \usage{
-\method{plot}{COMPASSResult}(x, y, subset,
-  remove_unexpressed_categories = TRUE, minimum_dof = 1,
-  maximum_dof = Inf, row_annotation,
+\method{plot}{COMPASSResult}(x, y, subset, threshold = 0.01,
+  minimum_dof = 1, maximum_dof = Inf, row_annotation,
   palette = colorRampPalette(brewer.pal(10, "Purples"))(20),
   show_rownames = FALSE, show_colnames = FALSE, measure = NULL,
   order_by = FunctionalityScore, ...)
@@ -22,8 +21,9 @@
   metadata, used to determine which individuals should be
   kept.}
 
-  \item{remove_unexpressed_categories}{Boolean, if
-  \code{TRUE} we remove any unexpressed categories.}
+  \item{threshold}{A numeric threshold for filtering
+  under-expressed categories. Any categories with mean
+  score < \code{threshold} are removed.}
 
   \item{minimum_dof}{The minimum degree of functionality
   for the categories to be plotted.}
