@@ -67,8 +67,7 @@ CellCounts <- function(data, combinations) {
   UseMethod("CellCounts")
 }
 
-##' @S3method CellCounts COMPASSContainer
-##' @method CellCounts COMPASSContainer
+##' @export
 CellCounts.COMPASSContainer <- function(data, combinations) {
   data <- data$data
   NextMethod("CellCounts")
@@ -120,8 +119,7 @@ CellCounts.COMPASSContainer <- function(data, combinations) {
   ) )
 }
 
-##' @S3method CellCounts default
-##' @method CellCounts default
+##' @export
 CellCounts.default <- function(data, combinations) {
   
   if (missing(combinations)) {

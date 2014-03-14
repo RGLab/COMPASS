@@ -35,7 +35,7 @@ $( function() {
   
   // multiselect
   $("#markers").multiselect({
-    noneSelectedText: "Subsets included must be positive for...", 
+    noneSelectedText: "Subsets must express...", 
     header: "Select markers",
     selectedText: "# of # markers selected",
     show: ['slide', 200]  
