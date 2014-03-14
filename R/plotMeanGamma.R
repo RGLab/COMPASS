@@ -131,7 +131,7 @@ plot.COMPASSResult <- function(x, y, subset=NULL,
     
     nc <- length(ind)
     M <- x$fit$mean_gamma[, ind, drop=FALSE]
-    colnames(M) <- colnames(x$data$n_s[, ind, drop=FALSE])
+    colnames(M) <- colnames(x$data$n_s)[ind]
     
     cats <- x$fit$categories[ind, , drop=FALSE]
     cats <- data.frame(cats)
@@ -140,7 +140,6 @@ plot.COMPASSResult <- function(x, y, subset=NULL,
       factor(x, levels=c(0, 1))
     }))
     dof <- x$fit$categories[ind, "Counts", drop=FALSE]
-    dof <- dof[ -length(dof) ]
     
   } else {
     
