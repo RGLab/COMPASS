@@ -383,12 +383,27 @@ shinyServer( function(input, output, session) {
       m <- DATA$fit$mean_gamma
       colnames(m) <- colnames(DATA$data$n_s)
       
-      ## Filter of Degree of Functionality
+      ## Filter by Degree of Functionality
       dof_keep <- intersect(
         which(DATA$fit$categories[, "Counts"] >= marker_dof[1]),
         which(DATA$fit$categories[, "Counts"] <= marker_dof[2])
       )
-      m <- m[, dof_keep, drop=FALSE]
+      
+      ## Filter by markers that must be included
+      markers_rex <- gsub("+", "", markers, fixed=TRUE)
+      markers_rex <- paste0("(?<!!)", markers_rex)
+      filter_keep <- Reduce( intersect, lapply(markers_rex, function(x) {
+        grep(x, colnames(DATA$data$n_s), perl=TRUE)
+      }))
+      
+      keep <- intersect(
+        dof_keep,
+        filter_keep
+      )
+      
+      cat( paste(colnames(m)[keep], collapse="\n") )
+      
+      m <- m[, keep, drop=FALSE]
       
       m <- melt(m)
       names(m) <- c(..iid.., "Subset", "Value")
@@ -398,7 +413,7 @@ shinyServer( function(input, output, session) {
         facet1 <- "."
         aes <- aes(x=Value)
       } else {
-        aes <- aes(x=Value, fill=facet1)
+        aes <- aes_string(x="Value", fill=facet1)
       }
       
       p <- ggplot(m, aes) +
