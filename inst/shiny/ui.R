@@ -178,7 +178,9 @@ shinyUI( bootstrapPage(
       HTML("<hr style='margin-top: 0px;' />"),
       
       h4("Experiment Description"),
-      lapply(DATA$description, HTML),
+      lapply(DATA$description, function(x) {
+        HTML(x, "<br />", "<br />")
+      }),
       
       HTML("<hr style='margin-top: 0px;' />"),
       
