@@ -15,8 +15,7 @@ FunctionalityScore <- function(x) {
 }
 
 ##' @rdname FunctionalityScore
-##' @method FunctionalityScore COMPASSResult
-##' @S3method FunctionalityScore COMPASSResult
+##' @export
 FunctionalityScore.COMPASSResult <- function(x) {
   ## we drop the last column as it is the 'NULL' category
   x <- x$fit$mean_gamma[, -ncol(x$fit$mean_gamma)]
@@ -24,8 +23,7 @@ FunctionalityScore.COMPASSResult <- function(x) {
 }
 
 ##' @rdname FunctionalityScore
-##' @method FunctionalityScore default
-##' @S3method FunctionalityScore default
+##' @export
 FunctionalityScore.default <- function(x) {
   return( rowMeans(x) )
 }
@@ -52,8 +50,7 @@ PolyfunctionalityScore <- function(x, degree, normalization) {
 }
 
 ##' @rdname PolyfunctionalityScore
-##' @method PolyfunctionalityScore COMPASSResult
-##' @S3method PolyfunctionalityScore COMPASSResult
+##' @export
 PolyfunctionalityScore.COMPASSResult <- function(x, degree, normalization="all") {
   M <- x$fit$mean_gamma
   if (missing(degree)) {
@@ -81,8 +78,7 @@ PolyfunctionalityScore.COMPASSResult <- function(x, degree, normalization="all")
 }
 
 ##' @rdname PolyfunctionalityScore
-##' @method PolyfunctionalityScore default
-##' @S3method PolyfunctionalityScore default
+##' @export
 PolyfunctionalityScore.default <- function(x, degree, normalization) {
   return( rowMeans(as.matrix(x) * matrix( rep(degree, each=nrow(x)), nrow=nrow(x))) )
 }

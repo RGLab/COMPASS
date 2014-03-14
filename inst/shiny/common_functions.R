@@ -59,8 +59,7 @@ joint <- function(dat, combos, ncol, colnames) {
 ## translates phenotype to label for different plots
 phenoToLabel <- function(x) {
   return( switch(x,
-    `MeanGamma`="Posterior Probability of Expression",
-    `LogFoldChange`="Log Fold Change",
+    `MeanGamma`="Probability of Ag-Specificity",
     x
   ) )
 }

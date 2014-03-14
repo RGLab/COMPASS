@@ -187,8 +187,6 @@ COMPASSContainer <- function(data, counts, meta,
 ##' 
 ##' @param x An object of class \code{COMPASSContainer}.
 ##' @param ... Optional arguments passed to \code{cat}.
-##' @method print COMPASSContainer
-##' @S3method print COMPASSContainer
 ##' @export
 ##' @examples
 ##' print(CC)
@@ -204,8 +202,6 @@ print.COMPASSContainer <- function(x, ...) {
 ##' object -- the number of samples, basic information about the metadata,
 ##' and so on.
 ##' 
-##' @method summary COMPASSContainer
-##' @S3method summary COMPASSContainer
 ##' @param object An object of class \code{COMPASSContainer}.
 ##' @param ... Optional arguments; currently ignored.
 ##' @export
