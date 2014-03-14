@@ -383,8 +383,6 @@ shinyServer( function(input, output, session) {
       m <- DATA$fit$mean_gamma
       colnames(m) <- colnames(DATA$data$n_s)
       
-      browser()
-      
       ## Filter of Degree of Functionality
       dof_keep <- intersect(
         which(DATA$fit$categories[, "Counts"] >= marker_dof[1]),
