@@ -20,8 +20,7 @@ melt_ <- function(data, ...) {
 ##'  or string (variable name). If blank, we use all variables not in \code{id.vars}.
 ##' @param variable.name Name of variable used to store measured variable names.
 ##' @param value.name Name of variable used to store values.
-##' @method melt_ data.frame
-##' @S3method melt_ data.frame
+##' @export
 melt_.data.frame <- function(data, id.vars, measure.vars, variable.name="variable", ..., value.name="value") {
   
   "%nin%" <- function(x, y) {
@@ -93,8 +92,7 @@ melt_.data.frame <- function(data, id.vars, measure.vars, variable.name="variabl
 }
 
 ##' @rdname melt_
-##' @method melt_ matrix
-##' @S3method melt_ matrix
+##' @export
 melt_.matrix <- function( data, ... ) {
   return( .Call(C_melt_matrix, data) )
 }

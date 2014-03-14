@@ -12,11 +12,13 @@ splomOutput <- function(outputId) {
 }
 
 DATA <- readRDS("data/data.rds")
-dat <- DATA$cell_data
-dat_post <- DATA$data
-meta <- DATA$meta
-sid <- DATA$COMPASS$data$sample_id
-iid <- DATA$COMPASS$data$individual_id
+data <- DATA$orig$data
+meta <- DATA$data$meta
+sid <- DATA$data$sample_id
+iid <- DATA$data$individual_id
+
+subsets <- colnames(DATA$data$n_s)[ -ncol(DATA$data$n_s) ]
+stimulations <- DATA$fit$call$treatment[[3]]
 
 facet_vars <- names(meta)
 facet_vars <- facet_vars[ !(facet_vars %in% c(sid, iid)) ]
@@ -33,12 +35,12 @@ svgOutput <- function(outputId, width, height) {
 }
 
 ## ensure that each matrix has the same column names
-stopifnot( length( table( table( unlist( lapply( dat, names ) ) ) ) ) != 1 )
+stopifnot( length( table( table( unlist( lapply( data, names ) ) ) ) ) != 1 )
 
 ## markers
-markers <- unname( colnames(dat[[1]]) )
-markers_positive <- paste0( colnames(dat[[1]]), "+" )
-markers_negative <- paste0( colnames(dat[[1]]), "-" )
+markers <- unname( colnames(data[[1]]) )
+markers_positive <- paste0( colnames(data[[1]]), "+" )
+markers_negative <- paste0( colnames(data[[1]]), "-" )
 
 shinyUI( bootstrapPage(
   
@@ -67,17 +69,12 @@ shinyUI( bootstrapPage(
     
     tags$div(
       id='controls-container', 
-      selectInput("phenotype", label="Phenotype", choices=list(
-        `Posterior Probability of Expression`="MeanGamma",
-        `Log Fold Change`="LogFoldChange",
-        `COMPASS Estimated ps - pu`="ModelDiff",
-        `COMPASS Estimated log(ps) - log(pu)`="ModelLogDiff"
-      )),
+      
+      HTML("<h3 style='text-align: center;'>ShinyCOMPASS</h3>"),
+      HTML("<hr style='margin-top: 0; margin-bottom: 20px;' />"),
       
       ## multiselect requires the attribute 'multiple' to be set; can't set
       ## this thru regular shiny HTML functions
-      
-      h3("Marker Filters"),
       
       HTML("<select id='markers' multiple='multiple'>"),
       HTML(
@@ -86,64 +83,43 @@ shinyUI( bootstrapPage(
       ),
       HTML("</select>"),
       
-      h4("Marginalize subsets over..."),
-      tags$div( class="overflow-auto",
-        checkboxGroupInput("markers_to_marginalize_over",
-          label="",
-          choices=markers
-        )
-      ),
-      
-      tags$div( class="overflow-auto",
-        tags$div( style="float: left; width: 50%;",
-          numericInput("marker_filter",
-            label='Remove marker combinations with average phenotype < x',
-            value=0
-          )
-        ),
-        
-        tags$div( style="float: right; width: 50%;",
-          numericInput("max_combos_to_show",
-            label=HTML("Show <span style='font-family: monospace;'>n</span> most highly expressed marker combinations"),
-            value=40
-          )
-        )
-      ),
+      HTML("<br />"),
+      HTML("<br />"),
       
       ## overflow: auto keeps div from collapsing to zero height
       ## see: http://stackoverflow.com/questions/218760/how-do-you-keep-parents-of-floated-elements-from-collapsing
       tags$div(
         tags$div( style="width: 50%; float: left;",
           tags$label( `for`="marker_dof_min", "Minimum Degree of Functionality"),
-          tags$input( id="marker_dof_min", type="number", value="1", min="1", max=ncol( dat[[1]] ), step="1" )
+          tags$input( id="marker_dof_min", type="number", value="1", min="1", max=ncol( data[[1]] ), step="1" )
         ),
         tags$div( style="width: 50%; float: right;", 
           tags$label( `for`="marker_dof_max", "Maximum Degree of Functionality"),
-          tags$input( id="marker_dof_max", type="number", value="6", min="1", max=ncol( dat[[1]] ), step="1" )
+          tags$input( id="marker_dof_max", type="number", value="6", min="1", max=ncol( data[[1]] ), step="1" )
         )
       ),
       
-      h3("Facets"),
+      h3("Conditioning Variables"),
       
       tags$div(
         
         tags$div( style="width: 33%; float: left;",
           selectInput("facet1",
-            label="Facet 1",
+            label="Variable 1",
             choices=c("None", facet_vars)
           )
         ),
         
         tags$div( style="width: 33%; float: left;",
           selectInput("facet2",
-            label="Facet 2",
+            label="Variable 2",
             choices=c("None", facet_vars)
           )
         ),
         
         tags$div( style="width: 33%; float: left;",
           selectInput("facet3",
-            label="Facet 3",
+            label="Variable 3",
             choices=c("None", facet_vars)
           )
         )
@@ -153,7 +129,7 @@ shinyUI( bootstrapPage(
       h3("Variable Filters"),
       
       selectInput("filter1",
-        label="Filter by Qualitative Variable",
+        label="Filter Subjects",
         choices=c("None", facet_vars)
       ),
       
@@ -161,10 +137,15 @@ shinyUI( bootstrapPage(
       ## levels for a factor
       conditionalPanel("input.filter1 != 'None'",
         checkboxGroupInput("filter1_cb", label='', choices='')
-      ),
+      )
       
-      h3("View Controls"),
-      HTML("<br />")
+#       h3("Subset Selection"),
+#       HTML("<select id='subsets' multiple='multiple'>"),
+#       HTML(
+#         paste0("<option value='", paste(subsets, collapse=","), "'> ",
+#           subsets, "</option>")
+#       ),
+#       HTML("</select>")
       
 #       textInput("custom_filter",
 #         label="Custom Filter",
@@ -186,96 +167,62 @@ shinyUI( bootstrapPage(
       zoomButton("zoom-heatmap")
     ),
     
-    gridsterItem(row=1, col=3, sizex=1, sizey=1,
-      tags$div(
-        selectInput("individual",
-          label="Individual",
-          choices=sort(unique(as.character(meta[[iid]])))
-        ),
-        plotOutput("linechart", width=width, height=height-65)
-        #checkboxInput("flip_linechart", "Flip Axes?", value=FALSE)
-      ),
-      zoomButton("zoom-linechart")
-    ),
-    
-    gridsterItem(row=2, col=3, sizex=1, sizey=1,
-      #       selectInput("sample",
-      #         label="Sample",
-      #         choices=unique(as.character(meta$name))
-      #       ),
-      plotOutput("dofplot", width=width, height=height-20),
-      checkboxInput("flip_dofplot", "Flip Axes?", value=FALSE),
-      zoomButton("zoom-dofplot")
-    ),
-    
-    ## NOTE: we set the associated CSS for the DataTable generated
     gridsterItem(row=2, col=1, sizex=2, sizey=1,
-      dataTableOutput("stats"),
-      zoomButton("zoom-stats")
+      plotOutput("polyfunctionality", width=width*2, height=height-20),
+      zoomButton("zoom-polyfunctionality")
     ),
     
-    gridsterItem(row=3, col=1, sizex=3, sizey=2,
+    gridsterItem(row=1, col=3, sizex=1, sizey=2,
+      h3( style="text-align: center;", "Data Summary"),
+      
+      HTML("<hr style='margin-top: 0px;' />"),
+      
+      h4("Experiment Description"),
+      lapply(DATA$description, HTML),
+      
+      HTML("<hr style='margin-top: 0px;' />"),
+      
+      h4("COMPASS Data Description"),
+      p( 
+        strong("Number of Subjects:"),
+        length(unique(DATA$orig$meta[[iid]]))
+      ),
+      p( 
+        strong("Number of Paired Samples:"),
+        nrow(DATA$data$n_s) 
+      ),
+      p(
+        strong("Number of Markers:"),
+        ncol(DATA$orig$data[[1]]) 
+      ),
+      p(
+        strong("Number of Subsets:"),
+        nrow(DATA$data$categories) - 1L,
+        "of",
+        2^ncol(DATA$orig$data[[1]]),
+        "possible subsets"
+      ),
+      p(
+        strong("Stimulations applied:"),
+        paste(stimulations, collapse=", ")
+      )
+    ),
+    
+    gridsterItem(row=3, col=1, sizex=2, sizey=1,
       ## custom plot output -- set style manually
       tags$div( style=paste0(
-        "width: ", width*3, "px; ",
-        "height: ", height*2, "px; "
+        "width: ", width*2, "px; ",
+        "height: ", height, "px; "
       ),
-        tags$div( id="boxplot_by_marker", class="shiny-plot-output",
+        tags$div( id="posterior_plot", class="shiny-plot-output",
           style=paste0(
-            "width: ", width*3, "px; ",
-            "height: ", height*2-30, "px; "
+            "width: ", width*2, "px; ",
+            "height: ", height, "px; "
           )
-        ),
-        tags$div( style="overflow: auto;",
-          
-          tags$div( style="float: left; display: inline-block; margin-right: 20px;",
-            selectInput("plot_type",
-              label="Type of Plot To View",
-              choices=list(
-                `Box Plot`="boxplot",
-                `Histogram`="histogram",
-                `Density Plot`="density"
-              )
-            )
-          ),
-          
-          tags$div( style="float: left; display: inline-block;", 
-            selectInput("boxplot_by_marker_orientation", 
-              label="Orientation",
-              choices=c("Vertical", "Horizontal")
-            )
-          ),
-          tags$div( style="float: left; display: inline-block; margin-left: 20px;",
-            checkboxInput("boxplot_manual_limits", "Set Limits Manually?", FALSE)
-          ),
-          conditionalPanel("input.boxplot_manual_limits === true",
-            tags$div( style="float: left; display: inline-block; margin-left: 20px;",
-              numericInput("boxplot_lower_limit", "Lower Limit", 0)
-            ),
-            tags$div( style="float: left; display: inline-block; margin-left: 20px;",
-              numericInput("boxplot_upper_limit", "Upper Limit", 1)
-            )
-          ),
-          tags$div( style="float: right; display: inline-block; margin-top: 20px;",
-            checkboxInput("boxplot_coord_flip",
-              label="Flip Axes?"
-            )
-          )
-          
         ),
         zoomButton("zoom-boxplot")
       )
     )
-    
-#     gridsterItem(row=3, col=1, sizex=2, sizey=2,
-#       splomOutput("splom"),
-#       zoomButton("zoom-splom")
-#     ),
-#     
-#     gridsterItem(row=7, col=1, sizex=2, sizey=1,
-#       plotOutput("polyfunctionality", height=height),
-#       zoomButton("zoom-polyfunctionality")
-#     )
     
   )
   

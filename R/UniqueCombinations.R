@@ -15,16 +15,14 @@ UniqueCombinations <- function(x, as.matrix) {
 }
 
 ##' @rdname UniqueCombinations
-##' @method UniqueCombinations COMPASSContainer
-##' @S3method UniqueCombinations COMPASSContainer
+##' @export
 UniqueCombinations.COMPASSContainer <- function(x, as.matrix=FALSE) {
   x <- x$data
   NextMethod("UniqueCombinations")
 }
 
 ##' @rdname UniqueCombinations
-##' @method UniqueCombinations default
-##' @S3method UniqueCombinations default
+##' @export
 UniqueCombinations.default <- function(x, as.matrix=FALSE) {
   
   combinations <- unique( as.data.table(

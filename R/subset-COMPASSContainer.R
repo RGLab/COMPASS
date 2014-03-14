@@ -6,8 +6,7 @@
 ##' @param subset A logical expression, evaluated within the metadata,
 ##'   indicating which entries to keep.
 ##' @param ... Optional arguents; currently unused.
-##' @method subset COMPASSContainer
-##' @S3method subset COMPASSContainer
+##' @export
 ##' @examples
 ##' subset(CC, iid == "iid_1")
 subset.COMPASSContainer <- function(x, subset, ...) {

@@ -19,6 +19,12 @@
 ##'   to be plotted.
 ##' @param maximum_dof The maximum degree of functionality for the categories
 ##'   to be plotted.
+##' @param must_express A character vector of markers that should be included
+##'   in each subset plotted. For example, \code{must_express=c("TNFa & IFNg")}
+##'   says we include only subsets that are positive for either
+##'   \code{TNFa} or \code{IFNg}, while \code{must_express=c("TNFa", "IFNg")}
+##'   says we should keep subsets which are positive for either \code{TNFa} or
+##'   \code{IFNg}.
 ##' @param row_annotation A vector of names, pulled from the metadata, to be
 ##'   used for row annotation.
 ##' @param palette The colour palette to be used.
@@ -46,10 +52,11 @@
 ##' ## visualize the proportion of cells belonging to a category
 ##' plot(CR, measure=PosteriorPs(CR))
 ##' @export
-plot.COMPASSResult <- function(x, y, subset, 
+plot.COMPASSResult <- function(x, y, subset=NULL, 
   threshold=0.01,
   minimum_dof=1, 
-  maximum_dof=Inf, 
+  maximum_dof=Inf,
+  must_express=NULL,
   row_annotation,
   #palette=seq_gradient_pal(low="black", high="red")(seq(0, 1, length=20)),
   palette=colorRampPalette(brewer.pal(10,"Purples"))(20),
@@ -96,7 +103,11 @@ plot.COMPASSResult <- function(x, y, subset,
     x$fit$mean_gamma <- measure
   }
   
-  subset_expr <- match.call()$subset
+  if (!is.language(subset)) {
+    subset_expr <- match.call()$subset
+  } else {
+    subset_expr <- subset
+  }
   
   if (missing(row_annotation)) {
     if (missing(y)) {
@@ -105,13 +116,51 @@ plot.COMPASSResult <- function(x, y, subset,
       row_annotation <- y
   }
   
-  nc <- ncol(x$fit$gamma)
-  M <- x$fit$mean_gamma[, -nc]
+  ## Keep only markers that were specified in the 'must_express'
+  ## argument
+  if (!is.null(must_express)) {
+    
+    stopifnot( is.character(must_express) )
+    ind <- Reduce(union, lapply(must_express, function(m) {
+      markers <- unlist( strsplit( m, "[[:space:]]*&[[:space:]]*") )
+      markers_regex <- paste0("(?<!!)", markers)
+      Reduce(intersect, lapply(markers_regex, function(rex) {
+        grep(rex, colnames(x$data$n_s), perl=TRUE)
+      }))
+    }))
+    
+    nc <- length(ind)
+    M <- x$fit$mean_gamma[, ind, drop=FALSE]
+    colnames(M) <- colnames(x$data$n_s[, ind, drop=FALSE])
+    
+    cats <- x$fit$categories[ind, , drop=FALSE]
+    cats <- data.frame(cats)
+    cats <- cats[,1:(ncol(cats)-1)]
+    cats <- as.data.frame( lapply(cats, function(x) {
+      factor(x, levels=c(0, 1))
+    }))
+    dof <- x$fit$categories[ind, "Counts", drop=FALSE]
+    dof <- dof[ -length(dof) ]
+    
+  } else {
+    
+    nc <- ncol(x$fit$gamma)
+    M <- x$fit$mean_gamma[, -nc, drop=FALSE]
+    colnames(M) <- colnames(x$data$n_s)[-nc]
+    
+    cats <- x$fit$categories[-nc,]
+    cats <- data.frame(cats)
+    cats <- cats[,1:(ncol(cats)-1)]
+    cats <- as.data.frame( lapply(cats, function(x) {
+      factor(x, levels=c(0, 1))
+    }))
+    dof <- x$fit$categories[, "Counts"]
+    dof <- dof[ -length(dof) ]
+    
+  }
   
   ## get the dof
-  dof <- x$fit$categories[, "Counts"]
-  dof <- dof[ -length(dof) ]
-
+  
   rowann <- data.frame(.id=rownames(M))
   rowann <- merge(
     rowann,
@@ -125,16 +174,6 @@ plot.COMPASSResult <- function(x, y, subset,
   
   ## make sure M, rowann names match up
   rowann <- rowann[ match(rownames(M), rownames(rowann)), , drop=FALSE ]
- 
-  cats <- x$fit$categories[-nc,]
-  cats <- data.frame(cats)
-  cats <- cats[,1:(ncol(cats)-1)]
-#   cats <- as.data.frame( lapply(cats, function(x) {
-#     swap(x, 0, -1)
-#   }))
-  cats <- as.data.frame( lapply(cats, function(x) {
-    factor(x, levels=c(0, 1))
-  }))
   
   ## keep only those meeting the min, max dof criteria
   M <- M[, dof >= minimum_dof & dof <= maximum_dof, drop=FALSE]
@@ -146,13 +185,18 @@ plot.COMPASSResult <- function(x, y, subset,
   ## remove under-expressed categories
   m <- apply(M, 2, mean)
   keep <- m > threshold
+  gone <- m <= threshold
+  if (length(gone)) {
+    message("The 'threshold' filter has removed ", sum(gone),
+      " categories:\n", paste( colnames(M)[gone], collapse=", "))
+  }
   M <- M[, keep, drop=FALSE]
   cats <- cats[keep, ]
   
   colnames(M) <- rownames(cats)
   
   ## handle subsetting
-  if (!missing(subset)) {
+  if (!is.null(subset)) {
     keep <- x$data$meta[[x$data$individual_id]][eval(subset_expr, envir=x$data$meta)]
     M <- M[ rownames(M) %in% keep, , drop=FALSE]
     rowann <- rowann[ rownames(rowann) %in% keep, , drop=FALSE]
