@@ -211,7 +211,9 @@ plot.COMPASSResult <- function(x, y, subset=NULL,
   ## Reorder within groups based on 'order_by'
   if (!is.null(order_by)) {
     if (!is.null(row_annotation)) {
-      grouping <- as.integer( factor( apply( rowann[row_annotation], 1, paste ) ) )
+      grouping <- as.integer( factor( apply( rowann[row_annotation], 1, function(x) {
+        paste(x, collapse = " ")
+      } ) ) )
     } else {
       grouping <- rep(1, nrow(M))
     }
