@@ -5,8 +5,7 @@
 ##' @param x A \code{COMPASSContainer}.
 ##' @param y A \code{COMPASSContainer}.
 ##' @param ... Optional arguments, currently ignored.
-##' @method merge COMPASSContainer
-##' @S3method merge COMPASSContainer
+##' @export
 ##' @importFrom plyr rbind.fill
 ##' @examples
 ##' ## Chop the example COMPASSContainer into two, then merge it back together

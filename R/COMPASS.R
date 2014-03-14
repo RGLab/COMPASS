@@ -287,7 +287,7 @@ COMPASS <- function(data, treatment, control, subset=NULL,
     ## generate nice names for the combos
     names(combos) <- unname(sapply(combos, function(x) {
       n <- length(x)
-      paste0( sep='', collapse='|', 
+      paste0( sep='', collapse='&', 
         swap(x, c(-n:-1, 1:n), c( rep("!", n), rep("", n) ) ),
         colnames(categories)[-ncol(categories)]
       )

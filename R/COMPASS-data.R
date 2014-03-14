@@ -18,10 +18,21 @@ NULL
 
 ##' Simulated COMPASS fit
 ##' 
-##' This dataset represents the result of fitt the \code{COMPASS} model on the
+##' This dataset represents the result of fitting the \code{COMPASS} model on the
 ##' accompanying dataset \acronym{CC}, as exported by \code{data(COMPASS)}.
 ##' Please see the vignette (\code{vignette("COMPASS")}) for more details on
 ##' how to interact with a \code{COMPASS} fit.
+##' 
+##' The model is fit as follows, using the \code{COMPASSContainer}
+##' \code{\link{CC}}.
+##' 
+##' \preformatted{
+##' CR <- COMPASS(CC,
+##'   treatment=trt == "Treatment",
+##'   control=trt == "Control",
+##'   iterations=1000
+##' )
+##' }
 ##' 
 ##' The dataset is exported as \acronym{CR}, which is a short alias
 ##' for \strong{C}\code{OMPASS}\strong{R}\code{esult}.
