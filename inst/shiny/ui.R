@@ -16,6 +16,9 @@ data <- DATA$orig$data
 meta <- DATA$data$meta
 sid <- DATA$data$sample_id
 iid <- DATA$data$individual_id
+facet1 <- DATA$facet1
+facet2 <- DATA$facet2
+facet3 <- DATA$facet3
 
 subsets <- colnames(DATA$data$n_s)[ -ncol(DATA$data$n_s) ]
 stimulations <- DATA$fit$call$treatment[[3]]
@@ -106,21 +109,24 @@ shinyUI( bootstrapPage(
         tags$div( style="width: 33%; float: left;",
           selectInput("facet1",
             label="Variable 1",
-            choices=c("None", facet_vars)
+            choices=c("None", facet_vars),
+            selected=facet1
           )
         ),
         
         tags$div( style="width: 33%; float: left;",
           selectInput("facet2",
             label="Variable 2",
-            choices=c("None", facet_vars)
+            choices=c("None", facet_vars),
+            selected=facet2
           )
         ),
         
         tags$div( style="width: 33%; float: left;",
           selectInput("facet3",
             label="Variable 3",
-            choices=c("None", facet_vars)
+            choices=c("None", facet_vars),
+            selected=facet3
           )
         )
         

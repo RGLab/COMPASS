@@ -10,10 +10,9 @@
 ##'   for potential facetting in the Shiny app. By default, we take all
 ##'   metadata variables; you may want to limit this if you know certain
 ##'   variables are not of interest.
-##' @param obfuscate Boolean; if \code{TRUE} we replace the patient IDs
-##'   used with a randomly generated set of IDs. This is useful if you wish
-##'   to display the data you are using externally but don't wish to make
-##'   available the IDs used.
+##' @param facet1,facet2,facet3 Default values for facets in the Shiny app.
+##'   Each should be the name of a single vector in the metadata.
+##' @param main A title to give to the heatmap and subset histogram plots.
 ##' @seealso \code{\link{shinyCOMPASSDeps}}, for identifying packages that you
 ##'   need in order to run the Shiny application.
 ##' @export
@@ -25,7 +24,8 @@
 ##'   shinyCOMPASS(CR)
 ##'   options(example.ask=TRUE)
 ##' }
-shinyCOMPASS <- function(x, dir=NULL, meta.vars, obfuscate=FALSE) {
+shinyCOMPASS <- function(x, dir=NULL, meta.vars, facet1="None", facet2="None", 
+  facet3="None", main=NA) {
   
   if (length(shinyCOMPASSDeps(verbose=FALSE))) {
     message("Error: Can't run the Shiny application as required packages ",
@@ -67,6 +67,20 @@ shinyCOMPASS <- function(x, dir=NULL, meta.vars, obfuscate=FALSE) {
       names(x$orig$meta) %in% c(iid, sid, meta.vars)
     ]
   }
+  
+  ## Add the default facets
+  x$facet1 <- facet1
+  x$facet2 <- facet2
+  x$facet3 <- facet3
+  x$main   <- main
+  
+  ## Check the facets
+  .check_facet <- function(facet) {
+    if (facet != "None" && !(facet %in% names(x$orig$meta))) {
+      stop("facet '", facet, "' is not available in the metadata")
+    }
+  }
+  invisible(lapply(c(facet1, facet2, facet3), .check_facet))
   
   ## Copy the Shiny infrastructure files to the directory
   dir.create(dir, showWarnings=FALSE, recursive=TRUE)
