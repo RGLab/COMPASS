@@ -3,7 +3,8 @@
 \alias{shinyCOMPASS}
 \title{Start a Shiny Application for Visualizing COMPASS Results}
 \usage{
-shinyCOMPASS(x, dir = NULL, meta.vars, obfuscate = FALSE)
+shinyCOMPASS(x, dir = NULL, meta.vars, facet1 = "None", facet2 = "None",
+  facet3 = "None", main = NA)
 }
 \arguments{
   \item{x}{An object of class \code{COMPASSResult}.}
@@ -17,11 +18,12 @@ shinyCOMPASS(x, dir = NULL, meta.vars, obfuscate = FALSE)
   to limit this if you know certain variables are not of
   interest.}
 
-  \item{obfuscate}{Boolean; if \code{TRUE} we replace the
-  patient IDs used with a randomly generated set of IDs.
-  This is useful if you wish to display the data you are
-  using externally but don't wish to make available the IDs
-  used.}
+  \item{facet1,facet2,facet3}{Default values for facets in
+  the Shiny app.  Each should be the name of a single
+  vector in the metadata.}
+
+  \item{main}{A title to give to the heatmap and subset
+  histogram plots.}
 }
 \description{
 This function takes a \code{COMPASSResult} object, and generates
