@@ -302,7 +302,8 @@ shinyServer( function(input, output, session) {
         subset=subset_call,
         minimum_dof=marker_dof[1],
         maximum_dof=marker_dof[2],
-        must_express=must_express
+        must_express=must_express,
+        main=DATA$main
       )
       
     })
@@ -324,7 +325,9 @@ shinyServer( function(input, output, session) {
       df$Subject <- rownames(df)
       
       ## Make sure we merge in the metadata
-      df <- merge(df, meta, by.x="Subject", by.y=..iid..)
+      meta_dt <- data.table(meta)
+      meta_collapsed <- meta_dt[ meta_dt[, .I[1], by=..iid..]$V1 ]
+      df <- merge(df, as.data.frame(meta_collapsed), by.x="Subject", by.y=..iid..)
       
       pf <- melt(df, value.vars=c("FunctionalityScore", "PolyfunctionaliyScore"),
         variable.name="FunctionalityType",
@@ -337,16 +340,20 @@ shinyServer( function(input, output, session) {
           
           p <- ggplot(pf, aes_string(y="Score", x=facet2, fill=facet1)) +
             geom_boxplot(outlier.size = 0) +
-            facet_wrap(~ FunctionalityType) +
+            facet_wrap(~ FunctionalityType, scales="free_y") +
             geom_point( position=position_jitterdodge() )
           
         } else {
           
-          p <- ggplot(pf, aes_string(y="Score", x=factor(1), fill=facet1)) +
+          p <- ggplot(pf, aes_string(y="Score", x="factor(1)", fill=facet1)) +
             geom_boxplot(outlier.size = 0) +
-            facet_wrap(~ FunctionalityType) +
+            facet_wrap(~ FunctionalityType, scales="free_y") +
             xlab("") +
-            geom_point( position=position_jitterdodge() )
+            geom_point( position=position_jitterdodge() ) +
+            theme(
+              axis.text.x=element_blank(),
+              axis.ticks.x=element_blank()
+            )
           
         }
         
@@ -396,12 +403,8 @@ shinyServer( function(input, output, session) {
         grep(x, colnames(DATA$data$n_s), perl=TRUE)
       }))
       
-      keep <- intersect(
-        dof_keep,
-        filter_keep
-      )
-      
-      cat( paste(colnames(m)[keep], collapse="\n") )
+      ## Only use the top subset
+      keep <- max( intersect(dof_keep, filter_keep) )
       
       m <- m[, keep, drop=FALSE]
       
@@ -417,11 +420,13 @@ shinyServer( function(input, output, session) {
       }
       
       p <- ggplot(m, aes) +
-        geom_histogram() +
+        geom_histogram(aes(y=..density..)) +
         facet_grid( paste(facet1, "~ Subset") ) +
         theme(
           legend.position="none"
-        )
+        ) +
+        xlab("Posterior Probability of Ag-Specificity") +
+        ylab("Density")
       
       print(p)
       
