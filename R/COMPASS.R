@@ -178,7 +178,7 @@ COMPASS <- function(data, treatment, control, subset=NULL,
   }
   
   .get_data <- function(data, expr, group) {
-    which <- eval(expr, envir=data$meta,enclos=parent.frame(n=2))
+    which <- eval(expr, envir=data$meta, enclos=parent.frame(n=2))
     samples <- data$meta[[sid]][which]
     samples <- samples[ samples %in% names(data$data) ]
     individuals <- unique(data$meta[[iid]][ data$meta[[sid]] %in% samples ])
@@ -416,14 +416,15 @@ COMPASS <- function(data, treatment, control, subset=NULL,
   vmessage("Done!")
   
   ## Filter metadata
-  ## Here, we subset on individual_id (in case any were filtered out),
-  ## and subset on treatment group. 
-  ## control is generally fixed and needs to be matched to treatment anyway.
-  output$data$meta <- with(output$data, {
-    meta.sub <-meta[with(meta,get(individual_id))%in%rownames(n_s) &
-        eval(treatment,meta,parent.frame(n=4)), ]
-    meta.sub[match(rownames(n_s),meta.sub[,individual_id]),]
-  })
+  ..iid.. <- iid
+  meta_dt <- as.data.table(data$meta)
+  
+  ## Only keep metadata variables that occur once for each subject
+  meta_counts <- meta_dt[, lapply(.SD, function(x) length(unique(x))), by=..iid..]
+  keep <- names(meta_counts)[sapply(meta_counts, function(x) all(x == 1))]
+  output$data$meta <- as.data.frame(
+    meta_dt[ meta_dt[, .I[1], by=eval(..iid..)]$V1 ][, c(..iid.., keep), with=FALSE]
+  )
   
   ## Make sure that the symbols in the 'treatment', 'control' are evaluated
   
