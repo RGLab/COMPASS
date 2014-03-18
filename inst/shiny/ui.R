@@ -20,9 +20,9 @@ facet1 <- DATA$facet1
 facet2 <- DATA$facet2
 facet3 <- DATA$facet3
 
-subsets <- unname(
+subsets <- rev( unname(
   transform_subset_label(colnames(DATA$data$n_s)[ -ncol(DATA$data$n_s) ])
-)
+) )
 stimulations <- DATA$fit$call$treatment[[3]]
 
 facet_vars <- names(meta)
