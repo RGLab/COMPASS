@@ -365,7 +365,7 @@ shinyServer( function(input, output, session) {
         
         p <- ggplot(pf, aes_string(x=factor(1), y="Score")) +
           geom_boxplot(outlier.size = 0) +
-          facet_wrap(~ FunctionalityType) +
+          facet_wrap(~ FunctionalityType, scales="free_y") +
           xlab("") +
           geom_point( position=position_jitter(width=0.1) )
       }
@@ -425,7 +425,9 @@ shinyServer( function(input, output, session) {
       m <- melt(m)
       names(m) <- c(..iid.., "Subset", "Value")
       m <- merge(m, meta)
-      m$Subset <- transform_subset_label(m$Subset)
+      if (is.null(subsets)) {
+        m$Subset <- transform_subset_label(m$Subset)
+      }
       
       if (is.null(facet1)) {
         facet1 <- "."
