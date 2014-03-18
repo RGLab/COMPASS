@@ -63,3 +63,19 @@ phenoToLabel <- function(x) {
     x
   ) )
 }
+
+## transform subset label from boolean-style to +/- style
+transform_subset_label <- function(x) {
+  x <- as.character(x)
+  sapply(x, function(x) {
+    splat <- unlist(strsplit(x, "&", fixed=TRUE))
+    output <- lapply(splat, function(y) {
+      if (substring(y, 1, 1) == "!") {
+        return( paste0( substring(y, 2, nchar(y)), "-"))
+      } else {
+        return(paste0(y, "+"))
+      }
+    })
+    do.call( function(...) paste(..., sep="", collapse=""), output )
+  })
+}
