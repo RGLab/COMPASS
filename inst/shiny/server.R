@@ -182,6 +182,10 @@ shinyServer( function(input, output, session) {
     return( c(input$marker_dof_min, input$marker_dof_max) )
   })
   
+  getSubsets <- reactive({
+    return(input$subsets)
+  })
+  
 #   getCustomFilter <- reactive({
 #     return( input$custom_filter )
 #   })
@@ -382,6 +386,7 @@ shinyServer( function(input, output, session) {
       phenotype <- getPhenotype()
       filter1 <- getFilter1()
       filter1_cb <- getFilter1Cb()
+      subsets <- getSubsets()
       
       facet1 <- getFacet1()
       facet2 <- getFacet2()
@@ -390,27 +395,37 @@ shinyServer( function(input, output, session) {
       m <- DATA$fit$mean_gamma
       colnames(m) <- colnames(DATA$data$n_s)
       
-      ## Filter by Degree of Functionality
-      dof_keep <- intersect(
-        which(DATA$fit$categories[, "Counts"] >= marker_dof[1]),
-        which(DATA$fit$categories[, "Counts"] <= marker_dof[2])
-      )
+      if (is.null(subsets)) {
       
-      ## Filter by markers that must be included
-      markers_rex <- gsub("+", "", markers, fixed=TRUE)
-      markers_rex <- paste0("(?<!!)", markers_rex)
-      filter_keep <- Reduce( intersect, lapply(markers_rex, function(x) {
-        grep(x, colnames(DATA$data$n_s), perl=TRUE)
-      }))
-      
-      ## Only use the top subset
-      keep <- max( intersect(dof_keep, filter_keep) )
-      
-      m <- m[, keep, drop=FALSE]
-      
+        ## Filter by Degree of Functionality
+        dof_keep <- intersect(
+          which(DATA$fit$categories[, "Counts"] >= marker_dof[1]),
+          which(DATA$fit$categories[, "Counts"] <= marker_dof[2])
+        )
+        
+        ## Filter by markers that must be included
+        markers_rex <- gsub("+", "", markers, fixed=TRUE)
+        markers_rex <- paste0("(?<!!)", markers_rex)
+        filter_keep <- Reduce( intersect, lapply(markers_rex, function(x) {
+          grep(x, colnames(DATA$data$n_s), perl=TRUE)
+        }))
+        
+        ## Only use the top subset
+        keep <- max( intersect(dof_keep, filter_keep) )
+        
+        m <- m[, keep, drop=FALSE]
+        
+      } else {
+        
+        colnames(m) <- transform_subset_label(colnames(m))
+        m <- m[, subsets, drop=FALSE]
+        
+      }
+        
       m <- melt(m)
       names(m) <- c(..iid.., "Subset", "Value")
       m <- merge(m, meta)
+      m$Subset <- transform_subset_label(m$Subset)
       
       if (is.null(facet1)) {
         facet1 <- "."
