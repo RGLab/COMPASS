@@ -41,6 +41,13 @@ $( function() {
     show: ['slide', 200]  
   });
   
+  $("#subsets").multiselect({
+    noneSelectedText: "Visualize subsets...",
+    header: "Select Subset",
+    selectedText: "# of # subsets selected",
+    show: ['slide', 200]
+  });
+  
   /*
   // disable body scrolling when inside the multiselect
   $(".ui-multiselect-menu").mouseover( function() {

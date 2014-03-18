@@ -20,7 +20,9 @@ facet1 <- DATA$facet1
 facet2 <- DATA$facet2
 facet3 <- DATA$facet3
 
-subsets <- colnames(DATA$data$n_s)[ -ncol(DATA$data$n_s) ]
+subsets <- unname(
+  transform_subset_label(colnames(DATA$data$n_s)[ -ncol(DATA$data$n_s) ])
+)
 stimulations <- DATA$fit$call$treatment[[3]]
 
 facet_vars <- names(meta)
@@ -143,20 +145,16 @@ shinyUI( bootstrapPage(
       ## levels for a factor
       conditionalPanel("input.filter1 != 'None'",
         checkboxGroupInput("filter1_cb", label='', choices='')
-      )
+      ),
       
-#       h3("Subset Selection"),
-#       HTML("<select id='subsets' multiple='multiple'>"),
-#       HTML(
-#         paste0("<option value='", paste(subsets, collapse=","), "'> ",
-#           subsets, "</option>")
-#       ),
-#       HTML("</select>")
-      
-#       textInput("custom_filter",
-#         label="Custom Filter",
-#         value=""
-#       )
+      HTML("<select id='subsets' multiple='multiple'>"),
+      HTML(
+        paste0("<option value='", subsets, "'> ",
+          subsets, "</option>")
+      ),
+      HTML("</select>"),
+      HTML("<br />"),
+      HTML("<br />")
       
     ),
     
