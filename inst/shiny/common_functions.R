@@ -71,7 +71,7 @@ transform_subset_label <- function(x) {
     splat <- unlist(strsplit(x, "&", fixed=TRUE))
     output <- lapply(splat, function(y) {
       if (substring(y, 1, 1) == "!") {
-        return( paste0( substring(y, 2, nchar(y)), "-"))
+        return("")
       } else {
         return(paste0(y, "+"))
       }
