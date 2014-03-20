@@ -320,6 +320,8 @@ shinyServer( function(input, output, session) {
       
       facet1 <- getFacet1()
       facet2 <- getFacet2()
+      filter1 <- getFilter1()
+      filter1_cb <- getFilter1Cb()
       
       ## Get a melted PolyfunctionalityScore / FunctionalityScore dataset
       df <- data.frame(
@@ -331,6 +333,13 @@ shinyServer( function(input, output, session) {
       ## Make sure we merge in the metadata
       meta_dt <- data.table(meta)
       meta_collapsed <- meta_dt[ meta_dt[, .I[1], by=..iid..]$V1 ]
+      
+      ## Respect any filtering done
+      if (length(filter1) && length(filter1_cb)) {
+        subset_call <- call("%in%", as.symbol(filter1), filter1_cb)
+        meta_collapsed <- droplevels(meta_collapsed[ eval(subset_call), ])
+      }
+      
       df <- merge(df, as.data.frame(meta_collapsed), by.x="Subject", by.y=..iid..)
       
       pf <- melt(df, value.vars=c("FunctionalityScore", "PolyfunctionaliyScore"),
@@ -369,6 +378,9 @@ shinyServer( function(input, output, session) {
           xlab("") +
           geom_point( position=position_jitter(width=0.1) )
       }
+      
+      p <- p + ggtitle("(Poly)Functionality Score") +
+        theme(plot.title=element_text(face="bold", size=12, vjust=1))
       
       print(p)
       
@@ -424,6 +436,14 @@ shinyServer( function(input, output, session) {
         
       m <- melt(m)
       names(m) <- c(..iid.., "Subset", "Value")
+      
+      ## Respect any filtering done
+      if (length(filter1) && length(filter1_cb)) {
+        subset_call <- call("%in%", as.symbol(filter1), filter1_cb)
+        meta <- as.data.table(meta)
+        meta <- droplevels(meta[ eval(subset_call), ])
+      }
+      
       m <- merge(m, meta)
       if (is.null(subsets)) {
         m$Subset <- transform_subset_label(m$Subset)
@@ -437,13 +457,15 @@ shinyServer( function(input, output, session) {
       }
       
       p <- ggplot(m, aes) +
-        geom_histogram(aes(y=..density..)) +
+        geom_histogram() +
         facet_grid( paste(facet1, "~ Subset") ) +
         theme(
           legend.position="none"
         ) +
-        xlab("Posterior Probability of Ag-Specificity") +
-        ylab("Density")
+        xlab("Probability of Response") +
+        ylab("Number of Subjects") +
+        ggtitle("Posterior Means of Response Probabilities") +
+        theme(plot.title=element_text(face="bold", size=12, vjust=1))
       
       print(p)
       
