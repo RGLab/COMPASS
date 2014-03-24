@@ -1,7 +1,7 @@
 Package: COMPASS
 Type: Package
 Title: Combinatorial Polyfunctionality Analysis of Single Cells
-Version: 1.1.4-2
+Version: 1.1.5
 Date: 2014-02-11
 Authors@R: c( person("Lynn", "Lin", role="aut", email="llin@fhcrc.org"),
     person("Kevin", "Ushey", role=c("aut", "cre"), email="kushey@fhcrc.org"),
@@ -21,8 +21,8 @@ License: Artistic-2.0
 BugReports: https://github.com/RGLab/COMPASS/issues
 VignetteBuilder: knitr
 Depends:
-    R (>= 3.0.1)
-LinkingTo: Rcpp
+    R (>= 3.0.2)
+LinkingTo: Rcpp (>= 0.11.0)
 Imports:
     Rcpp,
     data.table,

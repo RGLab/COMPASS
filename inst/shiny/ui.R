@@ -209,7 +209,9 @@ shinyUI( bootstrapPage(
         "possible subsets"
       ),
       p(
-        strong("Stimulations applied:"),
+        strong(
+          if (length(stimulations) > 1) "Stimulations" else "Stimulation", " applied:"
+        ),
         paste(stimulations, collapse=", ")
       )
     ),

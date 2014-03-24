@@ -239,6 +239,12 @@ plot.COMPASSResult <- function(x, y, subset=NULL,
   } else {
     rowann <- NA
   }
+  
+  ## Reorder data within degrees of functionality
+  means <- apply(M, 2, mean)
+  dof <- dof[ as.integer(names(means)) ]
+  ord <- order(dof, means, decreasing = FALSE)
+  M <- M[, ord, drop=FALSE]
 
   pheatmap(M,
     color=palette,
