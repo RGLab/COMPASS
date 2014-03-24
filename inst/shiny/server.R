@@ -379,7 +379,7 @@ shinyServer( function(input, output, session) {
           geom_point( position=position_jitter(width=0.1) )
       }
       
-      p <- p + ggtitle("(Poly)Functionality Score") +
+      p <- p + ggtitle("Functionality Scores") +
         theme(plot.title=element_text(face="bold", size=12, vjust=1))
       
       print(p)

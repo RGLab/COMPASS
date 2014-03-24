@@ -4,7 +4,7 @@
 \title{Start a Shiny Application for Visualizing COMPASS Results}
 \usage{
 shinyCOMPASS(x, dir = NULL, meta.vars, facet1 = "None", facet2 = "None",
-  facet3 = "None", main = NA)
+  facet3 = "None", main = NA, ...)
 }
 \arguments{
   \item{x}{An object of class \code{COMPASSResult}.}
@@ -24,6 +24,9 @@ shinyCOMPASS(x, dir = NULL, meta.vars, facet1 = "None", facet2 = "None",
 
   \item{main}{A title to give to the heatmap and subset
   histogram plots.}
+
+  \item{...}{Optional arguments passed to
+  \code{shiny::runApp}.}
 }
 \description{
 This function takes a \code{COMPASSResult} object, and generates
