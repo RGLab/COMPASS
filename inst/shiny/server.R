@@ -126,12 +126,12 @@ shinyServer( function(input, output, session) {
   
   getFacet2 <- reactive({
     if (input$facet2 == "None") return(NULL)
-    else return( input$facet1 )
+    else return( input$facet2 )
   })
   
   getFacet3 <- reactive({
     if (input$facet3 == "None") return(NULL)
-    else return( input$facet1 )
+    else return( input$facet3 )
   })
   
   getSample <- reactive({
@@ -320,6 +320,8 @@ shinyServer( function(input, output, session) {
       
       facet1 <- getFacet1()
       facet2 <- getFacet2()
+      facet3 <- getFacet3()
+      
       filter1 <- getFilter1()
       filter1_cb <- getFilter1Cb()
       
@@ -347,39 +349,44 @@ shinyServer( function(input, output, session) {
         value.name="Score"
       )
       
-      if (!is.null(facet1)) {
+      if (!is.null(facet3)) {
         
-        if (!is.null(facet2)) {
-          
-          p <- ggplot(pf, aes_string(y="Score", x=facet2, fill=facet1)) +
-            geom_boxplot(outlier.size = 0) +
-            facet_wrap(~ FunctionalityType, scales="free_y") +
-            geom_point( position=position_jitterdodge() )
-          
-        } else {
-          
-          p <- ggplot(pf, aes_string(y="Score", x="factor(1)", fill=facet1)) +
-            geom_boxplot(outlier.size = 0) +
-            facet_wrap(~ FunctionalityType, scales="free_y") +
-            xlab("") +
-            geom_point( position=position_jitterdodge() ) +
-            theme(
-              axis.text.x=element_blank(),
-              axis.ticks.x=element_blank()
-            )
-          
-        }
+        p <- ggplot(pf, aes_string(y="Score", x=facet2, fill=facet1)) +
+          geom_boxplot(outlier.size = 0) +
+          geom_point(position=position_jitterdodge()) +
+          facet_grid(paste(facet3, "~", "FunctionalityType"), scales="free_y")
+        
+      } else if (!is.null(facet2)) {
+        
+        p <- ggplot(pf, aes_string(y="Score", x=facet2, fill=facet1)) +
+          geom_boxplot(outlier.size = 0) +
+          geom_point(position=position_jitterdodge()) +
+          facet_wrap(~ FunctionalityType, scales="free_y")
+        
+      } else if (!is.null(facet1)) {
+        
+        p <- ggplot(pf, aes_string(x="factor(1)", y="Score", fill=facet1)) +
+          geom_boxplot(outlier.size = 0) +
+          geom_point(position=position_jitterdodge()) +
+          facet_wrap(~ FunctionalityType, scales="free_y") +
+          xlab("") +
+          theme(
+            axis.text.x=element_blank(),
+            axis.ticks.x=element_blank()
+          )
         
       } else {
         
-        p <- ggplot(pf, aes_string(x=factor(1), y="Score")) +
+        p <- ggplot(pf, aes_string(x="factor(1)", y="Score")) +
           geom_boxplot(outlier.size = 0) +
+          geom_point(position=position_jitter()) +
           facet_wrap(~ FunctionalityType, scales="free_y") +
-          xlab("") +
-          geom_point( position=position_jitter(width=0.1) )
+          xlab("")
+        
       }
       
-      p <- p + ggtitle("Functionality Scores") +
+      p <- p +
+        ggtitle("Functionality Scores") +
         theme(plot.title=element_text(face="bold", size=12, vjust=1))
       
       print(p)
