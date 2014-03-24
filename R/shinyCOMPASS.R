@@ -13,6 +13,7 @@
 ##' @param facet1,facet2,facet3 Default values for facets in the Shiny app.
 ##'   Each should be the name of a single vector in the metadata.
 ##' @param main A title to give to the heatmap and subset histogram plots.
+##' @param ... Optional arguments passed to \code{shiny::runApp}.
 ##' @seealso \code{\link{shinyCOMPASSDeps}}, for identifying packages that you
 ##'   need in order to run the Shiny application.
 ##' @export
@@ -25,7 +26,7 @@
 ##'   options(example.ask=TRUE)
 ##' }
 shinyCOMPASS <- function(x, dir=NULL, meta.vars, facet1="None", facet2="None", 
-  facet3="None", main=NA) {
+  facet3="None", main=NA, ...) {
   
   if (length(shinyCOMPASSDeps(verbose=FALSE))) {
     message("Error: Can't run the Shiny application as required packages ",
@@ -95,6 +96,6 @@ shinyCOMPASS <- function(x, dir=NULL, meta.vars, facet1="None", facet2="None",
   saveRDS(x, file=file.path(dir, "data", "data.rds"))
   
   message("Starting the Shiny application...")
-  runApp( file.path(dir) )
+  runApp(file.path(dir), ...)
   
 }
