@@ -4,7 +4,7 @@
 \title{Start a Shiny Application for Visualizing COMPASS Results}
 \usage{
 shinyCOMPASS(x, dir = NULL, meta.vars, facet1 = "None", facet2 = "None",
-  facet3 = "None", main = NA, ...)
+  facet3 = "None", main = NA, launch = TRUE, ...)
 }
 \arguments{
   \item{x}{An object of class \code{COMPASSResult}.}
@@ -24,6 +24,11 @@ shinyCOMPASS(x, dir = NULL, meta.vars, facet1 = "None", facet2 = "None",
 
   \item{main}{A title to give to the heatmap and subset
   histogram plots.}
+
+  \item{launch}{Boolean; if \code{TRUE} we launch the Shiny
+  application.  Otherwise, the user can launch it manually
+  by navigating to the directory \code{dir} and running
+  \code{shiny::runApp()}.}
 
   \item{...}{Optional arguments passed to
   \code{shiny::runApp}.}
