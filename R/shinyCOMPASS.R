@@ -13,6 +13,9 @@
 ##' @param facet1,facet2,facet3 Default values for facets in the Shiny app.
 ##'   Each should be the name of a single vector in the metadata.
 ##' @param main A title to give to the heatmap and subset histogram plots.
+##' @param launch Boolean; if \code{TRUE} we launch the Shiny application.
+##'   Otherwise, the user can launch it manually by navigating to the directory
+##'   \code{dir} and running \code{shiny::runApp()}.
 ##' @param ... Optional arguments passed to \code{shiny::runApp}.
 ##' @seealso \code{\link{shinyCOMPASSDeps}}, for identifying packages that you
 ##'   need in order to run the Shiny application.
@@ -26,7 +29,7 @@
 ##'   options(example.ask=TRUE)
 ##' }
 shinyCOMPASS <- function(x, dir=NULL, meta.vars, facet1="None", facet2="None", 
-  facet3="None", main=NA, ...) {
+  facet3="None", main=NA, launch=TRUE, ...) {
   
   if (length(shinyCOMPASSDeps(verbose=FALSE))) {
     message("Error: Can't run the Shiny application as required packages ",
@@ -53,6 +56,8 @@ shinyCOMPASS <- function(x, dir=NULL, meta.vars, facet1="None", facet2="None",
     dir <- file.path( tempdir(), "shinyCOMPASS" )
     on.exit(unlink(dir, recursive=TRUE))
   }
+  
+  dir <- path.expand(dir)
   
   ## Keep only the metadata variables specified
   iid <- x$data$individual_id
@@ -95,7 +100,14 @@ shinyCOMPASS <- function(x, dir=NULL, meta.vars, facet1="None", facet2="None",
   dir.create( file.path(dir, "data"), showWarnings=FALSE )
   saveRDS(x, file=file.path(dir, "data", "data.rds"))
   
-  message("Starting the Shiny application...")
-  runApp(file.path(dir), ...)
+  message("The files necessary for launching the COMPASS Shiny application have ", 
+    "been copied to '", dir, "'.")
+  
+  if (launch) {
+    message("Starting the Shiny application...")
+    runApp(file.path(dir), ...)
+  } else {
+    file.path(dir)
+  }
   
 }

@@ -365,23 +365,23 @@ shinyServer( function(input, output, session) {
         
       } else if (!is.null(facet1)) {
         
-        p <- ggplot(pf, aes_string(x="factor(1)", y="Score", fill=facet1)) +
+        p <- ggplot(pf, aes_string(y="Score", x=facet1, fill=facet1)) +
           geom_boxplot(outlier.size = 0) +
           geom_point(position=position_jitterdodge()) +
+          facet_wrap(~ FunctionalityType, scales="free_y") +
+          xlab("")
+        
+      } else {
+        
+        p <- ggplot(pf, aes_string(x="factor(1)", y="Score")) +
+          geom_boxplot(outlier.size = 0) +
+          geom_point(position=position_jitter(width=0.1)) +
           facet_wrap(~ FunctionalityType, scales="free_y") +
           xlab("") +
           theme(
             axis.text.x=element_blank(),
             axis.ticks.x=element_blank()
           )
-        
-      } else {
-        
-        p <- ggplot(pf, aes_string(x="factor(1)", y="Score")) +
-          geom_boxplot(outlier.size = 0) +
-          geom_point(position=position_jitter()) +
-          facet_wrap(~ FunctionalityType, scales="free_y") +
-          xlab("")
         
       }
       
