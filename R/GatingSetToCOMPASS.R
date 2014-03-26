@@ -283,11 +283,11 @@ COMPASSContainerFromGatingSet <- function(gs = NULL, node = NULL, filter.fun = N
         map <- map[markers, ]
       }
       message("We will map the following nodes to markers:")
-      kable(map)
+      kable(as.data.frame(map))
       
       
       # construct the map
-      mp <- map[, desc]
+      mp <- as.character(map[, desc])
       names(mp) <- map[, node]
       mp <- as.list(mp)
     }
