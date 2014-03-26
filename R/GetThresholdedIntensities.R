@@ -135,7 +135,7 @@ GetThresholdedIntensities <- function(gs, node, map) {
       stop("Unable to match values in 'names(map)' to channel names in the data.")
     }
     
-    expr_nms <- unname(params$name[indices])
+    expr_nms <- unname(as.character(params[[column_to_use]])[indices])
     
     ## Extract the intensities
     message("Extracting cell intensities and thresholding...")
