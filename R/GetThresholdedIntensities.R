@@ -98,8 +98,7 @@ GetThresholdedIntensities <- function(gs, node, map) {
     
     ## Try to guess whether we should be pulling names from the 'desc'
     ## column or the 'name' column of the flowSets
-    dat <- flowWorkspace::getData(gs, use.exprs=FALSE)
-    ff <- get( objects(dat@frames)[[1]], envir=dat@frames )
+    ff <- flowWorkspace::getData(gs[[1]], use.exprs=FALSE)
     params <- parameters(ff)@data
     
     ## First, check for a perfect match using a basic regex
@@ -151,9 +150,9 @@ GetThresholdedIntensities <- function(gs, node, map) {
         } else {
           node_path <- file.path(path, cNode)
         }
-        gate <- flowWorkspace::getGate(x, node_path)
-        thresh <- gate@min
-        exprs[, expr_nms[i]][ exprs[, expr_nms[i]] < thresh ] <- 0
+        ## find out what cells didn't fall into the gate
+        ind <- !flowWorkspace::getIndices(x, node_path)
+        exprs[ind, expr_nms[i]] <- 0
       }
       exprs <- exprs[ rowSums(exprs) > 0, , drop=FALSE]
       return(exprs)
