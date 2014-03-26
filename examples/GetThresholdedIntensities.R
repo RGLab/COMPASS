@@ -28,12 +28,24 @@ if (require(flowWorkspace)) {
   fs <- flowSet( lapply(data, flowFrame) )
   gs <- GatingSet(fs)
   
+  ## Add some dummy metadata
+  meta <- pData(gs)
+  meta$PTID <- 1:10
+  pData(gs) <- meta
+  
+  gate <- rectangleGate( list(TNFa=c(-Inf,Inf)))
+  add(gs, gate, parent="root", name="dummy")
+  
+  ## Add dummy gate
+  
   ## Make some gates, and apply them
   invisible(lapply(marker_names, function(marker) {
     .gate <- setNames( list( c( rexp(1, runif(1, 1E-5, 1E-3)), Inf) ), marker )
     gate <- rectangleGate(.gate=.gate)
-    add(gs, gate, parent="root", name=paste0(marker, "+"))
+    add(gs, gate, parent="dummy", name=paste0(marker, "+"))
   }))
+  
+  recompute(gs)
   
   ## Map node names to channel names
   map=list(
@@ -44,7 +56,15 @@ if (require(flowWorkspace)) {
   )
   
   ## Pull out the data as a COMPASS-friendly dataset
-  output <- GetThresholdedIntensities(gs, "root", map)
+  node <- "dummy"
+  map <- map
+  system.time(
+    output <- GetThresholdedIntensities(gs, "dummy", map)
+  )
+  
+  system.time(
+    output <- COMPASSContainerFromGatingSet(gs, "dummy", individual_id="PTID", sample_id="name")
+  )
   str(output)
   
 }
