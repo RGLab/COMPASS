@@ -36,7 +36,7 @@ Imports:
     grDevices,
     utils
 Suggests:
-    flowWorkspace (>= 3.9.36),
+    flowWorkspace (>= 3.9.66),
     shiny,
     testthat,
     devtools,

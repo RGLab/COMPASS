@@ -71,7 +71,7 @@ COMPASSContainerFromGatingSet <- function(gs = NULL, node = NULL, filter.fun = N
       parent.counts
     }
     
-    nnames <- flowWorkspace::getNodes(gs[[1]],isPath=TRUE)
+    nnames <- flowWorkspace::getNodes(gs[[1]], path="full")
     parent.pop<-nnames[grepl(node, nnames, fixed = FALSE)]    
     if (length(parent.pop) > 1) {
       stop(gettextf("The node expression %s is not unique.", node))
