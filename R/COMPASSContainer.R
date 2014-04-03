@@ -40,6 +40,11 @@ COMPASSContainer <- function(data, counts, meta,
     stop("'", deparse(substitute(counts)), "' must have its 'names' ",
       "attribute set", call.=FALSE)
   
+  if (is.list(counts)) {
+    counts <- unlist(counts)
+  }
+  storage.mode(counts) <- "integer"
+  
   ## remove NULLs
   null_data <- names(data)[sapply(data, is.null)]
   if (length(null_data)) {
