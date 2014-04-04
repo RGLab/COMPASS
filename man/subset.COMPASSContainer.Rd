@@ -6,12 +6,12 @@
 \method{subset}{COMPASSContainer}(x, subset, ...)
 }
 \arguments{
-  \item{x}{A \code{COMPASSContainer}.}
+\item{x}{A \code{COMPASSContainer}.}
 
-  \item{subset}{A logical expression, evaluated within the
-  metadata, indicating which entries to keep.}
+\item{subset}{A logical expression, evaluated within the metadata,
+indicating which entries to keep.}
 
-  \item{...}{Optional arguents; currently unused.}
+\item{...}{Optional arguents; currently unused.}
 }
 \description{
 Use this function to subset a \code{COMPASSContainer}.

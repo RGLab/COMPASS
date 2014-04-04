@@ -11,60 +11,54 @@
   order_by = FunctionalityScore, ...)
 }
 \arguments{
-  \item{x}{An object of class \code{COMPASSResult}.}
+\item{x}{An object of class \code{COMPASSResult}.}
 
-  \item{y}{This argument gets passed to
-  \code{row_annotation}, if \code{row_annotation} is
-  missing. It can be used to group rows (individuals) by
-  different conditions as defined in the metadata.}
+\item{y}{This argument gets passed to \code{row_annotation}, if
+\code{row_annotation} is missing. It can be used to group rows (individuals)
+by different conditions as defined in the metadata.}
 
-  \item{subset}{An \R expression, evaluated within the
-  metadata, used to determine which individuals should be
-  kept.}
+\item{subset}{An \R expression, evaluated within the metadata, used to
+determine which individuals should be kept.}
 
-  \item{threshold}{A numeric threshold for filtering
-  under-expressed categories. Any categories with mean
-  score < \code{threshold} are removed.}
+\item{threshold}{A numeric threshold for filtering under-expressed
+categories. Any categories with mean score < \code{threshold} are
+removed.}
 
-  \item{minimum_dof}{The minimum degree of functionality
-  for the categories to be plotted.}
+\item{minimum_dof}{The minimum degree of functionality for the categories
+to be plotted.}
 
-  \item{maximum_dof}{The maximum degree of functionality
-  for the categories to be plotted.}
+\item{maximum_dof}{The maximum degree of functionality for the categories
+to be plotted.}
 
-  \item{must_express}{A character vector of markers that
-  should be included in each subset plotted. For example,
-  \code{must_express=c("TNFa & IFNg")} says we include only
-  subsets that are positive for either \code{TNFa} or
-  \code{IFNg}, while \code{must_express=c("TNFa", "IFNg")}
-  says we should keep subsets which are positive for either
-  \code{TNFa} or \code{IFNg}.}
+\item{must_express}{A character vector of markers that should be included
+in each subset plotted. For example, \code{must_express=c("TNFa & IFNg")}
+says we include only subsets that are positive for either
+\code{TNFa} or \code{IFNg}, while \code{must_express=c("TNFa", "IFNg")}
+says we should keep subsets which are positive for either \code{TNFa} or
+\code{IFNg}.}
 
-  \item{row_annotation}{A vector of names, pulled from the
-  metadata, to be used for row annotation.}
+\item{row_annotation}{A vector of names, pulled from the metadata, to be
+used for row annotation.}
 
-  \item{palette}{The colour palette to be used.}
+\item{palette}{The colour palette to be used.}
 
-  \item{show_rownames}{Boolean; if \code{TRUE} we display
-  row names (ie, the individual ids).}
+\item{show_rownames}{Boolean; if \code{TRUE} we display row names (ie,
+the individual ids).}
 
-  \item{show_colnames}{Boolean; if \code{TRUE} we display
-  column names (ie, the column name associated with a
-  cytokine; typically not needed)}
+\item{show_colnames}{Boolean; if \code{TRUE} we display column names
+(ie, the column name associated with a cytokine; typically not needed)}
 
-  \item{measure}{Optional. By default, we produce a heatmap
-  of the mean gammas produced in a model fit. We can
-  override this by supplying a matrix of suitable dimension
-  as well; these can be generated with the
-  \code{Posterior*} functions -- see
-  \code{\link{Posterior}} for examples.}
+\item{measure}{Optional. By default, we produce a heatmap of the mean
+gammas produced in a model fit. We can override this by supplying a
+matrix of suitable dimension as well; these can be generated with
+the \code{Posterior*} functions -- see \code{\link{Posterior}} for
+examples.}
 
-  \item{order_by}{Order rows within a group. This should be
-  a function; e.g. \code{FunctionalityScore}, \code{mean},
-  \code{median}, and so on. Set this to \code{NULL} to
-  preserve the original ordering of the data.}
+\item{order_by}{Order rows within a group. This should be a function;
+e.g. \code{FunctionalityScore}, \code{mean}, \code{median}, and so on.
+Set this to \code{NULL} to preserve the original ordering of the data.}
 
-  \item{...}{Optional arguments passed to \code{pheatmap}.}
+\item{...}{Optional arguments passed to \code{pheatmap}.}
 }
 \value{
 The plot as a \code{grid} object (\code{grob}). It can be redrawn

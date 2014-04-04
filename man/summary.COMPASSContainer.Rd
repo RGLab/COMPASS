@@ -6,10 +6,9 @@
 \method{summary}{COMPASSContainer}(object, ...)
 }
 \arguments{
-  \item{object}{An object of class
-  \code{COMPASSContainer}.}
+\item{object}{An object of class \code{COMPASSContainer}.}
 
-  \item{...}{Optional arguments; currently ignored.}
+\item{...}{Optional arguments; currently ignored.}
 }
 \description{
 This function prints summary information about a \code{COMPASSContainer}
