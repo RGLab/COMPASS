@@ -75,12 +75,61 @@ CellCounts.COMPASSContainer <- function(data, combinations) {
 
 .CellCounts_character <- function(data, combinations) {
   
+  ## Pre-parse the combinations by expanding entries of the form
+  ## "A*B*C" to
+  ##
+  ## A & B & C
+  ## A & B & !C
+  ## A & !B & C
+  ## ...
+  ##
+  ## TODO: Handle things like A&(B*C)
+  combos <- lapply(combinations, function(x) {
+    
+    ## Bail if no '*'
+    if (!grepl("*", x, fixed=TRUE)) return(x)
+    
+    ## Bail if unsupported combination seen
+    if (grepl("*", x, fixed=TRUE) && grepl("[&|]", x, perl=TRUE)) {
+      stop("currently cannot combine '*' expander with '&' or '|'",
+        call.=FALSE)
+    }
+    
+    ## Generate a matrix of 0s and 1s that forms the same 'structure'
+    splat <- unlist(strsplit(x, "*", fixed = TRUE))
+    n <- length(splat)
+    values <- do.call( 
+      function(...) {
+        expand.grid(..., KEEP.OUT.ATTRS = FALSE)
+      },
+      replicate(n, c(0, 1), simplify = FALSE)
+    )
+    
+    ## Replace the 0s and 1s with appropriate names
+    for (i in seq_along(values)) {
+      values[, i] <- swap(values[, i],
+        c(0, 1),
+        c(splat[i], paste0("!", splat[i]))
+      )
+    }
+    
+    ## Paste and return the output
+    do.call(
+      function(...) paste(..., sep = "&"),
+      values,
+      
+    )
+    
+  })
+  
+  combos <- unlist(combos)
+  
   output <- .Call(C_COMPASS_CellCounts_character, 
     data, 
-    lapply(combinations, function(x) parse(text=x))
+    lapply(combos, function(x) parse(text=x))
   )
   rownames(output) <- names(data)
-  colnames(output) <- unlist(combinations)
+  colnames(output) <- combos
   return(output)
 }
 

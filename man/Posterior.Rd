@@ -18,7 +18,7 @@ PosteriorPs(x)
 PosteriorPu(x)
 }
 \arguments{
-  \item{x}{An object of class \code{COMPASSResult}.}
+\item{x}{An object of class \code{COMPASSResult}.}
 }
 \description{
 These functions can be used to retrieve different posterior measures

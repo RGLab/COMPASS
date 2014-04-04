@@ -7,31 +7,26 @@ shinyCOMPASS(x, dir = NULL, meta.vars, facet1 = "None", facet2 = "None",
   facet3 = "None", main = NA, launch = TRUE, ...)
 }
 \arguments{
-  \item{x}{An object of class \code{COMPASSResult}.}
+\item{x}{An object of class \code{COMPASSResult}.}
 
-  \item{dir}{A location to write out the \code{.rds} files
-  that will be loaded and used by the Shiny application.}
+\item{dir}{A location to write out the \code{.rds} files that
+will be loaded and used by the Shiny application.}
 
-  \item{meta.vars}{A character vector of column names that
-  should be used for potential facetting in the Shiny app.
-  By default, we take all metadata variables; you may want
-  to limit this if you know certain variables are not of
-  interest.}
+\item{meta.vars}{A character vector of column names that should be used
+for potential facetting in the Shiny app. By default, we take all
+metadata variables; you may want to limit this if you know certain
+variables are not of interest.}
 
-  \item{facet1,facet2,facet3}{Default values for facets in
-  the Shiny app.  Each should be the name of a single
-  vector in the metadata.}
+\item{facet1,facet2,facet3}{Default values for facets in the Shiny app.
+Each should be the name of a single vector in the metadata.}
 
-  \item{main}{A title to give to the heatmap and subset
-  histogram plots.}
+\item{main}{A title to give to the heatmap and subset histogram plots.}
 
-  \item{launch}{Boolean; if \code{TRUE} we launch the Shiny
-  application.  Otherwise, the user can launch it manually
-  by navigating to the directory \code{dir} and running
-  \code{shiny::runApp()}.}
+\item{launch}{Boolean; if \code{TRUE} we launch the Shiny application.
+Otherwise, the user can launch it manually by navigating to the directory
+\code{dir} and running \code{shiny::runApp()}.}
 
-  \item{...}{Optional arguments passed to
-  \code{shiny::runApp}.}
+\item{...}{Optional arguments passed to \code{shiny::runApp}.}
 }
 \description{
 This function takes a \code{COMPASSResult} object, and generates

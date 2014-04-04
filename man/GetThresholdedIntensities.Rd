@@ -6,12 +6,12 @@
 GetThresholdedIntensities(gs, node, map)
 }
 \arguments{
-  \item{gs}{A \code{GatingSet} or \code{GatingSetList}.}
+\item{gs}{A \code{GatingSet} or \code{GatingSetList}.}
 
-  \item{node}{The name, or path, of a single node in a
-  \code{GatingSet} / \code{GatingSetList}.}
+\item{node}{The name, or path, of a single node in a
+\code{GatingSet} / \code{GatingSetList}.}
 
-  \item{map}{A \code{list}, mapping node names to markers.}
+\item{map}{A \code{list}, mapping node names to markers.}
 }
 \value{
 A \code{list} with two components:

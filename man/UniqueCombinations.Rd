@@ -12,12 +12,10 @@ UniqueCombinations(x, as.matrix)
 \method{UniqueCombinations}{default}(x, as.matrix = FALSE)
 }
 \arguments{
-  \item{x}{Either a \code{COMPASSContainer}, or a list of
-  matrices.}
+\item{x}{Either a \code{COMPASSContainer}, or a list of matrices.}
 
-  \item{as.matrix}{Boolean; if \code{TRUE} we return
-  results as a matrix; otherwise, we return the results as
-  a list.}
+\item{as.matrix}{Boolean; if \code{TRUE} we return results as a matrix;
+otherwise, we return the results as a list.}
 }
 \description{
 Generate all possible unique combinations of \code{x}.

@@ -9,10 +9,10 @@ COMPASSDescription(x)
 COMPASSDescription(x) <- value
 }
 \arguments{
-  \item{x}{A \code{COMPASS} fit.}
+\item{x}{A \code{COMPASS} fit.}
 
-  \item{value}{A set of paragraphs describing the
-  experiment, as a character vector.}
+\item{value}{A set of paragraphs describing the experiment, as a character
+vector.}
 }
 \description{
 This is used for setting an informative description used in the Shiny

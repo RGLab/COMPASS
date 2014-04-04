@@ -6,9 +6,9 @@
 \method{print}{COMPASSContainer}(x, ...)
 }
 \arguments{
-  \item{x}{An object of class \code{COMPASSContainer}.}
+\item{x}{An object of class \code{COMPASSContainer}.}
 
-  \item{...}{Optional arguments passed to \code{cat}.}
+\item{...}{Optional arguments passed to \code{cat}.}
 }
 \description{
 This function prints a \code{COMPASSContainer} object, giving basic

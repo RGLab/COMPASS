@@ -9,37 +9,26 @@ COMPASSContainerFromGatingSet(gs = NULL, node = NULL, filter.fun = NULL,
   markers = NA)
 }
 \arguments{
-  \item{gs}{a \code{GatingSet} or \code{GatingSetList}}
+\item{gs}{a \code{GatingSet} or \code{GatingSetList}}
 
-  \item{node}{a \code{regular expression} to match a single
-  node in the gating tree. If more than one node is
-  matched, an error is thrown.}
+\item{node}{a \code{regular expression} to match a single node in the gating tree. If more than one node is matched, an error is thrown.}
 
-  \item{filter.fun}{a \code{function} that does string
-  substitution to clean up node names, i.e. turns a 'CD4+'
-  into a 'CD4' to try and match against the
-  \code{parameters} slot of the \code{flowFrames} in
-  \code{gs}}
+\item{filter.fun}{a \code{function} that does string substitution to clean up node names, i.e. turns a 'CD4+' into a 'CD4' to try and
+match against the \code{parameters} slot of the \code{flowFrames} in \code{gs}}
 
-  \item{individual_id}{a \code{character} identifying the
-  subject id column in the \code{gs} metadata}
+\item{individual_id}{a \code{character} identifying the subject id column in the \code{gs} metadata}
 
-  \item{sample_id}{a \code{character} idetifying the sample
-  id column in the \code{gs} metadata.}
+\item{sample_id}{a \code{character} idetifying the sample id column in the \code{gs} metadata.}
 
-  \item{mp}{a \code{list} mapping node names to markers.
-  This function tries to guess, but may fail. The user can
-  override the guesswork.}
+\item{mp}{a \code{list} mapping node names to markers. This function tries to guess, but may fail. The user can override the guesswork.}
 
-  \item{countFilterThreshold}{Numeric; if the number of
-  cells expressing at least one marker of interest is less
-  than this threshold, we remove that file.}
+\item{countFilterThreshold}{Numeric; if the number of cells expressing at
+least one marker of interest is less than this threshold, we remove that
+file.}
 
-  \item{matchmethod}{a \code{character} either 'regex' or
-  'Levenshtein' for matching nodes to markers.}
+\item{matchmethod}{a \code{character} either 'regex' or 'Levenshtein' for matching nodes to markers.}
 
-  \item{markers}{a \code{character} vector of marker names
-  to include.}
+\item{markers}{a \code{character} vector of marker names to include.}
 }
 \description{
 This code expects a \code{GatingSet} or \code{GatingSetList}.

@@ -6,7 +6,7 @@
 transpose_list(x)
 }
 \arguments{
-  \item{x}{An \R list.}
+\item{x}{An \R list.}
 }
 \description{
 Transpose a matrix-like list.
