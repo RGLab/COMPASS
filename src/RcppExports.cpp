@@ -5,22 +5,6 @@
 
 using namespace Rcpp;
 
-// CellCounts
-IntegerMatrix CellCounts(List x, List combos);
-RcppExport SEXP COMPASS_CellCounts(SEXP xSEXP, SEXP combosSEXP) {
-BEGIN_RCPP
-    SEXP __sexp_result;
-    {
-        Rcpp::RNGScope __rngScope;
-        Rcpp::traits::input_parameter< List >::type x(xSEXP );
-        Rcpp::traits::input_parameter< List >::type combos(combosSEXP );
-        IntegerMatrix __result = CellCounts(x, combos);
-        PROTECT(__sexp_result = Rcpp::wrap(__result));
-    }
-    UNPROTECT(1);
-    return __sexp_result;
-END_RCPP
-}
 // CellCounts_character
 IntegerMatrix CellCounts_character(List data, List combinations);
 RcppExport SEXP COMPASS_CellCounts_character(SEXP dataSEXP, SEXP combinationsSEXP) {
@@ -31,6 +15,22 @@ BEGIN_RCPP
         Rcpp::traits::input_parameter< List >::type data(dataSEXP );
         Rcpp::traits::input_parameter< List >::type combinations(combinationsSEXP );
         IntegerMatrix __result = CellCounts_character(data, combinations);
+        PROTECT(__sexp_result = Rcpp::wrap(__result));
+    }
+    UNPROTECT(1);
+    return __sexp_result;
+END_RCPP
+}
+// CellCounts
+IntegerMatrix CellCounts(List x, List combos);
+RcppExport SEXP COMPASS_CellCounts(SEXP xSEXP, SEXP combosSEXP) {
+BEGIN_RCPP
+    SEXP __sexp_result;
+    {
+        Rcpp::RNGScope __rngScope;
+        Rcpp::traits::input_parameter< List >::type x(xSEXP );
+        Rcpp::traits::input_parameter< List >::type combos(combosSEXP );
+        IntegerMatrix __result = CellCounts(x, combos);
         PROTECT(__sexp_result = Rcpp::wrap(__result));
     }
     UNPROTECT(1);

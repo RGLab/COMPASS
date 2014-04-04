@@ -5,8 +5,8 @@
 ## This greatly speeds compilation time.
 cleanup <- function() {
   
-  ## bail if we didn't R CMD build first
-  if (!grepl(tempdir(), getwd())) {
+  ## Bail if this is an R CMD INSTALL
+  if (Sys.getenv("R_INSTALL_PKG") != "") {
     message("It looks like this isn't being called from R CMD build; bailing out")
     return(invisible(NULL))
   }
@@ -20,7 +20,7 @@ cleanup <- function() {
   pkg_version <- DESCRIPTION$Version
   
   ## copy the files to a 'build' directory
-  buildDir <- file.path(tempdir(), )
+  buildDir <- getwd()
   
   ## in the build directory, 'cat' all the src files together
   ## have a separate file for .c, .cpp files
@@ -38,7 +38,6 @@ cleanup <- function() {
     final <- shQuote( paste( sep='', buildDir, "/src/", pkg_name, "_", gsub("\\.", "", ext), ext ) )
     system( paste("touch", final) )
     files <- files[ files != final ]
-    files <- files[ !(files %in% grep("RcppExports", files, value=TRUE)) ]
     for( file in files ) {
       system( paste("cat", file, ">>", final) )
       system( paste("echo '' >>", final ) ) ## adds a newline just in case
