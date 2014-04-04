@@ -6,14 +6,12 @@
 CellCounts(data, combinations)
 }
 \arguments{
-  \item{data}{Either a \code{COMPASSContainer}, or a list
-  of matrices.  Each matrix \code{i} is of dimension
-  \code{N_i} cells (rows) by \code{K} common markers
-  (columns).}
+\item{data}{Either a \code{COMPASSContainer}, or a list of matrices.
+Each matrix \code{i} is of dimension \code{N_i} cells (rows) by
+\code{K} common markers (columns).}
 
-  \item{combinations}{A list of 'combinations', used to
-  denote the subsets of interest. See the examples for
-  usage.}
+\item{combinations}{A list of 'combinations', used to denote the
+subsets of interest. See the examples for usage.}
 }
 \description{
 Compute the number of cells expressing a particular
