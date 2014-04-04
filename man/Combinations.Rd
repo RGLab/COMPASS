@@ -6,7 +6,7 @@
 Combinations(n)
 }
 \arguments{
-  \item{n}{An integer.}
+\item{n}{An integer.}
 }
 \description{
 Given an intenger \code{n}, generate all binary combinations of

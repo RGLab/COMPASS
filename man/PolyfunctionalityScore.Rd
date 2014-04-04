@@ -13,19 +13,16 @@ PolyfunctionalityScore(x, degree, normalization)
 \method{PolyfunctionalityScore}{default}(x, degree, normalization)
 }
 \arguments{
-  \item{x}{An object of class \code{COMPASSResult}, as
-  returned by \code{\link{COMPASS}}. Alternatively, a
-  matrix of functionality scores.}
+\item{x}{An object of class \code{COMPASSResult}, as returned by
+\code{\link{COMPASS}}. Alternatively, a matrix of functionality scores.}
 
-  \item{degree}{A vector of weights. If missing, this is
-  the 'degree of functionality', that is, the number of
-  markers expressed in a particular category.}
+\item{degree}{A vector of weights. If missing, this is the 'degree of
+functionality', that is, the number of markers expressed in a particular
+category.}
 
-  \item{normalization}{A \code{character} vector specifying
-  how the score is to be normalized. Either using
-  \code{"all"} possible categories, or just the
-  \code{"observed"} categories. Defaults to \code{"all"}
-  categories.}
+\item{normalization}{A \code{character} vector specifying how the score
+is to be normalized. Either using \code{"all"} possible categories, or
+just the \code{"observed"} categories. Defaults to \code{"all"} categories.}
 }
 \value{
 A numeric vector of polyfunctionality scores.

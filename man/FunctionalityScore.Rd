@@ -12,10 +12,9 @@ FunctionalityScore(x)
 \method{FunctionalityScore}{default}(x)
 }
 \arguments{
-  \item{x}{An object of class \code{COMPASSResult}, as
-  returned by \code{\link{COMPASS}}. Alternatively, a
-  matrix of functionality scores, used under the assumption
-  that the 'null' category has been dropped.}
+\item{x}{An object of class \code{COMPASSResult}, as returned by
+\code{\link{COMPASS}}. Alternatively, a matrix of functionality scores,
+used under the assumption that the 'null' category has been dropped.}
 }
 \value{
 A numeric vector of functionality scores.
