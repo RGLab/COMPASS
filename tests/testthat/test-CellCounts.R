@@ -51,4 +51,9 @@ test_that("We properly expand with a '*' in the name", {
   ## TODO: allow combinations of * and [&|]
   expect_error( CellCounts(data, "A*B&C"))
   
+  expect_identical(
+    CellCounts(data, c("A*B", "C")),
+    CellCounts(data, c("A&B", "!A&B", "A&!B", "!A&!B", "C"))
+  )
+  
 })
