@@ -335,9 +335,9 @@ COMPASS <- function(data, treatment, control, subset=NULL,
   ## Check for rows in n_s, n_u with zero counts
   .zero_counts <- function(x, group) {
     bad_ids <- character()
-    j <- ncol(x)
-    for (i in 1:nrow(x)) {
-      if (x[i, j] < 1) {
+    rs <- rowSums(x)
+    for (i in seq_along(rs)) {
+      if (rs[i] < 1) {
         bad_ids <- c(bad_ids, rownames(x)[i])
       }
     }
