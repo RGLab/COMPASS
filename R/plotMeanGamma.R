@@ -1,10 +1,10 @@
 ##' Plot a COMPASSResult
-##' 
+##'
 ##' This function can be used to visualize the mean probability of response --
 ##' that is, the probability that there is a difference in response between
 ##' samples subjected to the 'treatment' condition, and samples subjected
 ##' to the 'control' condition.
-##' 
+##'
 ##' @aliases plot
 ##' @param x An object of class \code{COMPASSResult}.
 ##' @param y This argument gets passed to \code{row_annotation}, if
@@ -48,41 +48,48 @@
 ##' @examples
 ##' ## visualize the mean probability of reponse
 ##' plot(CR)
-##' 
+##'
 ##' ## visualize the proportion of cells belonging to a category
 ##' plot(CR, measure=PosteriorPs(CR))
 ##' @export
-plot.COMPASSResult <- function(x, y, subset=NULL, 
+plot.COMPASSResult <- function(x, y, subset=NULL,
   threshold=0.01,
-  minimum_dof=1, 
+  minimum_dof=1,
   maximum_dof=Inf,
   must_express=NULL,
   row_annotation,
   #palette=seq_gradient_pal(low="black", high="red")(seq(0, 1, length=20)),
   palette=colorRampPalette(brewer.pal(10,"Purples"))(20),
-  show_rownames=FALSE, 
-  show_colnames=FALSE, 
+  show_rownames=FALSE,
+  show_colnames=FALSE,
   measure=NULL,
   order_by=FunctionalityScore,
   ...) {
-  
+
   call <- match.call()
-  
+
+  ## Number of markers
+  .n <- ncol(x$fit$categories) - 1
+
   ## If order_by is missing, then the user is expecting default behavior
   ## ie, FunctionalityScore
   if (missing(order_by)) {
-    order_fun <- FunctionalityScore
+    order_fun <- function(x) {
+      FunctionalityScore(x, n=.n)
+    }
   } else {
     if (!is.null(order_by)) {
-      
+
       if (is.symbol(call$order_by)) {
         if (call$order_by == "PolyfunctionalityScore") {
           ## .degree is generated downstream
           order_fun <- function(x) {
-            PolyfunctionalityScore(x, degree=.degree)
+            PolyfunctionalityScore(x, degree=.degree, n=.n)
           }
         } else if (call$order_by == "FunctionalityScore") {
-          order_fun <- FunctionalityScore
+          order_fun <- function(x) {
+            FunctionalityScore(x, n=.n)
+          }
         } else {
           FUN <- match.fun(order_by)
           order_fun <- function(x, f=FUN) {
@@ -97,29 +104,29 @@ plot.COMPASSResult <- function(x, y, subset=NULL,
       }
     }
   }
-  
+
   ## try to override mean_gamma with measure
   if (!is.null(measure)) {
     x$fit$mean_gamma <- measure
   }
-  
+
   if (!is.language(subset)) {
     subset_expr <- match.call()$subset
   } else {
     subset_expr <- subset
   }
-  
+
   if (missing(row_annotation)) {
     if (missing(y)) {
       y <- NULL
-    } 
+    }
       row_annotation <- y
   }
-  
+
   ## Keep only markers that were specified in the 'must_express'
   ## argument
   if (!is.null(must_express)) {
-    
+
     stopifnot( is.character(must_express) )
     ind <- Reduce(union, lapply(must_express, function(m) {
       markers <- unlist( strsplit( m, "[[:space:]]*&[[:space:]]*") )
@@ -128,11 +135,11 @@ plot.COMPASSResult <- function(x, y, subset=NULL,
         grep(rex, colnames(x$data$n_s), perl=TRUE)
       }))
     }))
-    
+
     nc <- length(ind)
     M <- x$fit$mean_gamma[, ind, drop=FALSE]
     colnames(M) <- colnames(x$data$n_s)[ind]
-    
+
     cats <- x$fit$categories[ind, , drop=FALSE]
     cats <- data.frame(cats)
     cats <- cats[,1:(ncol(cats)-1)]
@@ -140,13 +147,13 @@ plot.COMPASSResult <- function(x, y, subset=NULL,
       factor(x, levels=c(0, 1))
     }))
     dof <- x$fit$categories[ind, "Counts", drop=FALSE]
-    
+
   } else {
-    
+
     nc <- ncol(x$fit$gamma)
     M <- x$fit$mean_gamma[, -nc, drop=FALSE]
     colnames(M) <- colnames(x$data$n_s)[-nc]
-    
+
     cats <- x$fit$categories[-nc,]
     cats <- data.frame(cats)
     cats <- cats[,1:(ncol(cats)-1)]
@@ -155,32 +162,32 @@ plot.COMPASSResult <- function(x, y, subset=NULL,
     }))
     dof <- x$fit$categories[, "Counts"]
     dof <- dof[ -length(dof) ]
-    
+
   }
-  
+
   ## get the dof
-  
+
   rowann <- data.frame(.id=rownames(M))
   rowann <- merge(
     rowann,
-    x$data$meta[c(x$data$individual_id, row_annotation)], 
+    x$data$meta[c(x$data$individual_id, row_annotation)],
     by.x=".id",
     by.y=x$data$individual_id
   )
   rowann <- rowann[!duplicated(rowann[[".id"]]), ,drop=FALSE]
   rownames(rowann) <- rowann[[".id"]]
   rowann <- rowann[-c(which(names(rowann)==".id"))]
-  
+
   ## make sure M, rowann names match up
   rowann <- rowann[ match(rownames(M), rownames(rowann)), , drop=FALSE ]
-  
+
   ## keep only those meeting the min, max dof criteria
   M <- M[, dof >= minimum_dof & dof <= maximum_dof, drop=FALSE]
   cats <- cats[dof >= minimum_dof & dof <= maximum_dof, ]
   if (ncol(M) == 0) {
     stop("No categories left after subsetting for 'minimum_dof', 'maximum_dof'")
   }
-  
+
   ## remove under-expressed categories
   m <- apply(M, 2, mean)
   keep <- m > threshold
@@ -191,23 +198,23 @@ plot.COMPASSResult <- function(x, y, subset=NULL,
   }
   M <- M[, keep, drop=FALSE]
   cats <- cats[keep, ]
-  
+
   colnames(M) <- rownames(cats)
-  
+
   ## handle subsetting
   if (!is.null(subset)) {
     keep <- x$data$meta[[x$data$individual_id]][eval(subset_expr, envir=x$data$meta)]
     M <- M[ rownames(M) %in% keep, , drop=FALSE]
     rowann <- rowann[ rownames(rowann) %in% keep, , drop=FALSE]
   }
-  
+
   ## Generate .degree if using PolyfunctionalityScore
   if (is.symbol(call$order_by) && call$order_by == "PolyfunctionalityScore") {
     cats_mat <- as.matrix(cats)
     mode(cats_mat) <- "integer"
     .degree <- apply(cats_mat, 1, sum)
   }
-  
+
   ## Reorder within groups based on 'order_by'
   if (!is.null(order_by)) {
     if (!is.null(row_annotation)) {
@@ -223,15 +230,15 @@ plot.COMPASSResult <- function(x, y, subset=NULL,
       ind <- which(group == grouping)
       score <- order_fun(M[ind, , drop=FALSE])
       ord <- ind[ order(score, decreasing=TRUE) ]
-      
+
       M[ind, ] <- M[ord, ]
-      
+
       rownames(M)[ind] <- rownames(M)[ord]
       rownames(rowann)[ind] <- rownames(rowann)[ord]
-      
+
     }
   }
-  
+
   ## Group the data by row annotation
   if (!is.null(row_annotation)) {
     o <- do.call(order, as.list(rowann[row_annotation]))
@@ -239,7 +246,7 @@ plot.COMPASSResult <- function(x, y, subset=NULL,
   } else {
     rowann <- NA
   }
-  
+
   ## Reorder data within degrees of functionality
   means <- apply(M, 2, mean)
   dof <- dof[ as.integer(names(means)) ]
@@ -256,7 +263,7 @@ plot.COMPASSResult <- function(x, y, subset=NULL,
     cytokine_annotation=cats,
     ...
   )
-  
+
   return( invisible(grid.grab()) )
-  
+
 }
