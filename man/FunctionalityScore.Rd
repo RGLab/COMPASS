@@ -21,7 +21,12 @@ A numeric vector of functionality scores.
 }
 \description{
 Computes the functionality score for each observation from the gamma matrix
-of a COMPASS model fit.
+of a COMPASS model fit. The scores are normalized to one.
+}
+\note{
+The null category is implicitly dropped when computing the functionality
+  score for a \code{COMPASS} result; this is not true for the regular matrix
+  method.
 }
 \examples{
 FunctionalityScore(CR)
