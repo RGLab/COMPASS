@@ -109,7 +109,8 @@ plot.COMPASSResult <- function(x, y, subset=NULL,
   if (!is.null(measure)) {
     x$fit$mean_gamma <- measure
   }
-
+  
+  subset <- call$subset
   if (!is.language(subset)) {
     subset_expr <- match.call()$subset
   } else {
