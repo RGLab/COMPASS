@@ -126,7 +126,7 @@ given by the data frame column names.}
 
 \item{row_annotation_colors}{same interpretation as the column parameters}
 
-\item{cytokine_annotation}{is a data frame of binary factors with levels 0,1, that defines combinations
+\item{cytokine_annotation}{A \code{data.frame} of factors, with either levels \code{0} = unexpressed, \code{1} = expressed, or optionally with a third level \code{-1} = 'left out'.
 of the categories for each column. They will be colored by their degree of functionality and ordered by degree of functionality
 and by amount of expression if column clustering is not done.}
 
