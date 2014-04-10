@@ -294,7 +294,7 @@ convert_cytokine_annotations <- function(annotation) {
   
   ## Swap each number with its degree of functionality (ie, number
   ## of markers expressed in that category)
-  dof <- apply(annot, 1, sum)
+  dof <- apply(annot, 1, function(x) sum(x[x != -1]))
   annot <- apply(annot, 2, function(x) {
     x[ x == 1 ] <- dof[ x == 1]
     return(x)
@@ -304,7 +304,7 @@ convert_cytokine_annotations <- function(annotation) {
   pal <- brewer.pal( ncol(annot), "Paired" )
   annot <- as.data.frame(annot)
   annot[] <- lapply(annot, function(x) {
-    swap(x, 0:5, c("#FFFFFF", pal))
+    swap(x, -1:5, c("#AAAAAB", "#FFFFFF", pal))
   })
   
   ## Return the annotations
@@ -878,7 +878,7 @@ kmeans_pheatmap = function(mat, k = min(nrow(mat), 150), sd_limit = NA, ...){
 #' given by the data frame column names.
 #' @param row_annotation_legend same interpretation as the column parameters.
 #' @param row_annotation_colors same interpretation as the column parameters
-#' @param cytokine_annotation is a data frame of binary factors with levels 0,1, that defines combinations
+#' @param cytokine_annotation A \code{data.frame} of factors, with either levels \code{0} = unexpressed, \code{1} = expressed, or optionally with a third level \code{-1} = 'left out'.
 #' of the categories for each column. They will be colored by their degree of functionality and ordered by degree of functionality
 #' and by amount of expression if column clustering is not done.
 #' @param headerplot is a list with two components, order and data. Order tells how to reorder the columns of the matrix. 
@@ -988,8 +988,8 @@ pheatmap = function(mat, color = colorRampPalette(rev(brewer.pal(n = 7, name = "
   #check that the cytokine annotation (if it exists), is in the right form
   if(!is.na(cytokine_annotation[[1]][1])){
     for(i in 1:ncol(cytokine_annotation)){
-      if(!(class(cytokine_annotation[[i]])=="factor" & all(levels(cytokine_annotation[[i]])%in%c(0,1)))){
-        stop("cytokine annotation must be a data frame with categorical factors containing levels 0,1")
+      if(!(class(cytokine_annotation[[i]])=="factor" & all(levels(cytokine_annotation[[i]])%in%c(-1,0,1)))){
+        stop("cytokine annotation must be a data frame with categorical factors containing levels (-1), 0, 1")
       }else
         show_colnames<-FALSE
     }
