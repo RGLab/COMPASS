@@ -1101,7 +1101,10 @@ pheatmap = function(mat, color = colorRampPalette(rev(brewer.pal(n = 7, name = "
     
     #order the columns by max functionality 
     if (order_by_max_functionality) {
-      cka<-apply(cytokine_annotation,2,function(x)sum(as.numeric(as.character(x))))
+      cka <- apply(cytokine_annotation, 2, function(x) {
+        tmp <- as.numeric(as.character(x))
+        sum(tmp[tmp != -1])
+      })
       cytokine_annotation = cytokine_annotation[,order(cka,decreasing=TRUE),drop=FALSE]
     }
     
