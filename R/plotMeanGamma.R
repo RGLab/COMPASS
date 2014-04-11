@@ -67,7 +67,22 @@ plot.COMPASSResult <- function(x, y, subset=NULL,
   ...) {
 
   call <- match.call()
-
+  
+  ## We do some gymnastics to figure out what the subset expression is
+  ## If the caller does something like the following:
+  ##
+  ## subset_call <- call("%in%", a, b)
+  ## plot(CR, subset=subset_call)
+  ##
+  ## then this function sees 'subset' as a promise that it cannot properly
+  ## evaluate, and call$subset just sees 'subset_call'. So we have to explicitly
+  ## evaluate the symbol in the parent frame to recover the call.
+  if (is.symbol(call$subset)) {
+    subset <- eval(call$subset, envir=parent.frame())
+  } else if (is.language(call$subset)) {
+    subset <- call$subset
+  }
+  
   ## Number of markers
   .n <- ncol(x$fit$categories) - 1
 
@@ -110,13 +125,6 @@ plot.COMPASSResult <- function(x, y, subset=NULL,
     x$fit$mean_gamma <- measure
   }
   
-  subset <- call$subset
-  if (!is.language(subset)) {
-    subset_expr <- match.call()$subset
-  } else {
-    subset_expr <- subset
-  }
-
   if (missing(row_annotation)) {
     if (missing(y)) {
       y <- NULL
@@ -203,8 +211,8 @@ plot.COMPASSResult <- function(x, y, subset=NULL,
   colnames(M) <- rownames(cats)
 
   ## handle subsetting
-  if (!is.null(subset)) {
-    keep <- x$data$meta[[x$data$individual_id]][eval(subset_expr, envir=x$data$meta)]
+  if (is.call(subset)) {
+    keep <- x$data$meta[[x$data$individual_id]][eval(subset, envir=x$data$meta)]
     M <- M[ rownames(M) %in% keep, , drop=FALSE]
     rowann <- rowann[ rownames(rowann) %in% keep, , drop=FALSE]
   }
