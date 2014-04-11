@@ -16,6 +16,15 @@ DATA <- readRDS("data/data.rds")
 ..sid..  <- DATA$data$sample_id
 ..iid..  <- DATA$data$individual_id
 
+## global variables for the data state
+## NULL variables are updated by other functions
+fit <- DATA
+data <- DATA$data
+meta <- DATA$data$meta
+orig <- DATA$orig
+
+orig_markers <- colnames(DATA$orig$data[[1]])
+
 trt <- DATA$fit$call$treatment
 if (is.language(trt)) {
   ..stid.. <- as.character(trt[[2]])
@@ -106,30 +115,24 @@ filter1 <- function(dat, var, levels) {
 
 shinyServer( function(input, output, session) {
   
-  ## global variables for the data state
-  ## NULL variables are updated by other functions
-  fit <- DATA
-  data <- DATA$data
-  meta <- DATA$data$meta
-  orig <- DATA$orig
-  
-  orig_markers <- colnames(DATA$orig$data[[1]])
-  
   getPhenotype <- reactive({
     return( "MeanGamma" )
   })
   
   getFacet1 <- reactive({
+    if (is.null(input$facet1)) return(NULL)
     if (input$facet1 == "None") return(NULL)
     else return( input$facet1 )
   })
   
   getFacet2 <- reactive({
+    if (is.null(input$facet2)) return(NULL)
     if (input$facet2 == "None") return(NULL)
     else return( input$facet2 )
   })
   
   getFacet3 <- reactive({
+    if (is.null(input$facet3)) return(NULL)
     if (input$facet3 == "None") return(NULL)
     else return( input$facet3 )
   })
@@ -451,7 +454,13 @@ shinyServer( function(input, output, session) {
         meta <- droplevels(meta[ eval(subset_call), ])
       }
       
-      m <- merge(m, meta)
+      ## Make sure we remove the samples from the meta data before merging in
+      ## the extra metadata information
+      meta <- as.data.table(meta)
+      meta_collapsed <- meta[meta[, .I[1], by=..iid..]$V1]
+      meta_collapsed <- as.data.frame(meta_collapsed)
+      m <- merge(m, meta_collapsed)
+      
       if (is.null(subsets)) {
         m$Subset <- transform_subset_label(m$Subset)
       }

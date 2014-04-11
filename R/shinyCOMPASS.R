@@ -13,6 +13,9 @@
 ##' @param facet1,facet2,facet3 Default values for facets in the Shiny app.
 ##'   Each should be the name of a single vector in the metadata.
 ##' @param main A title to give to the heatmap and subset histogram plots.
+##' @param stimulation The name of the stimulation applied. If this is \code{NULL},
+##'   the stimulations used are inferred from the data (ie, the \code{COMPASS} call
+##'   used).
 ##' @param launch Boolean; if \code{TRUE} we launch the Shiny application.
 ##'   Otherwise, the user can launch it manually by navigating to the directory
 ##'   \code{dir} and running \code{shiny::runApp()}.
@@ -29,7 +32,8 @@
 ##'   options(example.ask=TRUE)
 ##' }
 shinyCOMPASS <- function(x, dir=NULL, meta.vars, facet1="None", facet2="None", 
-  facet3="None", main="Heatmap of Ag-Specificity Posterior Probabilities", launch=TRUE, ...) {
+  facet3="None", main="Heatmap of Ag-Specificity Posterior Probabilities", 
+  stimulation=NULL, launch=TRUE, ...) {
   
   if (length(shinyCOMPASSDeps(verbose=FALSE))) {
     message("Error: Can't run the Shiny application as required packages ",
@@ -78,7 +82,10 @@ shinyCOMPASS <- function(x, dir=NULL, meta.vars, facet1="None", facet2="None",
   x$facet1 <- facet1
   x$facet2 <- facet2
   x$facet3 <- facet3
+  
+  ## Add other information
   x$main   <- main
+  x$stimulation <- stimulation
   
   ## Check the facets
   .check_facet <- function(facet) {

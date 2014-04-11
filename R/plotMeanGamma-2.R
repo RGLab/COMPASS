@@ -41,10 +41,10 @@ plot2 <- function(x, y, subset,
   subset_expr <- match.call()$subset
   
   nc_x <- ncol(x$fit$gamma)
-  M_x <- x$fit$mean_gamma[, -nc_x]
+  M_x <- x$fit$mean_gamma[, -nc_x, drop=FALSE]
   
   nc_y <- ncol(y$fit$gamma)
-  M_y <- y$fit$mean_gamma[, -nc_y]
+  M_y <- y$fit$mean_gamma[, -nc_y, drop=FALSE]
   
   ## make sure the row order is the same
   M_x <- M_x[ order(rownames(M_x)), , drop=FALSE ]
@@ -130,20 +130,12 @@ plot2 <- function(x, y, subset,
     sum( as.integer(x) )
   })
   
-  ## keep only those meeting the min, max dof criteria
-  M <- M[, dof >= minimum_dof & dof <= maximum_dof, drop=FALSE]
-  cats <- cats[dof >= minimum_dof & dof <= maximum_dof, ]
-  if (ncol(M) == 0) {
-    stop("No categories left after subsetting for 'minimum_dof', 'maximum_dof'")
-  }
-  
   ## remove under-expressed categories
   m <- apply(M, 2, mean)
   keep <- m > threshold | m < -threshold
   M <- M[, keep, drop=FALSE]
-  cats <- cats[keep, ]
-  
-  colnames(M) <- rownames(cats)
+  cats <- cats[keep, , drop=FALSE]
+  keep <- keep[ names(keep) %in% colnames(M) ]
   
   ## handle subsetting
   if (!missing(subset)) {
@@ -182,11 +174,22 @@ plot2 <- function(x, y, subset,
   #palette<-rgb(palette,alpha=alpha*255,maxColor=255)
 
   m<-matrix(palette,nrow=nrow(M_x),ncol=ncol(M_x))
-  m<-m[,keep]
-  colnames(m)<-colnames(M)
-  rownames(m)<-rownames(M)
-  M<-m
-  pheatmap(M[o, , drop=FALSE],
+  colnames(m)<-colnames(M_x)
+  rownames(m)<-rownames(M_x)
+  m<-m[, names(keep), drop=FALSE]
+  
+  rownames(cats) <- colnames(m)
+  
+  ## do some final dof subsetting
+  dof <- sapply(strsplit(colnames(m), "", fixed=TRUE), function(x)
+    sum(x == "1")
+  )
+  
+  keep <- dof >= minimum_dof & dof <= maximum_dof
+  m <- m[, keep, drop=FALSE]
+  cats <- cats[keep, ]
+  
+  pheatmap(m[o, , drop=FALSE],
     color=palette,
     show_rownames=show_rownames,
     show_colnames=show_colnames,
@@ -197,7 +200,5 @@ plot2 <- function(x, y, subset,
     polar=TRUE,
     ...
   )
-  
-  return (invisible(grid.grab()))
   
 }

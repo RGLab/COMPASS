@@ -19,11 +19,17 @@ iid <- DATA$data$individual_id
 facet1 <- DATA$facet1
 facet2 <- DATA$facet2
 facet3 <- DATA$facet3
+stimulation <- DATA$stimulation
 
 subsets <- rev( unname(
   transform_subset_label(colnames(DATA$data$n_s)[ -ncol(DATA$data$n_s) ])
 ) )
-stimulations <- DATA$fit$call$treatment[[3]]
+
+if (is.null(stimulation)) {
+  stimulations <- DATA$fit$call$treatment[[3]]
+} else {
+  stimulations <- stimulation
+}
 
 facet_vars <- names(meta)
 facet_vars <- facet_vars[ !(facet_vars %in% c(sid, iid)) ]
@@ -38,6 +44,28 @@ svgOutput <- function(outputId, width, height) {
     tag("svg", list(id=outputId, width=width, height=height, class="html-shiny-output"))
   )
 }
+
+## Make the HTML representing the facetting variables
+make_facets <- function(n) {
+  if (n > 3) n <- 3
+  width <- floor(100 / n)
+  if (n == 1) {
+    facets <- selectInput("facet1", label="", choices=c("None", facet_vars), selected=facet1)
+  } else {
+    facets <- do.call(tagList, lapply(seq_len(n), function(i) {
+      tags$div(style=paste0("width: ", width, "%; float: left;"),
+        selectInput( paste0("facet", i),
+          label=paste("Variable", i),
+          choices=c("None", facet_vars),
+          selected=get(paste0("facet", i))
+        )
+      )
+    }))
+  }
+  facets
+}
+
+num_meta_vars <- ncol(meta) - 2 ## take away 'sample ID' and 'subject ID'
 
 ## ensure that each matrix has the same column names
 stopifnot( length( table( table( unlist( lapply( data, names ) ) ) ) ) != 1 )
@@ -108,31 +136,7 @@ shinyUI( bootstrapPage(
       h3("Conditioning Variables"),
       
       tags$div(
-        
-        tags$div( style="width: 33%; float: left;",
-          selectInput("facet1",
-            label="Variable 1",
-            choices=c("None", facet_vars),
-            selected=facet1
-          )
-        ),
-        
-        tags$div( style="width: 33%; float: left;",
-          selectInput("facet2",
-            label="Variable 2",
-            choices=c("None", facet_vars),
-            selected=facet2
-          )
-        ),
-        
-        tags$div( style="width: 33%; float: left;",
-          selectInput("facet3",
-            label="Variable 3",
-            choices=c("None", facet_vars),
-            selected=facet3
-          )
-        )
-        
+        make_facets(num_meta_vars)
       ),
       
       h3("Variable Filters"),
@@ -193,17 +197,17 @@ shinyUI( bootstrapPage(
         strong("Number of Subjects:"),
         length(unique(DATA$orig$meta[[iid]]))
       ),
-      p( 
-        strong("Number of Paired Samples:"),
-        nrow(DATA$data$n_s) 
-      ),
+#       p( 
+#         strong("Number of Paired Samples:"),
+#         nrow(DATA$data$n_s) 
+#       ),
       p(
         strong("Number of Markers:"),
         ncol(DATA$orig$data[[1]]) 
       ),
       p(
         strong("Number of Subsets:"),
-        nrow(DATA$data$categories) - 1L,
+        nrow(DATA$data$categories),
         "of",
         2^ncol(DATA$orig$data[[1]]),
         "possible subsets"
