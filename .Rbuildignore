@@ -1,0 +1,17 @@
+.Rhistory$
+COMPASS.Rproj$
+.travis.yml$
+.Rproj.user/
+data/.*.rds$
+^incubator/
+^refactor/
+^shinyTest/
+^scratch/
+^internal/
+.Rhistory$
+.gitignore$
+^old/
+^TODO.md
+^examples/
+^.*\.Rproj$
+^\.Rproj\.user$
