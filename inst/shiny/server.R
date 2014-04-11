@@ -386,7 +386,7 @@ shinyServer( function(input, output, session) {
       }
       
       p <- p +
-        ggtitle("Functionality Scores") +
+        ggtitle("Functionality and Polyfunctionality Scores") +
         theme(plot.title=element_text(face="bold", size=12, vjust=1))
       
       print(p)
@@ -471,7 +471,7 @@ shinyServer( function(input, output, session) {
         ) +
         xlab("Probability of Response") +
         ylab("Number of Subjects") +
-        ggtitle("Posterior Means of Response Probabilities") +
+        ggtitle("Histogram of Ag-specific probabilities for selected subsets") +
         theme(plot.title=element_text(face="bold", size=12, vjust=1))
       
       print(p)

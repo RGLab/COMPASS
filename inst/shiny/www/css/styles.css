@@ -85,12 +85,15 @@ div.controls  > * {
 }
 
 #update {
+  float: left;
   margin-left: 10px;
   text-align: center;
 }
 
 #gridster-control-hide {
-  margin-left: 10px;
+  float: right;
+  margin-right: 10px;
+  text-align: center;
 }
 
 #gridster-control-container {

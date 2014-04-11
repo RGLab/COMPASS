@@ -94,12 +94,13 @@ shinyUI( bootstrapPage(
       ## overflow: auto keeps div from collapsing to zero height
       ## see: http://stackoverflow.com/questions/218760/how-do-you-keep-parents-of-floated-elements-from-collapsing
       tags$div(
+        p("Range of Degree of Functionality to be Displayed"),
         tags$div( style="width: 50%; float: left;",
-          tags$label( `for`="marker_dof_min", "Minimum Degree of Functionality"),
+          tags$label( `for`="marker_dof_min", "Min"),
           tags$input( id="marker_dof_min", type="number", value="1", min="1", max=ncol( data[[1]] ), step="1" )
         ),
         tags$div( style="width: 50%; float: right;", 
-          tags$label( `for`="marker_dof_max", "Maximum Degree of Functionality"),
+          tags$label( `for`="marker_dof_max", "Max"),
           tags$input( id="marker_dof_max", type="number", value="6", min="1", max=ncol( data[[1]] ), step="1" )
         )
       ),
@@ -147,6 +148,7 @@ shinyUI( bootstrapPage(
         checkboxGroupInput("filter1_cb", label='', choices='')
       ),
       
+      ## Visualize subsets...
       HTML("<select id='subsets' multiple='multiple'>"),
       HTML(
         paste0("<option value='", subsets, "'> ",
@@ -157,8 +159,6 @@ shinyUI( bootstrapPage(
       HTML("<br />")
       
     ),
-    
-    actionButton("gridster-control", "Gridster Enabled"),
     actionButton("update", "Update View"),
     actionButton("gridster-control-hide", "Show Controls")
   ),

@@ -29,7 +29,7 @@
 ##'   options(example.ask=TRUE)
 ##' }
 shinyCOMPASS <- function(x, dir=NULL, meta.vars, facet1="None", facet2="None", 
-  facet3="None", main=NA, launch=TRUE, ...) {
+  facet3="None", main="Heatmap of Ag-Specificity Posterior Probabilities", launch=TRUE, ...) {
   
   if (length(shinyCOMPASSDeps(verbose=FALSE))) {
     message("Error: Can't run the Shiny application as required packages ",
