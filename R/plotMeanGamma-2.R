@@ -38,7 +38,13 @@ plot2 <- function(x, y, subset,
   show_colnames=FALSE, 
   ...) {
   
-  subset_expr <- match.call()$subset
+  call <- match.call()
+  
+  if (is.symbol(call$subset)) {
+    subset <- eval(call$subset, envir=parent.frame())
+  } else if (is.language(call$subset)) {
+    subset <- call$subset
+  }
   
   nc_x <- ncol(x$fit$gamma)
   M_x <- x$fit$mean_gamma[, -nc_x, drop=FALSE]
@@ -139,9 +145,11 @@ plot2 <- function(x, y, subset,
   
   ## handle subsetting
   if (!missing(subset)) {
-    keep <- x$data$meta[[x$data$individual_id]][eval(subset_expr, envir=x$data$meta)]
-    M <- M[ rownames(M) %in% keep, , drop=FALSE]
-    rowann <- rowann[ rownames(rowann) %in% keep, , drop=FALSE]
+    keep_indiv <- unique(x$data$meta[[x$data$individual_id]][eval(subset, envir=x$data$meta)])
+    M <- M[ rownames(M) %in% keep_indiv, , drop=FALSE]
+    rowann <- rowann[ rownames(rowann) %in% keep_indiv, , drop=FALSE]
+    M_x <- M_x[ rownames(M_x) %in% keep_indiv, , drop=FALSE]
+    M_y <- M_y[ rownames(M_y) %in% keep_indiv, , drop=FALSE]
   }
   
   ## reorder the data
@@ -163,6 +171,9 @@ plot2 <- function(x, y, subset,
   #outer(rgbvals[,1],as.vector(as.matrix(M_x)))
   pal<-log1p(as.vector(as.matrix(M_x)))-log1p(as.vector(as.matrix(M_y)))
   pal<-(pal+max(pal))/diff(range(pal))
+  
+  ## force negatives to zero
+  pal[pal < 0] <- 0
   
   palette<-t(rgb2hsv(t(cr(pal))))
   #palette<-cr(pal)

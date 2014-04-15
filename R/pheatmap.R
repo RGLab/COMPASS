@@ -1,6 +1,9 @@
 lo = function(rown, coln, nrow, ncol, cellheight = NA, cellwidth = NA, treeheight_col, treeheight_row, legend, annotation, annotation_colors, annotation_legend, main, fontsize, fontsize_row, fontsize_col,row_annotation,row_annotation_legend,row_annotation_colors, cytokine_annotation, polar=FALSE,...){
   annot_legend_width = unit(0, "npc")
   
+  tl <- tryCatch( get("trtLabels", parent.frame()),
+    error=function(e) NULL )
+  
   #cytokine labels
   if(!is.na(cytokine_annotation[[1]][1])){
     cytn<-colnames(cytokine_annotation)
@@ -45,9 +48,6 @@ lo = function(rown, coln, nrow, ncol, cellheight = NA, cellwidth = NA, treeheigh
     title_length = unit(1.1, "grobwidth", textGrob("Scale", gp = gpar(fontface = "bold", ...)))
     legend_width = unit(12, "bigpts") + longest_break * 1.2
     legend_width = max(title_length, legend_width)
-    if(polar){
-      legend_width<-unit(1.5,"inches")
-    }
   }
   else{
     legend_width = unit(0, "bigpts")
@@ -104,7 +104,7 @@ lo = function(rown, coln, nrow, ncol, cellheight = NA, cellwidth = NA, treeheigh
     }
   }else{
     row_annotation_width = unit(0,"bigpts")
-    annot_legend_width= unit(0,"bigpts")+annot_legend_width #row legend appears in the same viewport as column legend
+    annot_legend_width= unit(0,"bigpts") + unit(0.1, "npc")
   }
   
   # cytokine annotations
@@ -137,10 +137,12 @@ lo = function(rown, coln, nrow, ncol, cellheight = NA, cellwidth = NA, treeheigh
   
   
   # Produce layout()
+  ## Another hack in a series of terrible hacks
   pushViewport(viewport(name="layout", layout = 
       grid.layout(nrow = 6, ncol = 6, 
         widths = unit.c(treeheight_row, matwidth, row_annotation_width, rown_width, legend_width, annot_legend_width), 
         heights = unit.c(main_height, treeheight_col, annot_height, matheight, coln_height, cytokine_height)), gp = do.call(gpar, gp)))
+  
   
   # Get cell dimensions
   pushViewport(vplayout(4, 2))
@@ -554,18 +556,21 @@ heatmap_motor = function(matrix, border_color, cellwidth, cellheight, tree_col, 
   
   # Draw legend
   if(!is.na(legend[1])){
-    length(colnames(matrix))
+    
     if(length(rownames(matrix)) != 0){
       pushViewport(vplayout(4:5, 5, name="legend")) 
-    }
-    else{
+    } else {
       pushViewport(vplayout(3:5, 5, name="legend")) 
     }
-    if(!(polar)){
+    
+    if(!(polar)) {
       draw_legend(color, breaks, legend, fontsize = fontsize, ...)
-    }else{
+    } else {
+      popViewport()
+      pushViewport(vplayout(3:6, 5:6, name='legend'))
       draw_polar_legend(fontsize=fontsize,treatmentLabel=trtLabels)
     }
+    
     popViewport()
   }
   
@@ -573,13 +578,14 @@ heatmap_motor = function(matrix, border_color, cellwidth, cellheight, tree_col, 
 }
 #Todo pass stim condition labels
 draw_polar_legend <- function(fontsize=NA,treatmentLabel=trtLabels){
+  
   #if we could get the size of the window or root viewport, we could set the size of the legend so
   #that it is scaled to look like a circle in any aspect ratio.
   height =unit(0.25,"npc")
   width = unit(1,"npc")
   pushViewport(viewport(name="polar_legend",
     x = unit(0,"npc"), y = unit(0.8, "npc"), just = c(0, 1), width=width,height = height))
-  C=0.45 #center
+  C=0.4 #center
   R=0.25 #radius
   N=51   #number of points
   .aspect<-function(){
@@ -591,33 +597,35 @@ draw_polar_legend <- function(fontsize=NA,treatmentLabel=trtLabels){
   }
   asp.scale<-0.5/.aspect()
   R<-R*asp.scale
-  xy<-.toCart(R,seq(0,pi,l=100),C=C)  
+  xy<-.toCart(R,seq(0,pi,l=100),C=C)
   polar_legend <- .polarLegend(R=R,N=N,C=C)
   
   o<-order(polar_legend$position[,"x"],polar_legend$position[,"y"],decreasing=TRUE)
   #for(i in (1:nrow(polar_legend$position))[o]){
-    pts<-pointsGrob(x=polar_legend$position[,"x"]*R+C,y=polar_legend$position[,"y"]*R+C,gp=gpar(col=polar_legend$color,cex=0.25),default.units="npc")
+    pts<-pointsGrob(x=polar_legend$position[,"y"]*R+C,y=polar_legend$position[,"x"]*R+C,gp=gpar(col=polar_legend$color,cex=0.25),default.units="npc")
   #}
   #for(i in (1:nrow(polar_legend$position))[o]){
   #  grid.points(x=polar_legend$position[i,"x"]*R+C,y=polar_legend$position[i,"y"]*R+C,gp=gpar(col=polar_legend$color[i],cex=0.4),default.units="npc")
   #}
 
-  poly<-polygonGrob(x=xy$x, y=xy$y, gp=gpar(fill=NA, col="black",lwd=2),default.units="npc") # outer shell 
+  poly<-polygonGrob(x=xy$y, y=xy$x, gp=gpar(fill=NA, col="black",lwd=2),default.units="npc") # outer shell 
   #get aspect ratio of the polygon
   
   gp2<-pts$gp
   gp2$cex<-0.4
   grid.draw(editGrob(pts,gp=gp2))
-  seg<-segmentsGrob(x0=seq(-1,1,l=9)*R+C,y0=rep(0,9)*R+C,x1=seq(-1,1,l=9)*R+C,y1=rep(0-0.1,9)*R+C,default.units="npc",gp=gpar(lwd=2))
+  seg<-segmentsGrob(y0=seq(-1,1,l=9)*R+C,x0=rep(0,9)*R+C,y1=seq(-1,1,l=9)*R+C,x1=rep(0-0.1,9)*R+C,default.units="npc",gp=gpar(lwd=2))
   label<-seq(1,0,l=5)
   label<-c(label,rev(label)[-1])
-  tx1<-textGrob(label=label,x=seq(-1,1,l=9)*R+C,y=rep(0-0.2,9)*R+C,default.units="npc",rot=90,hjust=1,gp=gpar(cex=0.8))
-  tx2<-textGrob(label=treatmentLabel,x=c(-1.1,1.1)*R+C,y=rep(0,2)*R+C,rot=90,just=1,gp=gpar(cex=0.8))
+  tx1<-textGrob(label=label,y=seq(-1,1,l=9)*R+C,x=rep(0-0.2,9)*R+C,default.units="npc",hjust=1,gp=gpar(cex=0.8))
+  if (is.na(get("row_annotation", parent.frame()))) {
+    tx2<-textGrob(label=treatmentLabel,y=c(-1.4,1.4)*R+C,x=rep(0.5,2.5)*R+C,just=1,gp=gpar(cex=0.8))
+  } else {
+    tx2<-textGrob(label=treatmentLabel,y=c(-1.4,1.4)*R+C,x=rep(1,3)*R+C,just=1,gp=gpar(cex=0.8))
+  }
   grid.draw(pts)
   grid.draw(poly)
   grid.draw(seg)
-  offset<-unit(1,"grobheight",tx1)
-  tx2$y<-tx2$y-offset-unit(10,"bigpts")
   grid.draw(tx1)
   grid.draw(tx2)
   popViewport()

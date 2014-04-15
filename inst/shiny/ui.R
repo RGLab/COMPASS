@@ -93,6 +93,15 @@ shinyUI( bootstrapPage(
   includeScript("www/js/gridsterExtras.js"),
   includeScript("scripts.js"),
   
+  ## Allows us to evaluate raw JavaScript code
+  tags$head(tags$script(HTML('
+      Shiny.addCustomMessageHandler("jsCode",
+        function(message) {
+          eval(message.value);
+        }
+      );
+    '))),
+  
   singleton( tags$body( style="background-color: #789;" ) ),
   
   #h1(style="text-align: center; color: white", "Cytokine Visualization"),

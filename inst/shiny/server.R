@@ -12,6 +12,8 @@ library(stringr)
 library(RColorBrewer)
 library(COMPASS)
 
+source("common_functions.R")
+
 DATA <- readRDS("data/data.rds")
 ..sid..  <- DATA$data$sample_id
 ..iid..  <- DATA$data$individual_id
@@ -32,7 +34,18 @@ if (is.language(trt)) {
   ..stid.. <- as.character(trt)
 }
 
-source("common_functions.R")
+subsets <- unname(transform_subset_label(colnames(data$n_s)))
+dof <- str_count(subsets, "\\+")
+
+evalJS <- function(msg) {
+  code <- parse(text="session$sendCustomMessage(type='jsCode', list(value=.__JS_PLACEHOLDER__.))")
+  code[[1]][[3]][[2]] <- msg ## don't judge me
+  eval(code, envir=parent.frame())
+}
+
+## This is JavaScript code for destroying and reconstructing the subset
+## widget -- use it when you are updating the subsets available for selection
+updateSubsets.js <- paste( readLines("updateSubsets.js"), collapse="\n" )
 
 ## Used for the d3 splom
 renderSplom <- function(expr, env=parent.frame(), quoted=FALSE) {
@@ -269,6 +282,47 @@ shinyServer( function(input, output, session) {
       }
   })
   
+  ## an observer for updating the subsets available, based on the markers
+  ## wanted + degree of functionality range
+  observe({
+    
+    marker_dof <- getMarkerOrder()
+    markers <- getMarkers()
+    
+    ## Contains-selected-marker subsetting
+    if (is.null(markers)) {
+      keep.ind <- seq_along(subsets)
+    } else {
+      keep <- Reduce(intersect, lapply(markers, function(x) {
+        grep(x, subsets, value=TRUE, fixed=TRUE)
+      }))
+      keep.ind <- match(keep, subsets)
+    }
+    
+    ## DOF subsetting
+    dof.ind <- which(dof >= marker_dof[1] & dof <= marker_dof[2])
+    
+    ## Combine them
+    ind <- intersect(keep.ind, dof.ind)
+    
+    subsets <- subsets[ind]
+    dof <- dof[ind]
+    subsets <- subsets[ order(dof, decreasing=TRUE) ]
+    
+    subsetsHTML <- tagList(HTML("<select id='subsets' multiple='multiple'>"),
+      HTML(
+        paste0("<option value='", subsets, "'> ",
+          subsets, "</option>")
+      ),
+      HTML("</select>")
+    )
+    code <- sprintf("$('#subsets').html(\"%s\")", subsetsHTML )
+    code <- gsub("\n", " ", code)
+    evalJS( gsub("\n", " ", code) )
+    evalJS( updateSubsets.js )
+    
+  })
+  
   ## A helper function for rendering views only when the button is clicked
   renderOnUpdateButtonPress <- function(x, env = parent.frame(), quoted = FALSE) {
     force(input$update)
@@ -350,6 +404,11 @@ shinyServer( function(input, output, session) {
       pf <- melt(df, value.vars=c("FunctionalityScore", "PolyfunctionaliyScore"),
         variable.name="FunctionalityType",
         value.name="Score"
+      )
+      
+      pf$FunctionalityType <- factor(pf$FunctionalityType,
+        levels=c("FunctionalityScore", "PolyfunctionalityScore"),
+        labels=c("Functionality Score", "Polyfunctionality Score")
       )
       
       if (!is.null(facet3)) {
