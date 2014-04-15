@@ -45,7 +45,7 @@ evalJS <- function(msg) {
 
 ## This is JavaScript code for destroying and reconstructing the subset
 ## widget -- use it when you are updating the subsets available for selection
-updateSubsets.js <- paste( readLines("updateSubsets.js"), collapse="\n" )
+updateSubsets.js <- paste( readLines("www/js/updateSubsets.js"), collapse="\n" )
 
 ## Used for the d3 splom
 renderSplom <- function(expr, env=parent.frame(), quoted=FALSE) {

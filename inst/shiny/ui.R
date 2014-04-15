@@ -1,6 +1,8 @@
 library(lattice)
 library(shinyGridster)
 
+source("withHelp.R")
+
 zoomButton <- function(inputId) {
   tags$i(class="icon-zoom-in", id=inputId, style="position: absolute; right: 10px; bottom: 10px")
 }
@@ -87,10 +89,14 @@ shinyUI( bootstrapPage(
   includeScript("www/multiselect/multiselect.js"),
   includeCSS("www/multiselect/multiselect.css"),
   
+  includeScript("www/opentip/opentip.js"),
+  includeCSS("www/opentip/opentip.css"),
+  
   includeCSS("www/css/shinySplom.css"),
   includeScript("www/js/shinySplom.js"),
   
   includeScript("www/js/gridsterExtras.js"),
+  includeScript("www/js/tooltips.js"),
   includeScript("scripts.js"),
   
   ## Allows us to evaluate raw JavaScript code
@@ -124,12 +130,18 @@ shinyUI( bootstrapPage(
         markers, "</option>")
       ),
       HTML("</select>"),
+      helpIcon("markers-help",
+        style="float: right; margin-right: 10px; margin-top: 6px;"
+      ),
       
       HTML("<br />"),
       HTML("<br />"),
       
       ## overflow: auto keeps div from collapsing to zero height
       ## see: http://stackoverflow.com/questions/218760/how-do-you-keep-parents-of-floated-elements-from-collapsing
+      helpIcon("dof-help",
+        "float: right; margin-right: 10px; margin-top: 3px;"
+      ),
       tags$div(
         p("Range of Degree of Functionality to be Displayed"),
         tags$div( style="width: 50%; float: left;",
@@ -142,15 +154,20 @@ shinyUI( bootstrapPage(
         )
       ),
       
+      helpIcon("facets-help",
+        style="float: right; margin-right: 10px; margin-top: 12px;"
+      ),
       h3("Conditioning Variables"),
-      
       tags$div(
         make_facets(num_meta_vars)
       ),
       
       h3("Variable Filters"),
       
-      selectInput("filter1",
+      helpIcon("filter1-help",
+        "float: right; margin-right: 10px; margin-top: 3px;"
+      ),
+      selectizeInput("filter1",
         label="Filter Subjects",
         choices=c("None", facet_vars)
       ),
@@ -162,6 +179,9 @@ shinyUI( bootstrapPage(
       ),
       
       ## Visualize subsets...
+      helpIcon("subsets-help",
+        "float: right; margin-top: 6px; margin-right: 10px;"
+      ),
       HTML("<select id='subsets' multiple='multiple'>"),
       HTML(
         paste0("<option value='", subsets, "'> ",
