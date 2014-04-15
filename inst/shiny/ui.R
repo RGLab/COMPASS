@@ -124,15 +124,35 @@ shinyUI( bootstrapPage(
       ## multiselect requires the attribute 'multiple' to be set; can't set
       ## this thru regular shiny HTML functions
       
+      h3("Subset Selection"),
+      
+      helpIcon("markers-help",
+        style="float: right; margin-right: 10px; margin-top: 6px;"
+      ),
+      
+      h5(style="margin: 6px;", "Marker Selection"),
       HTML("<select id='markers' multiple='multiple'>"),
       HTML(
         paste0("<option value='", markers_positive, "'> ",
         markers, "</option>")
       ),
       HTML("</select>"),
-      helpIcon("markers-help",
-        style="float: right; margin-right: 10px; margin-top: 6px;"
+      
+      HTML("<br />"),
+      HTML("<br />"),
+      
+      ## Visualize subsets...
+      helpIcon("subsets-help",
+        "float: right; margin-top: 6px; margin-right: 10px;"
       ),
+      
+      h5(style="margin: 6px;", "Subsets to Visualize in Histogram"),
+      HTML("<select id='subsets' multiple='multiple'>"),
+      HTML(
+        paste0("<option value='", subsets, "'> ",
+          subsets, "</option>")
+      ),
+      HTML("</select>"),
       
       HTML("<br />"),
       HTML("<br />"),
@@ -143,7 +163,7 @@ shinyUI( bootstrapPage(
         "float: right; margin-right: 10px; margin-top: 3px;"
       ),
       tags$div(
-        p("Range of Degree of Functionality to be Displayed"),
+        h5(style="margin: 6px;", "Range of Degree of Functionality to be Displayed"),
         tags$div( style="width: 50%; float: left;",
           tags$label( `for`="marker_dof_min", "Min"),
           tags$input( id="marker_dof_min", type="number", value="1", min="1", max=ncol( data[[1]] ), step="1" )
@@ -157,18 +177,20 @@ shinyUI( bootstrapPage(
       helpIcon("facets-help",
         style="float: right; margin-right: 10px; margin-top: 12px;"
       ),
+      
       h3("Conditioning Variables"),
+      
       tags$div(
         make_facets(num_meta_vars)
       ),
       
-      h3("Variable Filters"),
+      h3("Filtering Variables"),
       
       helpIcon("filter1-help",
         "float: right; margin-right: 10px; margin-top: 3px;"
       ),
       selectizeInput("filter1",
-        label="Filter Subjects",
+        label="Filter subjects by...",
         choices=c("None", facet_vars)
       ),
       
@@ -177,20 +199,8 @@ shinyUI( bootstrapPage(
       conditionalPanel("input.filter1 != 'None'",
         checkboxGroupInput("filter1_cb", label='', choices='')
       ),
-      
-      ## Visualize subsets...
-      helpIcon("subsets-help",
-        "float: right; margin-top: 6px; margin-right: 10px;"
-      ),
-      HTML("<select id='subsets' multiple='multiple'>"),
-      HTML(
-        paste0("<option value='", subsets, "'> ",
-          subsets, "</option>")
-      ),
-      HTML("</select>"),
       HTML("<br />"),
-      HTML("<br />")
-      
+      HTML("<hr style='margin-top: 0; margin-bottom: 20px;' />")
     ),
     actionButton("update", "Update View"),
     actionButton("gridster-control-hide", "Show Controls")
