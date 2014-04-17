@@ -172,7 +172,9 @@ plot2 <- function(x, y, subset,
   if (!missing(subset)) {
     keep_indiv <- unique(x$data$meta[[x$data$individual_id]][eval(subset, envir=x$data$meta)])
     M <- M[ rownames(M) %in% keep_indiv, , drop=FALSE]
-    rowann <- rowann[ rownames(rowann) %in% keep_indiv, , drop=FALSE]
+    if (!is.null(row_annotation)) {
+      rowann <- rowann[ rownames(rowann) %in% keep_indiv, , drop=FALSE]
+    }
     M_x <- M_x[ rownames(M_x) %in% keep_indiv, , drop=FALSE]
     M_y <- M_y[ rownames(M_y) %in% keep_indiv, , drop=FALSE]
   }
