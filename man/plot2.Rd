@@ -4,8 +4,8 @@
 \title{Plot a pair of COMPASSResults}
 \usage{
 plot2(x, y, subset, threshold = 0.01, minimum_dof = 1, maximum_dof = Inf,
-  row_annotation = NULL, palette = NA, show_rownames = FALSE,
-  show_colnames = FALSE, ...)
+  must_express = NULL, row_annotation = NULL, palette = NA,
+  show_rownames = FALSE, show_colnames = FALSE, ...)
 }
 \arguments{
 \item{x}{An object of class \code{COMPASSResult}.}
@@ -24,6 +24,13 @@ to be plotted.}
 
 \item{maximum_dof}{The maximum degree of functionality for the categories
 to be plotted.}
+
+\item{must_express}{A character vector of markers that should be included
+in each subset plotted. For example, \code{must_express=c("TNFa & IFNg")}
+says we include only subsets that are positive for both
+\code{TNFa} or \code{IFNg}, while \code{must_express=c("TNFa", "IFNg")}
+says we should keep subsets which are positive for either \code{TNFa} or
+\code{IFNg}.}
 
 \item{subset}{An \R expression, evaluated within the metadata, used to
 determine which individuals should be kept.}

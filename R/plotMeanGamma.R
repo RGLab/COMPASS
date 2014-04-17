@@ -21,7 +21,7 @@
 ##'   to be plotted.
 ##' @param must_express A character vector of markers that should be included
 ##'   in each subset plotted. For example, \code{must_express=c("TNFa & IFNg")}
-##'   says we include only subsets that are positive for either
+##'   says we include only subsets that are positive for both
 ##'   \code{TNFa} or \code{IFNg}, while \code{must_express=c("TNFa", "IFNg")}
 ##'   says we should keep subsets which are positive for either \code{TNFa} or
 ##'   \code{IFNg}.

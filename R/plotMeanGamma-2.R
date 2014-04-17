@@ -16,6 +16,12 @@
 ##'   to be plotted.
 ##' @param maximum_dof The maximum degree of functionality for the categories
 ##'   to be plotted.
+##' @param must_express A character vector of markers that should be included
+##'   in each subset plotted. For example, \code{must_express=c("TNFa & IFNg")}
+##'   says we include only subsets that are positive for both
+##'   \code{TNFa} or \code{IFNg}, while \code{must_express=c("TNFa", "IFNg")}
+##'   says we should keep subsets which are positive for either \code{TNFa} or
+##'   \code{IFNg}.
 ##' @param subset An \R expression, evaluated within the metadata, used to
 ##'   determine which individuals should be kept.
 ##' @param palette The colour palette to be used.
@@ -32,6 +38,7 @@ plot2 <- function(x, y, subset,
   threshold=0.01,
   minimum_dof=1,
   maximum_dof=Inf,
+  must_express=NULL,
   row_annotation=NULL, 
   palette=NA,
   show_rownames=FALSE, 
@@ -129,7 +136,25 @@ plot2 <- function(x, y, subset,
       "from 'x' and 'y'")
   }
   
+  ## finally, merge the two
   M <- M_x - M_y
+  
+  ## after the merging, try to filter based on express markers
+  ## Keep only markers that were specified in the 'must_express'
+  ## argument
+  if (!is.null(must_express)) {
+    
+    cats_int <- cats
+    cats_int[] <- lapply(cats, function(x) as.integer(as.character(x)))
+    
+    ind <- Reduce(union, lapply(must_express, function(x) {
+      eval( parse(text=x), envir=cats_int )
+    }))
+    
+    cats <- cats[ind, ]
+    M <- M[, ind]
+    
+  }
   
   ## compute dof from the colnames of M
   dof <- sapply( strsplit( colnames(M), "", fixed=TRUE ), function(x) {
