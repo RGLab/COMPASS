@@ -67,13 +67,31 @@ metadata.COMPASSResult <- function(x) {
   x$data$meta
 }
 
-##' @rdname metadata
 ##' @export
 `metadata<-` <- function(x, value) UseMethod("metadata<-")
 
-##' @rdname metadata
 ##' @export
 `metadata<-.COMPASSContainer` <- function(x, value) {
   x$meta <- check_meta(x$data, x$counts, value, x$individual_id, x$sample_id)
   x
 }
+
+##' COMPASSResult Accessors
+##'
+##' These functions can be used for accessing data within a \code{COMPASSResult}.
+##'
+##' @param x A \code{COMPASSResult} object.
+##' @name COMPASSResult-accessors
+NULL
+
+##' The gamma array associated with a \code{COMPASS} model fit.
+##' @rdname COMPASSResult-accessors
+Gamma <- function(x) {
+  return(x$fit$gamma)
+}
+
+##' @rdname COMPASSResult-accessors
+MeanGamma <- function(x) {
+  return(x$fit$mean_gamma)
+}
+

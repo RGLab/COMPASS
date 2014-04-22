@@ -73,9 +73,6 @@ shinyCOMPASS <- function(x, dir=NULL, meta.vars, facet1="None", facet2="None",
       names(x$data$meta) %in% c(iid, sid, meta.vars)
     ]
 
-    x$orig$meta <- x$orig$meta[
-      names(x$orig$meta) %in% c(iid, sid, meta.vars)
-    ]
   }
 
   ## Add the default facets
@@ -89,7 +86,7 @@ shinyCOMPASS <- function(x, dir=NULL, meta.vars, facet1="None", facet2="None",
 
   ## Check the facets
   .check_facet <- function(facet) {
-    if (facet != "None" && !(facet %in% names(x$orig$meta))) {
+    if (facet != "None" && !(facet %in% names(x$data$meta))) {
       stop("facet '", facet, "' is not available in the metadata")
     }
   }

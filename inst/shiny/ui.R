@@ -14,7 +14,6 @@ splomOutput <- function(outputId) {
 }
 
 DATA <- readRDS("data/data.rds")
-data <- DATA$orig$data
 meta <- DATA$data$meta
 sid <- DATA$data$sample_id
 iid <- DATA$data$individual_id
@@ -22,6 +21,8 @@ facet1 <- DATA$facet1
 facet2 <- DATA$facet2
 facet3 <- DATA$facet3
 stimulation <- DATA$stimulation
+markers <- markers(DATA)
+markers_positive <- paste0(markers, "+")
 
 subsets <- rev( unname(
   transform_subset_label(colnames(DATA$data$n_s)[ -ncol(DATA$data$n_s) ])
@@ -67,15 +68,7 @@ make_facets <- function(n) {
   facets
 }
 
-num_meta_vars <- ncol(meta) - 2 ## take away 'sample ID' and 'subject ID'
-
-## ensure that each matrix has the same column names
-stopifnot( length( table( table( unlist( lapply( data, names ) ) ) ) ) != 1 )
-
-## markers
-markers <- unname( colnames(data[[1]]) )
-markers_positive <- paste0( colnames(data[[1]]), "+" )
-markers_negative <- paste0( colnames(data[[1]]), "-" )
+num_meta_vars <- sum( !(names(meta) %in% c(iid, sid)) )
 
 shinyUI( bootstrapPage(
 
@@ -166,11 +159,11 @@ shinyUI( bootstrapPage(
         h5(style="margin: 6px;", "Range of Degree of Functionality to be Displayed"),
         tags$div( style="width: 50%; float: left;",
           tags$label( `for`="marker_dof_min", "Min"),
-          tags$input( id="marker_dof_min", type="number", value="1", min="1", max=ncol( data[[1]] ), step="1" )
+          tags$input( id="marker_dof_min", type="number", value="1", min="1", max=length(markers), step="1" )
         ),
         tags$div( style="width: 50%; float: right;",
           tags$label( `for`="marker_dof_max", "Max"),
-          tags$input( id="marker_dof_max", type="number", value="6", min="1", max=ncol( data[[1]] ), step="1" )
+          tags$input( id="marker_dof_max", type="number", value="6", min="1", max=length(markers), step="1" )
         )
       ),
 
@@ -234,7 +227,7 @@ shinyUI( bootstrapPage(
       h4("COMPASS Data Description"),
       p(
         strong("Number of Subjects:"),
-        length(unique(DATA$orig$meta[[iid]]))
+        length(unique(DATA$data$meta[[iid]]))
       ),
 #       p(
 #         strong("Number of Paired Samples:"),
@@ -242,13 +235,13 @@ shinyUI( bootstrapPage(
 #       ),
       p(
         strong("Number of Markers:"),
-        ncol(DATA$orig$data[[1]])
+        length(markers)
       ),
       p(
         strong("Number of Subsets:"),
         nrow(DATA$data$categories),
         "of",
-        2^ncol(DATA$orig$data[[1]]),
+        2^length(markers),
         "possible subsets"
       ),
       p(

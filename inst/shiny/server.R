@@ -23,9 +23,7 @@ DATA <- readRDS("data/data.rds")
 fit <- DATA
 data <- DATA$data
 meta <- DATA$data$meta
-orig <- DATA$orig
-
-orig_markers <- colnames(DATA$orig$data[[1]])
+orig_markers <- markers(DATA)
 
 trt <- DATA$fit$call$treatment
 if (is.language(trt)) {
@@ -347,7 +345,7 @@ shinyServer( function(input, output, session) {
       facet3 <- getFacet3()
 
       if (length(markers)) {
-        must_express <- paste(markers, collapse="&")
+        must_express <- paste(gsub("+", "", markers, fixed=TRUE), collapse="&")
       } else {
         must_express <- NULL
       }

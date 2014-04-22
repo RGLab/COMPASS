@@ -42,9 +42,8 @@
 ##' @param replications The number of 'replications' to perform. In order to
 ##'   conserve memory, we only keep the model estimates from the last replication.
 ##' @param keep_original_data Keep the original \code{COMPASSContainer}
-##'   as part of the \code{COMPASS} output? Note that if you want to run
-##'   \code{shinyCOMPASS} later, it is necessary that you set this as \code{TRUE}.
-##'   If memory or disk space is an issue, you may set this to \code{FALSE}.
+##'   as part of the \code{COMPASS} output? If memory or disk space is an issue,
+##'   you may set this to \code{FALSE}.
 ##' @param verbose Boolean; if \code{TRUE} we output progress information.
 ##' @param ... Other arguments; currently unused.
 ##'
@@ -122,7 +121,7 @@ COMPASS <- function(data, treatment, control, subset=NULL,
   filter_lowest_frequency=0, filter_specific_markers=NULL,
   model="discrete",
   iterations=40000, replications=8,
-  keep_original_data=TRUE,
+  keep_original_data=FALSE,
   verbose=TRUE, ...) {
 
   if (!inherits(data, "COMPASSContainer")) {
