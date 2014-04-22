@@ -105,7 +105,8 @@ The \code{data} component is a list with the following components:
 \item{counts_u}{Total cell counts for unstimulated samples.}
 \item{categories}{The categories matrix used to define which
 categories will enter the model.}
-\item{meta}{The metadata.}
+\item{meta}{The metadata. Note that only \strong{individual-level} metadata
+  will be kept; sample-specific metadata is dropped.}
 \item{sample_id}{The name of the vector in the metadata used to
 identify the samples.}
 \item{individual_id}{The name of the vector in the metadata used
