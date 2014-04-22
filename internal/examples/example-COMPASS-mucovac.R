@@ -34,7 +34,7 @@ CD4_results <- COMPASS(
   data=CD4,
   treatment=Stim == x,
   control=Stim == "negctrl",
-  category_filter=function(x) colSums(x>4) > 2, 
+  category_filter=function(x) colSums(x>4) > 2,
   verbose=TRUE,
   iterations=10,
   filter_lowest_frequency=2,
@@ -42,7 +42,7 @@ CD4_results <- COMPASS(
 )
 
 saveRDS(CD4_results, file="data/Mucovac_CD4_results.rds")
-  
+
 nc<-ncol(CD4_results$fit$gamma)
 M<-apply(CD4_results$fit$gamma,1:2,mean)[,-nc]
 rowann<-data.frame(do.call(rbind,strsplit(rownames(M),":")))

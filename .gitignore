@@ -1,5 +1,4 @@
 *.so
-*.Rproj
 .DS_Store
 .project
 src/*.o

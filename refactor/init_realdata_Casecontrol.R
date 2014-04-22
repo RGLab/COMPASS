@@ -1,6 +1,6 @@
 ################### initialization ########################
 #original data: yu, ys, # ordered data: y_u, y_s
-library(e1071); 
+library(e1071);
 #library(utils);
 library(rBeta2009);
 
@@ -13,11 +13,11 @@ if (FALSE) { # for ENV-1 only
   sub_u = sub_u[-49]
   placebo = placebo[-49]
   I=I-1;
-  
+
   sub_s = sub_s[-49]
   N_s = N_s[-49]
   N_u = N_u[-49]
-  
+
   #32
   y_s[[32]]=NULL
   y_u[[32]]=NULL
@@ -26,7 +26,7 @@ if (FALSE) { # for ENV-1 only
   sub_u = sub_u[-32]
   placebo = placebo[-32]
   I=I-1;
-  
+
   sub_s = sub_s[-32]
   N_s = N_s[-32]
   N_u = N_u[-32]
@@ -55,7 +55,7 @@ indi = matrix(as.integer(indi), nrow=I)
 
 #####################find empirical ground mean and variance ##########
 m_s = array(0, dim = c(M,1)); #hyper prior mean for mu_s
-m_u = array(0, dim = c(M,1)); 
+m_u = array(0, dim = c(M,1));
 grand_m =m_u; grand_sd = m_u;
 
 for ( mm in 1:M) {
@@ -109,7 +109,7 @@ pb2 = 0.75;
 lambda_s=array(100000, dim=c(1,K)); lambda_s[K] =150000; #upper bound for alpha_s
 lambda_u=lambda_s;
 
-alpha_u[1,1:(K-1)] =10; alpha_u[1,K] = 100; 
+alpha_u[1,1:(K-1)] =10; alpha_u[1,K] = 100;
 alpha_s[1,1:(K-1)] =10; alpha_s[1,K] = 150;
 
 var_alphas = array(0,dim=c(K,K));
@@ -140,7 +140,7 @@ for ( i in 1:I){
   } else if (n_s[i,1]>1 && n_u[i,1]==0) {
     yy = y_s[[i]][1:n_s[i,1],dk]
     sig2ik[i,1,dk] = mad(yy)
-  } 
+  }
   if (n_u[i,1]>1) {meanuik[i,1,dk] = mean(y_u[[i]][1:n_u[i,1],dk])}
   else if (n_u[i,1]==1) {meanuik[i,1,dk] = (y_u[[i]][1:n_u[i,1],dk])}
 }
@@ -150,7 +150,7 @@ for ( kk in 2:6) {
   for ( i in 1:I) {
     if (n_s[i,kk]>0 && n_u[i,kk]>0) {
       yy = c(y_u[[i]][(sum(n_u[i,1:(kk-1)])+1):sum(n_u[i,1:kk]),dk], y_s[[i]][(sum(n_s[i,1:(kk-1)])+1):sum(n_s[i,1:kk]),dk])
-      sig2ik[i,kk,dk] = mad(yy)        
+      sig2ik[i,kk,dk] = mad(yy)
     }else if (n_s[i,kk]==0 && n_u[i,kk]>1) {
       yy = y_u[[i]][(sum(n_u[i,1:(kk-1)])+1):sum(n_u[i,1:kk]),dk]
       sig2ik[i,kk,dk] = mad(yy)
@@ -159,8 +159,8 @@ for ( kk in 2:6) {
       sig2ik[i,kk,dk] = mad(yy)
     }
     if (n_u[i,kk]>1){ meanuik[i,kk,dk] = mean(y_u[[i]][(sum(n_u[i,1:(kk-1)])+1):sum(n_u[i,1:kk]),dk])}
-    else if (n_u[i,kk]==1) {meanuik[i,kk,dk] =y_u[[i]][(sum(n_u[i,1:(kk-1)])+1):sum(n_u[i,1:kk]),dk]} 
-  }    
+    else if (n_u[i,kk]==1) {meanuik[i,kk,dk] =y_u[[i]][(sum(n_u[i,1:(kk-1)])+1):sum(n_u[i,1:kk]),dk]}
+  }
 }
 
 for ( kk in 7:K1) {
@@ -169,7 +169,7 @@ for ( kk in 7:K1) {
     if (n_s[i,kk]>0 && n_u[i,kk]>0) {
       yy = rbind(y_u[[i]][(sum(n_u[i,1:(kk-1)])+1):sum(n_u[i,1:kk]),dk], y_s[[i]][(sum(n_s[i,1:(kk-1)])+1):sum(n_s[i,1:kk]),dk])
       sig2ik[i,kk,dk] = apply(yy,2,mad)
-    }else if (n_s[i,kk]==0 && n_u[i,kk]>1 ) {   
+    }else if (n_s[i,kk]==0 && n_u[i,kk]>1 ) {
       yy = y_u[[i]][(sum(n_u[i,1:(kk-1)])+1):sum(n_u[i,1:kk]),dk]
       sig2ik[i,kk,dk] = apply(yy,2,mad)
     } else if (n_s[i,kk]>1 && n_u[i,kk]==0) {
@@ -177,8 +177,8 @@ for ( kk in 7:K1) {
       sig2ik[i,kk,dk] = apply(yy,2,mad)
     }
     if (n_u[i,kk]>1) {meanuik[i,kk,dk] = apply(y_u[[i]][(sum(n_u[i,1:(kk-1)])+1):sum(n_u[i,1:kk]),dk],2,mean)}
-    else if(n_u[i,kk]==1) {meanuik[i,kk,dk] =y_u[[i]][(sum(n_u[i,1:(kk-1)])+1):sum(n_u[i,1:kk]),dk]} 
-  }    
+    else if(n_u[i,kk]==1) {meanuik[i,kk,dk] =y_u[[i]][(sum(n_u[i,1:(kk-1)])+1):sum(n_u[i,1:kk]),dk]}
+  }
 }
 
 mean_sig = array(0, dim=c(M,1))
@@ -195,7 +195,7 @@ for ( mm in 1:M) {
   sig_sig[mm] = mad(temp)
   alpha1[mm] = (mean_sig[mm])^2/(sig_sig[mm])^2+2
   beta1[mm] = (mean_sig[mm])^3/(sig_sig[mm])^2+mean_sig[mm]
-  
+
   temp1 = as.vector(meanuik[,pm,mm])
   temp1 = temp1[-which(temp1==0)]
   temp_var[mm] = sum((temp1-m_u[mm])^2)/(length(temp1)-1)
@@ -234,19 +234,19 @@ ybar_s = array(0,dim=c(I,K,M))
 ybar_u = array(0,dim=c(I,K,M))
 ys2_s = array(0,dim=c(I,K,M))
 ys2_u = array(0,dim=c(I,K,M))
-for ( i in 1:I) { 
+for ( i in 1:I) {
   countu=1; counts=1;
   yui = y_u[[i]]; ysi = y_s[[i]];
   for ( k in 1:K1) {
     ldk = d[k,M+1];
     placed = which(d[k,1:M] ==1);
     if(n_u[i,k]>0) {
-      
-      if(n_u[i,k]>1) { 
+
+      if(n_u[i,k]>1) {
         ybar_u[i,k,] = colMeans(yui[countu:(countu+n_u[i,k]-1),]);
       }else {ybar_u[i,k,]=yui[countu,];}
-      
-      
+
+
       ys2_uik = array(0,dim=c(1,ldk));
       for ( c in countu:(countu+n_u[i,k]-1)) {
         ys2_uik = ys2_uik+ (yui[c,placed]-ybar_u[i,k,placed])^2/n_u[i,k];
@@ -283,20 +283,20 @@ if (FALSE){ #
     }
     ys_mm = ys_mm[-which(ys_mm==0)]
     yu_mm = yu_mm[-which(yu_mm==0)]
-    log_ys = log(ys_mm); 
+    log_ys = log(ys_mm);
     mean_log_s[mm] = mean(log_ys);
     sd_log_s[mm] = sd(log_ys);
-    
-    log_yu = log(yu_mm); 
+
+    log_yu = log(yu_mm);
     mean_log_u[mm] = mean(log_yu);
     sd_log_u[mm] = sd(log_yu);
   }
-  
+
   ybar_s = array(0,dim=c(I,K,M))
   ybar_u = array(0,dim=c(I,K,M))
   ys2_s = array(0,dim=c(I,K,M))
   ys2_u = array(0,dim=c(I,K,M))
-  for ( i in 1:I) { 
+  for ( i in 1:I) {
     countu=1; counts=1;
     yui = y_u[[i]]; ysi = y_s[[i]];
     yui = (log(yui)-repmat(mean_log_u,sum(n_u[i,1:K1]),1))/repmat(sd_log_u,sum(n_u[i,1:K1]),1)
@@ -305,12 +305,12 @@ if (FALSE){ #
       ldk = d[k,M+1];
       placed = which(d[k,1:M] ==1);
       if(n_u[i,k]>0) {
-        
-        if(n_u[i,k]>1) { 
+
+        if(n_u[i,k]>1) {
           ybar_u[i,k,] = colMeans(yui[countu:(countu+n_u[i,k]-1),]);
         }else {ybar_u[i,k,]=yui[countu:(countu+n_u[i,k]-1),];}
-        
-        
+
+
         ys2_uik = array(0,dim=c(1,ldk));
         for ( c in countu:(countu+n_u[i,k]-1)) {
           ys2_uik = ys2_uik+ (yui[c,placed]-ybar_u[i,k,placed])^2/n_u[i,k];
@@ -330,10 +330,10 @@ if (FALSE){ #
       countu = countu+n_u[i,k];counts = counts+n_s[i,k];
     }
   }
-  
+
   m_s = array(0, dim = c(M,1)); #hyper prior mean for mu_s
-  m_u = array(0, dim = c(M,1)); 
-  
+  m_u = array(0, dim = c(M,1));
+
   mu_s = array(0, dim=c(T,M)); mu_s[1,] = m_s;
   mu_u = array(0, dim=c(T,M)); mu_u[1,] = m_u;
 }#

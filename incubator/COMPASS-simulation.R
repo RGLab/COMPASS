@@ -3,20 +3,20 @@ library(COMPASS)
 ## simulate some data for COMPASS
 set.seed(123)
 
-make.data <- function(n, mean_ncells, sd_ncells, n_markers, 
+make.data <- function(n, mean_ncells, sd_ncells, n_markers,
   mean_intensity, sd_intensity, threshold) {
-  
+
   replicate(n, simplify=FALSE, {
     nCells <- max(0, floor( rnorm(1, mean_ncells, sd_ncells) ))
-    tmp <- matrix( 
-      rnorm(nCells * n_markers, mean_intensity, sd_intensity), 
-      ncol=n_markers 
+    tmp <- matrix(
+      rnorm(nCells * n_markers, mean_intensity, sd_intensity),
+      ncol=n_markers
     )
     tmp[ tmp < threshold ] <- 0
     colnames(tmp) <- paste0("V", 1:n_markers)
     return(tmp)
   })
-  
+
 }
 
 n <- 50
