@@ -42,7 +42,7 @@ $( function() {
   });
   
   $("#subsets").multiselect({
-    noneSelectedText: "Visualize subsets...",
+    noneSelectedText: "Subsets to Visualize in Histogram...",
     header: "Select Subset",
     selectedText: "# of # subsets selected",
     show: ['slide', 200]

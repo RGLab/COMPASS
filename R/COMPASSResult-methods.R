@@ -1,8 +1,8 @@
 ##' Print a COMPASSResult Object
-##' 
+##'
 ##' This function prints basic information about the model fit by a
 ##' \code{\link{COMPASS}} call.
-##' 
+##'
 ##' @param x An object of class \code{COMPASSResult}.
 ##' @param ... Optional arguments; currently unused.
 ##' @export
@@ -14,10 +14,10 @@ print.COMPASSResult <- function(x, ...) {
 }
 
 ##' Summarize a COMPASSResult Object
-##' 
+##'
 ##' This function prints basic information about the model fit by a
 ##' \code{\link{COMPASS}} call.
-##' 
+##'
 ##' @param object An object of class \code{COMPASSResult}.
 ##' @param ... Optional arguments; currently unused.
 ##' @export
