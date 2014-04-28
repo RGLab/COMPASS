@@ -21,7 +21,7 @@
 ##'   to be plotted.
 ##' @param must_express A character vector of markers that should be included
 ##'   in each subset plotted. For example, \code{must_express=c("TNFa & IFNg")}
-##'   says we include only subsets that are positive for either
+##'   says we include only subsets that are positive for both
 ##'   \code{TNFa} or \code{IFNg}, while \code{must_express=c("TNFa", "IFNg")}
 ##'   says we should keep subsets which are positive for either \code{TNFa} or
 ##'   \code{IFNg}.
@@ -58,7 +58,6 @@ plot.COMPASSResult <- function(x, y, subset=NULL,
   maximum_dof=Inf,
   must_express=NULL,
   row_annotation,
-  #palette=seq_gradient_pal(low="black", high="red")(seq(0, 1, length=20)),
   palette=colorRampPalette(brewer.pal(10,"Purples"))(20),
   show_rownames=FALSE,
   show_colnames=FALSE,
@@ -67,7 +66,7 @@ plot.COMPASSResult <- function(x, y, subset=NULL,
   ...) {
 
   call <- match.call()
-  
+
   ## We do some gymnastics to figure out what the subset expression is
   ## If the caller does something like the following:
   ##
@@ -77,12 +76,18 @@ plot.COMPASSResult <- function(x, y, subset=NULL,
   ## then this function sees 'subset' as a promise that it cannot properly
   ## evaluate, and call$subset just sees 'subset_call'. So we have to explicitly
   ## evaluate the symbol in the parent frame to recover the call.
-  if (is.symbol(call$subset)) {
-    subset <- eval(call$subset, envir=parent.frame())
-  } else if (is.language(call$subset)) {
+  if (!is.null(subset)) {
     subset <- call$subset
+    n <- 1
+    while (is.symbol(subset)) {
+      subset <- eval(subset, envir=parent.frame(n))
+      n <- n + 1
+    }
+    if (!is.language(subset)) {
+      stop("'subset' should be an expression", call.=FALSE)
+    }
   }
-  
+
   ## Number of markers
   .n <- ncol(x$fit$categories) - 1
 
@@ -94,7 +99,6 @@ plot.COMPASSResult <- function(x, y, subset=NULL,
     }
   } else {
     if (!is.null(order_by)) {
-
       if (is.symbol(call$order_by)) {
         if (call$order_by == "PolyfunctionalityScore") {
           ## .degree is generated downstream
@@ -107,14 +111,14 @@ plot.COMPASSResult <- function(x, y, subset=NULL,
           }
         } else {
           FUN <- match.fun(order_by)
-          order_fun <- function(x, f=FUN) {
-            apply(x, 1, f)
+          order_fun <- function(x) {
+            apply(x, 1, FUN)
           }
         }
       } else {
         FUN <- match.fun(order_by)
-        order_fun <- function(x, f=FUN) {
-          apply(x, 1, f)
+        order_fun <- function(x) {
+          apply(x, 1, FUN)
         }
       }
     }
@@ -122,60 +126,60 @@ plot.COMPASSResult <- function(x, y, subset=NULL,
 
   ## try to override mean_gamma with measure
   if (!is.null(measure)) {
-    x$fit$mean_gamma <- measure
+    ## normalize measure to have the same order + columns
+    m <- as.data.frame(measure)
+    missing_names <- colnames(x$fit$mean_gamma)[ !(colnames(x$fit$mean_gamma) %in% names(m)) ]
+    m[missing_names] <- 0
+    m <- m[ match(names(m), colnames(x$fit$mean_gamma)) ]
+    x$fit$mean_gamma <- as.matrix(m)
   }
-  
+
+  ## y is effectively an alias for row_annotation, just for usability
   if (missing(row_annotation)) {
     if (missing(y)) {
       y <- NULL
     }
-      row_annotation <- y
+    row_annotation <- y
   }
 
-  ## Keep only markers that were specified in the 'must_express'
-  ## argument
+  ## Rather than subsetting incrementally, we grow a set of column indices,
+  ## which will finally be subsetted at the end. We begin by accepting
+  ## everything, and ruling entries out based on the different
+  ## subsetting criteria.
+
+  ## Get some useful variables -- TODO: write getters for some of these
+  M <- x$fit$mean_gamma
+  cats <- x$fit$categories
+  ind <- 1:ncol(x$fit$mean_gamma)
+
+  ## We compute the subsets manually from the categories matrix because older
+  ## COMPASS fits don't have them :/
+  subsets_df <- as.data.frame(cats[, -ncol(cats), drop=FALSE])
+  for (i in seq_along(subsets_df)) {
+    tmp <- subsets_df[[i]]
+    subsets_df[[i]] <- paste0(
+      swap(tmp, c(0, 1), c("!", "")),
+      colnames(subsets_df)[[i]]
+    )
+  }
+  subsets <- do.call( function(...) paste(..., sep="&"), subsets_df )
+
+  colnames(M) <- subsets
+  dof <- cats[, "Counts"]
+
+  if (is.null(rownames(cats))) {
+    rownames(cats) <- subsets
+  }
+
+  ## Perform 'must_express' subsetting
   if (!is.null(must_express)) {
-
-    stopifnot( is.character(must_express) )
-    ind <- Reduce(union, lapply(must_express, function(m) {
-      markers <- unlist( strsplit( m, "[[:space:]]*&[[:space:]]*") )
-      markers_regex <- paste0("(?<!!)", markers)
-      Reduce(intersect, lapply(markers_regex, function(rex) {
-        grep(rex, colnames(x$data$n_s), perl=TRUE)
-      }))
+    must_express_ind <- Reduce(union, lapply(must_express, function(i) {
+      which(eval(parse(text=i), envir=as.data.frame(cats)) == 1)
     }))
-
-    nc <- length(ind)
-    M <- x$fit$mean_gamma[, ind, drop=FALSE]
-    colnames(M) <- colnames(x$data$n_s)[ind]
-
-    cats <- x$fit$categories[ind, , drop=FALSE]
-    cats <- data.frame(cats)
-    cats <- cats[,1:(ncol(cats)-1)]
-    cats <- as.data.frame( lapply(cats, function(x) {
-      factor(x, levels=c(0, 1))
-    }))
-    dof <- x$fit$categories[ind, "Counts", drop=FALSE]
-
-  } else {
-
-    nc <- ncol(x$fit$gamma)
-    M <- x$fit$mean_gamma[, -nc, drop=FALSE]
-    colnames(M) <- colnames(x$data$n_s)[-nc]
-
-    cats <- x$fit$categories[-nc,]
-    cats <- data.frame(cats)
-    cats <- cats[,1:(ncol(cats)-1)]
-    cats <- as.data.frame( lapply(cats, function(x) {
-      factor(x, levels=c(0, 1))
-    }))
-    dof <- x$fit$categories[, "Counts"]
-    dof <- dof[ -length(dof) ]
-
+    ind <- intersect(ind, must_express_ind)
   }
 
-  ## get the dof
-
+  ## Construct the base of the 'rowann' data.frame -- annotates rows
   rowann <- data.frame(.id=rownames(M))
   rowann <- merge(
     rowann,
@@ -191,11 +195,8 @@ plot.COMPASSResult <- function(x, y, subset=NULL,
   rowann <- rowann[ match(rownames(M), rownames(rowann)), , drop=FALSE ]
 
   ## keep only those meeting the min, max dof criteria
-  M <- M[, dof >= minimum_dof & dof <= maximum_dof, drop=FALSE]
-  cats <- cats[dof >= minimum_dof & dof <= maximum_dof, ]
-  if (ncol(M) == 0) {
-    stop("No categories left after subsetting for 'minimum_dof', 'maximum_dof'")
-  }
+  dof_ind <- which(dof >= minimum_dof & dof <= maximum_dof)
+  ind <- intersect(ind, dof_ind)
 
   ## remove under-expressed categories
   m <- apply(M, 2, mean)
@@ -205,14 +206,21 @@ plot.COMPASSResult <- function(x, y, subset=NULL,
     message("The 'threshold' filter has removed ", sum(gone),
       " categories:\n", paste( colnames(M)[gone], collapse=", "))
   }
-  M <- M[, keep, drop=FALSE]
-  cats <- cats[keep, ]
+  ind <- intersect(ind, which(keep))
 
-  colnames(M) <- rownames(cats)
+  ## finally, subset
+  if (!length(ind)) {
+    stop("no marker subsets available for plotting after subsetting")
+  }
 
-  ## handle subsetting
+  M <- M[, ind, drop=FALSE]
+  cats <- cats[ind, , drop=FALSE]
+  dof <- dof[ind]
+
+  ## handle subsetting -- this subsets rows, rather than columns, and hence
+  ## lives apart of the 'ind' collection
   if (is.call(subset)) {
-    keep <- x$data$meta[[x$data$individual_id]][eval(subset, envir=x$data$meta)]
+    keep <- unique(x$data$meta[[x$data$individual_id]][eval(subset, envir=x$data$meta)])
     M <- M[ rownames(M) %in% keep, , drop=FALSE]
     rowann <- rowann[ rownames(rowann) %in% keep, , drop=FALSE]
   }
@@ -256,9 +264,15 @@ plot.COMPASSResult <- function(x, y, subset=NULL,
     rowann <- NA
   }
 
+  ## Make sure the categories matrix is re-set as an appropriate df
+  cats_df <- as.data.frame(cats[, -ncol(cats)]) ## drop the "Counts" column
+  cats_df[] <- lapply(cats_df, function(x) {
+    as.factor(x)
+  })
+  rownames(cats_df) <- colnames(M)
+
   ## Reorder data within degrees of functionality
   means <- apply(M, 2, mean)
-  dof <- dof[ as.integer(names(means)) ]
   ord <- order(dof, means, decreasing = FALSE)
   M <- M[, ord, drop=FALSE]
 
@@ -269,7 +283,7 @@ plot.COMPASSResult <- function(x, y, subset=NULL,
     row_annotation=rowann,
     cluster_rows=FALSE,
     cluster_cols=FALSE,
-    cytokine_annotation=cats,
+    cytokine_annotation=cats_df,
     ...
   )
 

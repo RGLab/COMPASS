@@ -1,10 +1,10 @@
 ##' Generate Combinations
-##' 
+##'
 ##' Given an intenger \code{n}, generate all binary combinations of
 ##' \code{n} elements, transformed to indices. This is primarily for use
 ##' with the \code{\link{CellCounts}} function, but may be useful for
 ##' users in some scenarios.
-##' 
+##'
 ##' @param n An integer.
 ##' @export
 ##' @examples

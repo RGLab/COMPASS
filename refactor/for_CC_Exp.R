@@ -6,7 +6,7 @@ cd4_counts <- readRDS(system.file(package="MIMOSA","data/cd4_counts.rds"))
 #rm(res,meta,cd4_counts);gc(reset=TRUE)
 
 #### delete bad ptids
-#Filter 
+#Filter
 del = c(523845,525881,600929,616848,631338,631772,644891,646477,704809,719186,849938,104173,125948,132409,134551,210617,211497,217402,223868,233547,323142,330034,330272,339553)
 
 #### case-control
@@ -45,7 +45,7 @@ yu =vector(mode="list", length=length(sub_u));
 for (i in 1:length(sub_s)) {
   ys[[i]] = res[[sub_s[i]]]
   names(ys)[i] <- names(res)[sub_s[i]]
-  yu[[i]] = res[[sub_u[i]]]  
+  yu[[i]] = res[[sub_u[i]]]
   names(yu)[i] <- names(res)[sub_u[i]]
 }
 placebo = meta$vaccine[sub_s]
@@ -66,12 +66,12 @@ d = array(as.integer(0),dim=c(K,M))
 count=1;
 for (kk in 1:(M-1)) {
   set = combs(1:M,kk);
-  ll = dim(combs(1:M,kk)); 
-  
+  ll = dim(combs(1:M,kk));
+
   for ( lll in 1:ll[1]) {
     d[(count-1+lll),set[lll,]] = as.integer(1);
   }
-  
+
   count = count+choose(M,kk);
 }
 d[count,]=as.integer(1)
@@ -81,9 +81,9 @@ for (i in 1:I) {
   count_s = 1; count_u = 1;
   yui = 1*(yu[[i]]!=0)
   ysi = 1*(ys[[i]]!=0)
-  for ( kk in 1:K1) {   
+  for ( kk in 1:K1) {
     if( length(yui)>0) {
-      sel = apply(yui,1,function(xrow)(identical(as.numeric(xrow),as.numeric(d[kk,1:M])))) 
+      sel = apply(yui,1,function(xrow)(identical(as.numeric(xrow),as.numeric(d[kk,1:M]))))
       n_u[i,kk] = as.integer(sum(sel))
       if(n_u[i,kk]>0) {
         y_u[[i]][count_u:(count_u+n_u[i,kk]-1),] = yu[[i]][sel,]
@@ -91,8 +91,8 @@ for (i in 1:I) {
       }
     }
     if(length(ysi)>0) {
-      sel = apply(ysi,1,function(xrow)(identical(as.numeric(xrow),as.numeric(d[kk,1:M])))) 
-      
+      sel = apply(ysi,1,function(xrow)(identical(as.numeric(xrow),as.numeric(d[kk,1:M]))))
+
       n_s[i,kk] = as.integer(sum(sel))
       if(n_s[i,kk]>0) {
         y_s[[i]][count_s:(count_s+n_s[i,kk]-1),] = ys[[i]][sel,]
@@ -133,7 +133,7 @@ for ( i in 1:I) {
       posiu = c(posiu, (cu[j-1]+1):cu[j])
     } else if (n_u[i,j] ==1) {
       posiu = c(posiu,cu[j])
-    } 
+    }
   }
   if (length(posis) >0) {y_s[[i]] = y_s[[i]][-posis,]}
   if (length(posiu) >0) {y_u[[i]] = y_u[[i]][-posiu,]}
@@ -150,7 +150,7 @@ n_u[,K] = N_u-as.integer(rowSums(n_u[,1:K1]))
 
 ###########################################################
 ###########################################################
-library(e1071); 
+library(e1071);
 ######fix some gamma's #####
 indi = array(1,dim=c(I,K)) # 0 indicate that gamma_ik=0
 for (k in 1:K1) {
@@ -185,12 +185,12 @@ pp = array(0.65, dim=c(I,1));
 pb1 = 0.1;
 pb2 = 0.6;
 
-lambda_s = rep(0,K);  
+lambda_s = rep(0,K);
 lambda_s[1:K1] = (10^-2)*max(N_s,N_u)
 lambda_s[K] = max(N_s,N_u)-sum(lambda_s[1:K1])
 lambda_u = lambda_s
 
-alpha_u[1,1:(K-1)] =10; alpha_u[1,K] = 150; 
+alpha_u[1,1:(K-1)] =10; alpha_u[1,K] = 150;
 alpha_s[1,1:(K-1)] =10; alpha_s[1,K] = 100;
 
 #################### acceptance rate ###########################

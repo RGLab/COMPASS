@@ -1,5 +1,5 @@
 ##' Transpose a List
-##' 
+##'
 ##' Transpose a matrix-like list.
 ##' @param x An \R list.
 ##' @export

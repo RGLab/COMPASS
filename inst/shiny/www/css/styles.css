@@ -97,7 +97,7 @@ div.controls  > * {
 }
 
 #gridster-control-container {
-  z-index: 1000;
+  z-index: 100; /* needs to be less than 110 to work with opentip */
   height: 25px;
   width: 430px;
   min-width: 120px;

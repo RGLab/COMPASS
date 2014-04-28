@@ -5,10 +5,10 @@ library(COMPASS)
 # ## source first part of master4model_cpp.R
 CC <- COMPASSContainer(
   data=res,
-  counts=cd4_counts, 
-  meta=meta, 
+  counts=cd4_counts,
+  meta=meta,
   stim="Stim",
-  sample="name", 
+  sample="name",
   indiv="PTID"
 )
 
@@ -66,7 +66,7 @@ CC_sub <- CC
 CC_sub$data <- CC_sub$data[1:520]
 data <- CC_sub
 discrete <- COMPASS(
-  data=CC_sub, 
+  data=CC_sub,
   treatment=Stim == "92TH023 Env",
   control=Stim == "negctrl 1",
   model="discrete",
@@ -77,7 +77,7 @@ continuous <- COMPASS(
   data=CC,
   treatment=Stim == "92TH023 Env",
   control=Stim == "negctrl 1",
-  model="continuous", 
+  model="continuous",
   iterations=10
 )
 

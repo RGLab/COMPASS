@@ -1,23 +1,23 @@
 ##' Create a COMPASS Container from a GatingSet
-##' 
-##' This code expects a \code{GatingSet} or \code{GatingSetList}. 
-##' It expects a regular expression for the node name 
+##'
+##' This code expects a \code{GatingSet} or \code{GatingSetList}.
+##' It expects a regular expression for the node name
 ##' (i.e. '/4\\+$' would match '/4+' in a node name with the plus
 ##' sign at the end of the string. Alternatively, you can supply a
 ##' partial path.
 ##' The user must supply the individual_id and sample_id,
 ##' but they have default values suitable for the data we commonly see.
 ##' Sometimes the child node names don't match the marker names exactly.
-##' This function will try to make some guesses about how to match these up. 
+##' This function will try to make some guesses about how to match these up.
 ##' The \code{filter.fun} parameter is a function that does some regular expression string
 ##' substitution to try and clean up the node names by removing
 ##' various symobls that are often added to gates, \{+/-\}. The user can provide their
 ##' own function to do string cleanup.
 ##' Counts are extracted as well as metadata and single cell data, and these are fed into the
 ##' \code{COMPASSContainer} constructor.
-##' 
-##' There is likely not sufficient error checking. 
-##' 
+##'
+##' There is likely not sufficient error checking.
+##'
 ##' @param gs a \code{GatingSet} or \code{GatingSetList}
 ##' @param node a \code{regular expression} to match a single node in the gating tree. If more than one node is matched, an error is thrown.
 ##' @param filter.fun a \code{function} that does string substitution to clean up node names, i.e. turns a 'CD4+' into a 'CD4' to try and
@@ -40,20 +40,20 @@
 ##' @importFrom utils adist
 ##' @importFrom clue solve_LSAP
 ##' @export
-COMPASSContainerFromGatingSet <- function(gs = NULL, node = NULL, filter.fun = NULL, 
+COMPASSContainerFromGatingSet <- function(gs = NULL, node = NULL, filter.fun = NULL,
                                           individual_id = "PTID", sample_id = "name",
-                                          mp = NULL, countFilterThreshold = 5000, 
-                                          matchmethod = c("Levenshtein","regex"), 
+                                          mp = NULL, countFilterThreshold = 5000,
+                                          matchmethod = c("Levenshtein","regex"),
                                           markers = NA) {
   if (require(flowWorkspace)) {
-    
+
     ## R CMD check silencing
     desc.upper <- desc <- name <- NULL
-    
+
     if (is.null(gs) | is.null(node)) {
       stop("Must specify a gating set and parent node.")
     }
-    
+
     ## Make 'node' act more like a regular expression if it isn't one already
     n <- nchar(node)
     if (!substring(node, 1, 1) == "/") node <- paste0("/", node)
@@ -70,35 +70,35 @@ COMPASSContainerFromGatingSet <- function(gs = NULL, node = NULL, filter.fun = N
       names(parent.counts) <- flowWorkspace::sampleNames(x)
       parent.counts
     }
-    
+
     nnames <- flowWorkspace::getNodes(gs[[1]], path="full")
-    parent.pop<-nnames[grepl(node, nnames, fixed = FALSE)]    
+    parent.pop<-nnames[grepl(node, nnames, fixed = FALSE)]
     if (length(parent.pop) > 1) {
       stop(gettextf("The node expression %s is not unique.", node))
     }
     if (length(parent.pop) == 0) {
-      stop(gettextf("The node expression %s doesn't identify any nodes.", 
+      stop(gettextf("The node expression %s doesn't identify any nodes.",
                    node))
     }
-    
+
     # Extract the parent node name from the full population name
     parent.node <- laply(strsplit(parent.pop, "/"), function(x) x[length(x)])
     message(gettextf("Fetching %s", parent.node))
-    
+
     counts<-.getOneStat(gs,parent.node)
-    
+
     #stats <- getPopStats(gs, statistic = "count")
-    
+
     pd <- pData(gs)
     # Do the expected columns exist?
     if (!all(c(sample_id, individual_id) %in% colnames(pd))) {
       message("Some columns not found in metadata")
       message(gettextf("Expected: %s %s", sample_id, individual_id))
-      message(gettextf("Missing: %s\n", c(sample_id, individual_id)[which(!c(sample_id, individual_id) %in% 
+      message(gettextf("Missing: %s\n", c(sample_id, individual_id)[which(!c(sample_id, individual_id) %in%
                                                                  colnames(pd))]))
       stop("Quitting")
     }
-    
+
     # Can we identify a unique parent node?
 
 #     paths <- getNodes(gs[[1]], isPath=TRUE)
@@ -107,10 +107,10 @@ COMPASSContainerFromGatingSet <- function(gs = NULL, node = NULL, filter.fun = N
 #       stop(gettextf("The node expression %s is not unique.", node))
 #     }
 #     if (length(parent.pop) == 0) {
-#       stop(gettextf("The node expression %s doesn't identify any nodes.", 
+#       stop(gettextf("The node expression %s doesn't identify any nodes.",
 #                    node))
 #     }
-#     
+#
 #     # extract all the counts
 #     message("Extracting cell counts")
 #     .get_cell_counts <- function(gs, samples, node) {
@@ -124,7 +124,7 @@ COMPASSContainerFromGatingSet <- function(gs = NULL, node = NULL, filter.fun = N
 #       names(output) <- samples
 #       return(output)
 #     }
-#     
+#
 #     if (inherits(gs, "GatingSetList")) {
 #       counts <- unlist( lapply(gs@data, function(x) {
 #         .get_cell_counts(x, sampleNames(x), parent.pop)
@@ -140,13 +140,13 @@ COMPASSContainerFromGatingSet <- function(gs = NULL, node = NULL, filter.fun = N
     #  stop(gettextf("The node expression %s is not unique.", node))
     #}
     #if (length(parent.pop) == 0) {
-    #  stop(gettextf("The node expression %s doesn't identify any nodes.", 
+    #  stop(gettextf("The node expression %s doesn't identify any nodes.",
     #               node))
     #}
-    
+
     # Grab the counts for the parent
     #counts <- stats[which(rownames(stats) %in% parent.pop), ]
-    
+
 
     # Get the children of that parent and filter out boolean gates Test if
     # children exist, and test if non-empty set returned.
@@ -154,17 +154,17 @@ COMPASSContainerFromGatingSet <- function(gs = NULL, node = NULL, filter.fun = N
     child.nodes <- flowWorkspace::getChildren(gs[[1]], parent.node)
     child.nodes <- basename(child.nodes)
     if (length(child.nodes) == 0) {
-      stop(gettextf("Population %s has no children! Choose a different parent population.", 
+      stop(gettextf("Population %s has no children! Choose a different parent population.",
                    parent.node))
     }
-    
-    child.nodes <- child.nodes[!sapply(child.nodes, function(x) .isBoolGate(gs[[1]], 
+
+    child.nodes <- child.nodes[!sapply(child.nodes, function(x) .isBoolGate(gs[[1]],
                                                                                             x))]
     if (length(child.nodes) == 0) {
-      stop(gettextf("All the children of %s are boolean gates. Choose a population with non-boolean child gates.", 
+      stop(gettextf("All the children of %s are boolean gates. Choose a population with non-boolean child gates.",
                    parent.node))
     }
-    
+
     # Make sure the child node names are mapped to channel names correctly.
     # This is awful.. we don't have a way to track which dimension of a 2D
     # gate is of importance.. so this code tries to take a guess by matching
@@ -191,7 +191,7 @@ COMPASSContainerFromGatingSet <- function(gs = NULL, node = NULL, filter.fun = N
       } else {
         stop("Expected object of type 'GatingSetList' or 'GatingSet'")
       }
-      mlist <- flowWorkspace::lapply(xx, function(x) na.omit(parameters(getData(x, 
+      mlist <- flowWorkspace::lapply(xx, function(x) na.omit(parameters(getData(x,
                                                                  use.exprs = FALSE))@data$desc))
       common <- Reduce(intersect, mlist)
       unyn <- Reduce(union, mlist)
@@ -214,7 +214,7 @@ COMPASSContainerFromGatingSet <- function(gs = NULL, node = NULL, filter.fun = N
         message(gettextf("%s "), setdiff(unyn, common))
       }
     }
-    
+
     .checkMarkerConsistency(gs)
     if (is.null(mp)) {
       params <- parameters(flowWorkspace::getData(gs[[1]], use.exprs = FALSE))@data
@@ -226,27 +226,27 @@ COMPASSContainerFromGatingSet <- function(gs = NULL, node = NULL, filter.fun = N
       setkeyv(params, "desc")
       if (class(filter.fun) != "function") {
         filter.fun <- function(x) {
-          gsub("-", "", gsub("\\d+\\.", "", gsub("\\\\", "", gsub("/", 
+          gsub("-", "", gsub("\\d+\\.", "", gsub("\\\\", "", gsub("/",
                                                                   "", gsub("\\+", "", x)))))
         }
       }
       child.nodes[, `:=`(child.nodes.upper, filter.fun(child.nodes.upper))]
-      
+
       matchmethod <- match.arg(arg = matchmethod, choices = c("Levenshtein",
                                                               "regex"))
       if (matchmethod == "Levenshtein") {
-        distances <- adist(child.nodes[, child.nodes.upper], na.omit(params[, 
+        distances <- adist(child.nodes[, child.nodes.upper], na.omit(params[,
                                                                             desc.upper]))
         matching <- as.vector(solve_LSAP(distances))
         matched <- cbind(as.data.frame(na.omit(params)[matching, list(name, desc)]),  data.frame(node=child.nodes[, child.nodes]))
         map <- data.table(matched)
       } else {
-        map <- na.omit(unique(ldply(child.nodes[, child.nodes.upper], 
+        map <- na.omit(unique(ldply(child.nodes[, child.nodes.upper],
                                     function(x) {
-                                      params[desc.upper %like% x, `:=`(child.nodes.upper, 
+                                      params[desc.upper %like% x, `:=`(child.nodes.upper,
                                                                        x)]
                                     })))
-        map <- data.table(merge(map, child.nodes, by = "child.nodes.upper", 
+        map <- data.table(merge(map, child.nodes, by = "child.nodes.upper",
                                 all.x = TRUE))
         map[, `:=`(node, child.nodes)]
         #drop uncompensated markers
@@ -260,10 +260,10 @@ COMPASSContainerFromGatingSet <- function(gs = NULL, node = NULL, filter.fun = N
           })
           map <- map[-c(row.remove), ]
         }
-        
+
         # Some error checking
         if (nrow(map) != length(child.nodes[, child.nodes])) {
-          message(gettextf("We failed to guess the mapping between the node %s and the markers in the flowFrame\n", 
+          message(gettextf("We failed to guess the mapping between the node %s and the markers in the flowFrame\n",
                           child.nodes))
           message("Our best guess was:")
           kable(map)
@@ -276,7 +276,7 @@ COMPASSContainerFromGatingSet <- function(gs = NULL, node = NULL, filter.fun = N
         }
         map <- map[, c(2, 3, 6), with = FALSE]
       }
-      
+
       # Filter based on selected markers
       if (!is.na(markers)) {
         setkey(map, desc)
@@ -284,8 +284,8 @@ COMPASSContainerFromGatingSet <- function(gs = NULL, node = NULL, filter.fun = N
       }
       message("We will map the following nodes to markers:")
       kable(as.data.frame(map))
-      
-      
+
+
       # construct the map
       mp <- as.character(map[, desc])
       names(mp) <- map[, node]
@@ -294,7 +294,7 @@ COMPASSContainerFromGatingSet <- function(gs = NULL, node = NULL, filter.fun = N
     # Construct the expression
     expr <- as.name(paste(names(mp), collapse = "|"))
     message(gettextf("Extracting single cell data for %s", as.character(expr)))
-    
+
     # extract the single cell values
     sc_data <- try(getData(obj = gs, y = expr, pop_marker_list = mp))
     if(inherits(sc_data,"try-error")){
@@ -303,22 +303,22 @@ COMPASSContainerFromGatingSet <- function(gs = NULL, node = NULL, filter.fun = N
       kable(na.omit(data.frame(params[,1:2,with=FALSE])))
       stop()
     }
-    
+
     message("Filtering low counts")
     filter <- counts > countFilterThreshold
     keep.names <- names(counts)[filter]
     sc_data <- sc_data[keep.names]
     counts <- counts[keep.names]
     pd <- subset(pd, eval(as.name(sample_id)) %in% keep.names)
-    message(gettextf("Filtering %s samples due to low counts", length(filter) - 
+    message(gettextf("Filtering %s samples due to low counts", length(filter) -
                       length(keep.names)))
-    
+
     message("Creating COMPASS Container")
-    cc <- COMPASSContainer(data = sc_data, counts = counts, meta = pd, 
+    cc <- COMPASSContainer(data = sc_data, counts = counts, meta = pd,
                            individual_id = individual_id, sample_id = sample_id)
     return(cc)
   }
-  
+
   .needsFlowWorkspace()
-  
+
 }

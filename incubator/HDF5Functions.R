@@ -1,6 +1,6 @@
 #'Write a COMPASSContainer to an HDF5 file
 #'
-#'This function implement h5write from the rhdf5 package 
+#'This function implement h5write from the rhdf5 package
 #'to support writing of COMPASSContainer objects to HDF5 files.
 #'
 #'@param x is a \code{COMPASSContainer} object to be written to hdf5
@@ -11,9 +11,9 @@
 #'
 #'@details h5write.COMPASSContainer will write the object \code{x} to file at the group defined by \code{group}.
 #'The function will overwrite any existing file with name \code{filename} by default because deleting and replacing HDF5
-#'groups and datasets is apparently not trivially supported by rhdf5 at the moment. 
+#'groups and datasets is apparently not trivially supported by rhdf5 at the moment.
 #'
-#'@note Need to implement adding to an existing HDF5 file under a new group name. For example if we have 
+#'@note Need to implement adding to an existing HDF5 file under a new group name. For example if we have
 #'a set of CD4 matrices written in an HDF5 file, we may want to add CD8 matrices to the same file
 #'rather than creating a new HDF5 file.
 #'@importFrom rhdf5 h5write
@@ -26,16 +26,16 @@ h5write.COMPASSContainer<-function(x=NA,filename=NA,group=NA,overwrite=TRUE){
   if(overwrite&file.exists(filename)){
     file.remove(filename)
   }
-  
+
   #Create the h5 file if it doesn't exist
   if(!file.exists(filename)){
     h5createFile(filename)
   }
   #TODO handle the case where overwrite=FALSE but the file exists
   #How do we check if a group exists?
-  
+
   top <- strsplit(group,"/")[[1]][1]
-  
+
   loc <- H5Fopen(filename)
   group_exists <- !H5Lexists(h5loc=loc,name=group)
   H5Fclose(loc)

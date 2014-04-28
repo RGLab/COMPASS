@@ -14,7 +14,7 @@ combos <- as.list( as.data.frame( apply(categories, 1, function(x) {
     })
   })
   m <- .Call("MIMOSA_CellCounts", y, combos, PACKAGE="MIMOSA")
-  
+
   ## set the last column to be the 'null'
   m[, ncol(m)] <- counts[ names(y) ] - apply(m[,-ncol(m), drop=FALSE], 1, sum)
   return(m)

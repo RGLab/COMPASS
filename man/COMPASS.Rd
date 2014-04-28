@@ -7,7 +7,7 @@ COMPASS(data, treatment, control, subset = NULL,
   category_filter = function(x) colSums(x > 5) > 2,
   filter_lowest_frequency = 0, filter_specific_markers = NULL,
   model = "discrete", iterations = 40000, replications = 8,
-  keep_original_data = TRUE, verbose = TRUE, ...)
+  keep_original_data = FALSE, verbose = TRUE, ...)
 }
 \arguments{
 \item{data}{An object of class \code{COMPASSContainer}.}
@@ -47,9 +47,8 @@ the discrete model (\code{"discrete"}) is available.}
 conserve memory, we only keep the model estimates from the last replication.}
 
 \item{keep_original_data}{Keep the original \code{COMPASSContainer}
-as part of the \code{COMPASS} output? Note that if you want to run
-\code{shinyCOMPASS} later, it is necessary that you set this as \code{TRUE}.
-If memory or disk space is an issue, you may set this to \code{FALSE}.}
+as part of the \code{COMPASS} output? If memory or disk space is an issue,
+you may set this to \code{FALSE}.}
 
 \item{verbose}{Boolean; if \code{TRUE} we output progress information.}
 
@@ -105,7 +104,8 @@ The \code{data} component is a list with the following components:
 \item{counts_u}{Total cell counts for unstimulated samples.}
 \item{categories}{The categories matrix used to define which
 categories will enter the model.}
-\item{meta}{The metadata.}
+\item{meta}{The metadata. Note that only \strong{individual-level} metadata
+  will be kept; sample-specific metadata is dropped.}
 \item{sample_id}{The name of the vector in the metadata used to
 identify the samples.}
 \item{individual_id}{The name of the vector in the metadata used
