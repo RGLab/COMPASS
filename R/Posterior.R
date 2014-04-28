@@ -1,10 +1,10 @@
 ##' Retrieve Posterior Measures from a COMPASS fit
-##' 
+##'
 ##' These functions can be used to retrieve different posterior measures
 ##' from a \code{COMPASS} fit object.
-##' 
+##'
 ##' The posterior items retrieved are described as follows::
-##' 
+##'
 ##' \describe{
 ##' \item{\code{PosteriorPs}:}{The posterior probability that the samples
 ##' subjected to the 'treatment', or 'stimulated', condition responded.}
@@ -15,7 +15,7 @@
 ##' \item{\code{PosteriorLogDiff}:}{The difference in the log response rates,
 ##' as described above.}
 ##' }
-##' 
+##'
 ##' @param x An object of class \code{COMPASSResult}.
 ##' @export
 ##' @examples
@@ -24,16 +24,16 @@
 ##' PosteriorPu(CR)
 ##' PosteriorDiff(CR)
 ##' PosteriorLogDiff(CR)
-Posterior <- function(x) {  
+Posterior <- function(x) {
   if (!inherits(x, "COMPASSResult")) {
     stop("'x' must be an object of class 'COMPASSResult'")
   }
-  
+
   return(x$fit$posterior)
 }
 
 compute_posterior <- function(x, as.matrix=FALSE) {
-  
+
   output <- lapply( 1:nrow(x$data$n_s), function(i) {
     .Call( C_samplePuPs,
       x$fit$alpha_u,
@@ -47,7 +47,7 @@ compute_posterior <- function(x, as.matrix=FALSE) {
       ncol(x$fit$categories) - 1L
     )
   })
-  
+
   names(output) <- rownames(x$data$n_s)
   return(output)
 }
@@ -55,63 +55,63 @@ compute_posterior <- function(x, as.matrix=FALSE) {
 ##' @rdname Posterior
 ##' @export
 PosteriorDiff <- function(x) {
-  
+
   if (!inherits(x, "COMPASSResult")) {
     stop("'x' must be an object of class 'COMPASSResult'")
   }
-  
+
   post <- x$fit$posterior
   output <- sapply(post, "[[", "diff")
   nm <- colnames( x$data$n_s )
   rownames(output) <- nm[ -length(nm) ]
   return( t(output) )
-  
+
 }
 
 ##' @rdname Posterior
 ##' @export
 PosteriorLogDiff <- function(x) {
-  
+
   if (!inherits(x, "COMPASSResult")) {
     stop("'x' must be an object of class 'COMPASSResult'")
   }
-  
+
   post <- x$fit$posterior
   output <- sapply(post, "[[", "logd")
   nm <- colnames( x$data$n_s )
   rownames(output) <- nm[ -length(nm) ]
   return( t(output) )
-  
+
 }
 
 ##' @rdname Posterior
 ##' @export
 PosteriorPs <- function(x) {
-  
+
   if (!inherits(x, "COMPASSResult")) {
     stop("'x' must be an object of class 'COMPASSResult'")
   }
-  
+
   post <- x$fit$posterior
   output <- sapply(post, "[[", "p_s")
   nm <- colnames( x$data$n_s )
   rownames(output) <- nm[ -length(nm) ]
   return( t(output) )
-  
+
 }
 
 ##' @rdname Posterior
 ##' @export
 PosteriorPu <- function(x) {
-  
+
   if (!inherits(x, "COMPASSResult")) {
     stop("'x' must be an object of class 'COMPASSResult'")
   }
-  
+
   post <- x$fit$posterior
   output <- sapply(post, "[[", "p_u")
   nm <- colnames( x$data$n_s )
   rownames(output) <- nm[ -length(nm) ]
   return( t(output) )
-  
+
 }

@@ -1,9 +1,9 @@
 ##' Generate Unique Combinations
-##' 
+##'
 ##' Generate all possible unique combinations of \code{x}.
 ##' Primarily used as a helper function for \code{CellCounts}, but may
 ##' be occasionally useful to the end user.
-##' 
+##'
 ##' @param x Either a \code{COMPASSContainer}, or a list of matrices.
 ##' @param as.matrix Boolean; if \code{TRUE} we return results as a matrix;
 ##'   otherwise, we return the results as a list.
@@ -24,17 +24,17 @@ UniqueCombinations.COMPASSContainer <- function(x, as.matrix=FALSE) {
 ##' @rdname UniqueCombinations
 ##' @export
 UniqueCombinations.default <- function(x, as.matrix=FALSE) {
-  
+
   combinations <- unique( as.data.table(
-    lapply( 
-      lapply( 
-        as.data.table( do.call( rbind, x ) ), 
-        as.logical 
-      ), 
-      as.integer 
-    ) 
+    lapply(
+      lapply(
+        as.data.table( do.call( rbind, x ) ),
+        as.logical
+      ),
+      as.integer
+    )
   ) )
-  
+
   combinations[, c("Counts") := apply(.SD, 1, sum)]
   setkeyv(combinations, c("Counts", rev(names(combinations))))
   combinations[, "Counts" := NULL]
@@ -47,7 +47,7 @@ UniqueCombinations.default <- function(x, as.matrix=FALSE) {
       return(combinations)
     })))
   }
-  
+
   ## set informative names
   n <- ncol( x[[1]] )
   cn <- colnames( x[[1]] )

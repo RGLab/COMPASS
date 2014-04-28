@@ -34,12 +34,12 @@ marginal <- function(dat, combos, ncol, colnames) {
 }
 
 joint <- function(dat, combos, ncol, colnames) {
-  
+
   ## convert dat to binary
   dat[] <- lapply(dat, function(x) {
     colApply(x, as.logical, drop=FALSE)
   })
-  
+
   d <- vector("list", length(dat))
   for( i in 1:length(dat) ) {
     cat("Iteration", i, "of", length(dat), ".\n")

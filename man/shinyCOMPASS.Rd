@@ -4,7 +4,9 @@
 \title{Start a Shiny Application for Visualizing COMPASS Results}
 \usage{
 shinyCOMPASS(x, dir = NULL, meta.vars, facet1 = "None", facet2 = "None",
-  facet3 = "None", main = NA, launch = TRUE, ...)
+  facet3 = "None",
+  main = "Heatmap of Ag-Specificity Posterior Probabilities",
+  stimulation = NULL, launch = TRUE, ...)
 }
 \arguments{
 \item{x}{An object of class \code{COMPASSResult}.}
@@ -21,6 +23,10 @@ variables are not of interest.}
 Each should be the name of a single vector in the metadata.}
 
 \item{main}{A title to give to the heatmap and subset histogram plots.}
+
+\item{stimulation}{The name of the stimulation applied. If this is \code{NULL},
+the stimulations used are inferred from the data (ie, the \code{COMPASS} call
+used).}
 
 \item{launch}{Boolean; if \code{TRUE} we launch the Shiny application.
 Otherwise, the user can launch it manually by navigating to the directory

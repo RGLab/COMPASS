@@ -48,7 +48,7 @@ for (tt in 2:T) {
              else if (As>0.75) {varp_s2[kk] = varp_s2[kk]*sqrt(2);}
              else if (As>0.95) {varp_s2[kk] = varp_s2[kk]*sqrt(10);}
           }
-          for ( i in 1:I) {      
+          for ( i in 1:I) {
              Agm = mean(A_gm[i,intr]);
              if (Agm<0.001) {pp[i] = min(0.9,pp[i]*1.4);}
              else if (Agm<0.05) {pp[i] = min(0.9,pp[i]*1.2);}
@@ -70,7 +70,7 @@ for (stt in 1:sTT) {
        res2 <- .Call("updatealphau_noPu_Exp", alphaut = alpha_u[tt-1,],n_s = n_s,n_u=n_u, I=I, K=K, lambda_u = lambda_u, var_p = varp_u, ttt = ttt,gammat =gamma[,,tt-1])
        alpha_u[tt,] = res2$alphau_tt;
        A_alphau[,tt] = res2$Aalphau;
- 
+
        #update gamma
        res1 <- .Call("updategammak_noPu",n_s = n_s,n_u=n_u,gammat = gamma[,,tt-1],I=I,K=K,SS = SS,alphau = alpha_u[tt,],alphas = alpha_s[tt-1,],alpha=1,mk=mk,Istar = Istar,
                     mKstar = mKstar,pp=pp, pb1 = pb1, pb2 = pb2, indi=indi)

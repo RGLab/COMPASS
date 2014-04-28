@@ -22,38 +22,38 @@ test_that("The integer and character interfaces for CellCounts match up", {
     CellCounts(data, combinations),
     CellCounts(data, 1:6)
   )
-  
+
   expect_identical(
     CellCounts(data, list(c(1, 2, 3))),
     CellCounts(data, list("A&B&C"))
   )
-  
+
   y <- "A&B&C"
   expect_identical(
     CellCounts(data, list(c(1, 2, 3))),
     CellCounts(data, list(y))
   )
-  
+
   expect_identical(
     CellCounts(data, 1:6),
     marginal_counts(data)
   )
-  
+
 })
 
 test_that("We properly expand with a '*' in the name", {
-  
+
   expect_identical(
     CellCounts(data, "A*B"),
     CellCounts(data, c("A&B", "!A&B", "A&!B", "!A&!B"))
   )
-  
+
   ## TODO: allow combinations of * and [&|]
   expect_error( CellCounts(data, "A*B&C"))
-  
+
   expect_identical(
     CellCounts(data, c("A*B", "C")),
     CellCounts(data, c("A&B", "!A&B", "A&!B", "!A&!B", "C"))
   )
-  
+
 })
