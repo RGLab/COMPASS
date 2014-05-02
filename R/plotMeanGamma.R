@@ -1,6 +1,6 @@
 ##' Plot a COMPASSResult
 ##'
-##' This function can be used to visualize the mean probability of response --
+##' This function can be used to visualize the mean probability of response;
 ##' that is, the probability that there is a difference in response between
 ##' samples subjected to the 'treatment' condition, and samples subjected
 ##' to the 'control' condition.
@@ -53,17 +53,17 @@
 ##' plot(CR, measure=PosteriorPs(CR))
 ##' @export
 plot.COMPASSResult <- function(x, y, subset=NULL,
-  threshold=0.01,
-  minimum_dof=1,
-  maximum_dof=Inf,
-  must_express=NULL,
-  row_annotation,
-  palette=colorRampPalette(brewer.pal(10,"Purples"))(20),
-  show_rownames=FALSE,
-  show_colnames=FALSE,
-  measure=NULL,
-  order_by=FunctionalityScore,
-  ...) {
+                               threshold=0.01,
+                               minimum_dof=1,
+                               maximum_dof=Inf,
+                               must_express=NULL,
+                               row_annotation,
+                               palette=colorRampPalette(brewer.pal(10,"Purples"))(20),
+                               show_rownames=FALSE,
+                               show_colnames=FALSE,
+                               measure=NULL,
+                               order_by=FunctionalityScore,
+                               ...) {
 
   call <- match.call()
 
@@ -204,7 +204,7 @@ plot.COMPASSResult <- function(x, y, subset=NULL,
   gone <- m <= threshold
   if (length(gone)) {
     message("The 'threshold' filter has removed ", sum(gone),
-      " categories:\n", paste( colnames(M)[gone], collapse=", "))
+            " categories:\n", paste( colnames(M)[gone], collapse=", "))
   }
   ind <- intersect(ind, which(keep))
 
@@ -277,14 +277,14 @@ plot.COMPASSResult <- function(x, y, subset=NULL,
   M <- M[, ord, drop=FALSE]
 
   pheatmap(M,
-    color=palette,
-    show_rownames=show_rownames,
-    show_colnames=show_colnames,
-    row_annotation=rowann,
-    cluster_rows=FALSE,
-    cluster_cols=FALSE,
-    cytokine_annotation=cats_df,
-    ...
+           color=palette,
+           show_rownames=show_rownames,
+           show_colnames=show_colnames,
+           row_annotation=rowann,
+           cluster_rows=FALSE,
+           cluster_cols=FALSE,
+           cytokine_annotation=cats_df,
+           ...
   )
 
   return( invisible(grid.grab()) )
