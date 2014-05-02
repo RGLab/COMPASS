@@ -10,13 +10,13 @@ char max_type1(SEXP x) {
   int n = length(x);
   char max_type = -1;
   char tmp = -1;
-  for (int i=0; i < n; ++i) {
+  for (int i = 0; i < n; ++i) {
     // factors should mean we coerce to string
     if (isFactor(VECTOR_ELT(x, i))) {
       if (STRSXP > max_type) {
         max_type = STRSXP;
       }
-    } else if ((tmp = TYPEOF( VECTOR_ELT(x, i) )) > max_type) {
+    } else if ((tmp = TYPEOF(VECTOR_ELT(x, i))) > max_type) {
       max_type = tmp;
     }
   }
@@ -31,13 +31,13 @@ char max_type(SEXP x, SEXP ind_) {
   int* ind = INTEGER(ind_);
   char max_type = -1;
   char tmp = -1;
-  for (int i=0; i < n; ++i) {
+  for (int i = 0; i < n; ++i) {
     // factors should mean we coerce to string
     if (isFactor(VECTOR_ELT(x, ind[i]))) {
       if (STRSXP > max_type) {
         max_type = STRSXP;
       }
-    } else if ((tmp = TYPEOF( VECTOR_ELT(x, ind[i]) )) > max_type) {
+    } else if ((tmp = TYPEOF(VECTOR_ELT(x, ind[i]))) > max_type) {
       max_type = tmp;
     }
   }
