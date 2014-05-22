@@ -129,8 +129,8 @@ criteria,
 
 \code{category_filter=function(x) colSums(x > 5) > 2}
 
-indicates that we should only retain categories for which at least two samples
-had at least 5 cells expressing that particular combination of markers.
+indicates that we should only retain categories for which at least three samples
+had at least six cells expressing that particular combination of markers.
 }
 \examples{
 data(COMPASS) ## loads the COMPASSContainer 'CC'
