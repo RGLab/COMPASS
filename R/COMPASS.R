@@ -445,6 +445,7 @@ COMPASS <- function(data, treatment, control, subset=NULL,
   output$fit$call <- call
 
   class(output) <- "COMPASSResult"
+  attr(output,"sessionInfo")<-sessionInfo()
   return(output)
 
 }
