@@ -54,7 +54,7 @@ COMPASSContainerFromGatingSet<-function(gs = NULL, node = NULL, filter.fun = NUL
     if (is.null(gs) | is.null(node)) {
       stop("Must specify a gating set and parent node.")
     }
-
+    unique.node<-node
     ## Make 'node' act more like a regular expression if it isn't one already
     n <- nchar(node)
     if (!substring(node, 1, 1) == "/") node <- paste0("/", node)
@@ -83,10 +83,11 @@ COMPASSContainerFromGatingSet<-function(gs = NULL, node = NULL, filter.fun = NUL
     }
 
     # Extract the parent node name from the full population name
+    # we can just use the parent.pop
     parent.node <- laply(strsplit(parent.pop, "/"), function(x) x[length(x)])
     message(gettextf("Fetching %s", parent.node))
 
-    counts<-.getOneStat(gs,parent.node)
+    counts<-.getOneStat(gs,unique.node)
 
     #stats <- getPopStats(gs, statistic = "count")
 
@@ -103,8 +104,8 @@ COMPASSContainerFromGatingSet<-function(gs = NULL, node = NULL, filter.fun = NUL
     # Get the children of that parent and filter out boolean gates Test if
     # children exist, and test if non-empty set returned.
     message("Fetching child nodes")
-    full.child.nodes<-flowWorkspace::getChildren(gs[[1]], parent.node,path="auto")
-    child.nodes <- basename(flowWorkspace::getChildren(gs[[1]], parent.node))
+    full.child.nodes<-flowWorkspace::getChildren(gs[[1]], unique.node,path="auto")
+    child.nodes <- basename(flowWorkspace::getChildren(gs[[1]], unique.node))
 
     if (length(child.nodes) == 0) {
       stop(gettextf("Population %s has no children! Choose a different parent population.",
