@@ -12,8 +12,8 @@
 ##'
 ##' \code{category_filter=function(x) colSums(x > 5) > 2}
 ##'
-##' indicates that we should only retain categories for which at least two samples
-##' had at least 5 cells expressing that particular combination of markers.
+##' indicates that we should only retain categories for which at least three samples
+##' had at least six cells expressing that particular combination of markers.
 ##'
 ##' @param data An object of class \code{COMPASSContainer}.
 ##' @param treatment An \R expression, evaluated within the metadata, that
@@ -445,6 +445,7 @@ COMPASS <- function(data, treatment, control, subset=NULL,
   output$fit$call <- call
 
   class(output) <- "COMPASSResult"
+  attr(output,"sessionInfo")<-sessionInfo()
   return(output)
 
 }

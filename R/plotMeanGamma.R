@@ -199,7 +199,9 @@ plot.COMPASSResult <- function(x, y, subset=NULL,
   ind <- intersect(ind, dof_ind)
 
   ## remove under-expressed categories
-  m <- apply(M, 2, mean)
+  m <- apply(M, 2, function(x) {
+    mean(x, na.rm = TRUE)
+  })
   keep <- m > threshold
   gone <- m <= threshold
   if (length(gone)) {
