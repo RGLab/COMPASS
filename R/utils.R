@@ -58,19 +58,23 @@ categories <- function(x, counts) {
 metadata <- function(x) UseMethod("metadata")
 
 ##' @export
+#' @rdname metadata
 metadata.COMPASSContainer <- function(x) {
   x$meta
 }
 
 ##' @export
+#' @rdname metadata
 metadata.COMPASSResult <- function(x) {
   x$data$meta
 }
 
 ##' @export
+#' @rdname metadata
 `metadata<-` <- function(x, value) UseMethod("metadata<-")
 
 ##' @export
+#' @rdname metadata
 `metadata<-.COMPASSContainer` <- function(x, value) {
   x$meta <- check_meta(x$data, x$counts, value, x$individual_id, x$sample_id)
   x
