@@ -394,26 +394,51 @@ COMPASS <- function(data, treatment, control, subset=NULL,
         stop("There must be at least 2 categories (including the null categoy) for testing.", call.=FALSE)
     }
     ## Drop degree one categories if the option is set
-    if(dropDegreeOne){
-        .drop_degree_one <- function(categories=NULL,n_s=NULL,n_u=NULL){
+    if(class(dropDegreeOne)=="logical"){
+        if(dropDegreeOne){
+            .drop_degree_one <- function(categories=NULL,n_s=NULL,n_u=NULL){
+                to_drop <- categories[,"Counts"]==1
+                categories_new <- categories
+                n_s_new <- n_s
+                n_u_new <- n_u
+                nc <- ncol(n_s_new)
+                n_s_new[,nc] <- n_s_new[,nc]+rowSums(n_s[,to_drop])
+                n_u_new[,nc] <- n_u_new[,nc]+rowSums(n_u[,to_drop])
+                n_s_new <- n_s_new[,-which(to_drop),drop=FALSE]
+                n_u_new <- n_u_new[,-which(to_drop),drop=FALSE]
+                categories_new <- categories_new[!to_drop,,drop=FALSE]
+                return(list(categories=categories_new,n_s=n_s_new,n_u=n_u_new))
+            }
+
+            reduced <- .drop_degree_one(categories=categories,n_s=n_s,n_u=n_u)
+            categories <- reduced$categories
+            n_s <- reduced$n_s
+            n_u <- reduced$n_u
+        }
+    }else if(class(dopDegreeOne)=="character"){
+        .drop_degree_one <- function(categories=NULL,n_s=NULL,n_u=NULL,marker=dropDegreeOne){
             to_drop <- categories[,"Counts"]==1
+            if(!all(marker%in%colnames(categories)){
+                stop(paste0("Invalid marker name(s): ",paste(marker[!marker%in%colnames(categories)],collapse=",")))
+            }
+            marker.test <- rowSums(categories[,marker,drop=FALSE])==1
+            to_drop <- to_drop&marker.test
             categories_new <- categories
             n_s_new <- n_s
             n_u_new <- n_u
             nc <- ncol(n_s_new)
-            n_s_new[,nc] <- n_s_new[,nc]+rowSums(n_s[,to_drop])
-            n_u_new[,nc] <- n_u_new[,nc]+rowSums(n_u[,to_drop])
+            n_s_new[,nc] <- n_s_new[,nc]+rowSums(n_s[,to_drop,drop=FALSE])
+            n_u_new[,nc] <- n_u_new[,nc]+rowSums(n_u[,to_drop,drop=FALSE])
             n_s_new <- n_s_new[,-which(to_drop),drop=FALSE]
             n_u_new <- n_u_new[,-which(to_drop),drop=FALSE]
             categories_new <- categories_new[!to_drop,,drop=FALSE]
             return(list(categories=categories_new,n_s=n_s_new,n_u=n_u_new))
         }
-
-      reduced <- .drop_degree_one(categories=categories,n_s=n_s,n_u=n_u)
-      categories <- reduced$categories
-      n_s <- reduced$n_s
-      n_u <- reduced$n_u
-  }
+        reduced <- .drop_degree_one(categories=categories,n_s=n_s,n_u=n_u)
+        categories <- reduced$categories
+        n_s <- reduced$n_s
+        n_u <- reduced$n_u
+    }
   vmessage("There are a total of ", nrow(categories), " categories to be tested.")
 
   model <- match.arg(model)
