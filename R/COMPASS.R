@@ -418,7 +418,7 @@ COMPASS <- function(data, treatment, control, subset=NULL,
     }else if(class(dopDegreeOne)=="character"){
         .drop_degree_one <- function(categories=NULL,n_s=NULL,n_u=NULL,marker=dropDegreeOne){
             to_drop <- categories[,"Counts"]==1
-            if(!all(marker%in%colnames(categories)){
+            if(!all(marker%in%colnames(categories))){
                 stop(paste0("Invalid marker name(s): ",paste(marker[!marker%in%colnames(categories)],collapse=",")))
             }
             marker.test <- rowSums(categories[,marker,drop=FALSE])==1
