@@ -415,7 +415,7 @@ COMPASS <- function(data, treatment, control, subset=NULL,
             n_s <- reduced$n_s
             n_u <- reduced$n_u
         }
-    }else if(class(dopDegreeOne)=="character"){
+    }else if(class(dropDegreeOne)=="character"){
         .drop_degree_one <- function(categories=NULL,n_s=NULL,n_u=NULL,marker=dropDegreeOne){
             to_drop <- categories[,"Counts"]==1
             if(!all(marker%in%colnames(categories))){
