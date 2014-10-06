@@ -434,7 +434,7 @@ COMPASS <- function(data, treatment, control, subset=NULL,
             categories_new <- categories_new[!to_drop,,drop=FALSE]
             return(list(categories=categories_new,n_s=n_s_new,n_u=n_u_new))
         }
-        reduced <- .drop_degree_one(categories=categories,n_s=n_s,n_u=n_u)
+        reduced <- .drop_degree_one(categories=categories,n_s=n_s,n_u=n_u,marker=dropDegreeOne)
         categories <- reduced$categories
         n_s <- reduced$n_s
         n_u <- reduced$n_u
