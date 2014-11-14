@@ -226,10 +226,10 @@ draw_matrix = function(matrix, border_color, fmat, fontsize_number){
   }
 }
 
-draw_colnames = function(coln, ...){
-  m = length(coln)
+draw_colnames = function(cnames, ...){
+  m = length(cnames)
   x = (1:m)/m - 1/2/m
-  grid.text(coln, x = x, y = unit(0.96, "npc"), vjust = 0.5, hjust = 0, rot = 270, gp = gpar(...))
+  grid.text(cnames, x = x, y = unit(0.96, "npc"), vjust = 0.5, hjust = 0, rot = 270, gp = gpar(...))
 }
 
 draw_rownames = function(rown, ...){
