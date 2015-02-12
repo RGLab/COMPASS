@@ -4,7 +4,7 @@
 ##'
 ##' @param x A \code{COMPASSContainer}.
 ##' @param y A \code{COMPASSContainer}.
-##' @param ... Optional arguments, currently ignored.
+##' @param ... other arguments passed to 'COMPASSContainer' call.
 ##' @export
 ##' @importFrom plyr rbind.fill
 ##' @examples
@@ -69,6 +69,7 @@ merge.COMPASSContainer <- function(x, y, ...) {
     meta=meta,
     individual_id=x$individual_id,
     sample_id=x$sample_id
-  ) )
+    , ...
+    ) )
 
 }

@@ -11,7 +11,7 @@
 ##'   intensity information from an intracellular cytokine experiment.
 ##'   Each element of the list should be named; this name denotes which
 ##'   sample the cell intensities were measured from.
-##' @param counts A named integer vector of the cell counts for each
+##' @param counts A named integer vector of the cell counts(of the parent population) for each
 ##'   sample in \code{data}.
 ##' @param meta A \code{data.frame} of metadata, describing the individuals
 ##'   in the experiment. Each row in \code{meta} should correspond to a row
@@ -21,7 +21,9 @@
 ##'   individuals from which samples were drawn.
 ##' @param sample_id The name of the vector in \code{meta} that denotes the samples.
 ##'   This vector should contain all of the names in the \code{data} input.
-##'
+##' @param countFilterThreshold Numeric; if the number of cells expressing at
+##'   least one marker of interest is less than this threshold, we remove that
+##'   file. Default is 0, which means filter is disabled.
 ##' @return A \code{COMPASSContainer} returns a list made up of the same
 ##' components as input the model, but checks and sanitizes the supplied data
 ##' to ensure that it conforms to the expectations outlied above.
@@ -29,7 +31,7 @@
 ##' @export
 ##' @example examples/GenerateSampleCOMPASSContainer.R
 COMPASSContainer <- function(data, counts, meta,
-                             individual_id, sample_id) {
+                             individual_id, sample_id, countFilterThreshold = 0) {
 
   ## check names
   if (is.null(names(data)))
@@ -142,7 +144,19 @@ COMPASSContainer <- function(data, counts, meta,
   }
 
   .check_has_names(data, counts)
-
+  
+  if(countFilterThreshold > 0){
+    message("Filtering low counts")
+    filter <- counts > countFilterThreshold
+    keep.names <- names(counts)[filter]
+    data <- data[keep.names]
+    counts <- counts[keep.names]
+    meta <- subset(meta, eval(as.name(sample_id)) %in% keep.names)
+    message(gettextf("Filtering %s samples due to low counts", length(filter) -
+                length(keep.names)))  
+  }
+  
+  
   ## ensure that the counts are >= the number of rows in the data
   if (any(sapply(data, nrow) > counts)) {
     stop("There are entries in 'counts' that are greater than the ",
