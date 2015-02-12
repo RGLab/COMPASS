@@ -5,7 +5,7 @@
 ##' @param x A \code{COMPASSContainer}.
 ##' @param subset A logical expression, evaluated within the metadata,
 ##'   indicating which entries to keep.
-##' @param ... Optional arguents; currently unused.
+##' @param ... other arguments passed to 'COMPASSContainer' call.
 ##' @export
 ##' @examples
 ##' subset(CC, iid == "iid_1")
@@ -31,6 +31,7 @@ subset.COMPASSContainer <- function(x, subset, ...) {
     meta=x$meta[keep, ],
     individual_id=x$individual_id,
     sample_id=x$sample_id
+    , ...
   )
   setattr(output, "class", "COMPASSContainer")
   return(output)

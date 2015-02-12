@@ -25,12 +25,12 @@
 ##' @param individual_id a \code{character} identifying the subject id column in the \code{gs} metadata
 ##' @param sample_id a \code{character} idetifying the sample id column in the \code{gs} metadata.
 ##' @param mp a \code{list} mapping node names to markers. This function tries to guess, but may fail. The user can override the guesswork.
-##' @param countFilterThreshold Numeric; if the number of cells expressing at
-##'   least one marker of interest is less than this threshold, we remove that
-##'   file.
 ##' @param matchmethod a \code{character} either 'regex' or 'Levenshtein' for matching nodes to markers.
 ##' @param markers a \code{character} vector of marker names to include.
 ##' @param swap a \code{logical} default FALSE. Set to TRUE if the marker and channel names are swapped.
+##' @param countFilterThreshold \code{numeric} threshold. if the number of cells expressing at
+##'   least one marker of interest is less than this threshold, we remove that
+##'   file. Default is 5000.
 ##' @seealso \code{\link{COMPASSContainer}}
 ##' @examples \dontrun{
 ##' ## gs is a GatingSet from flowWorkspace
@@ -43,9 +43,9 @@
 ##' @export
 COMPASSContainerFromGatingSet<-function(gs = NULL, node = NULL, filter.fun = NULL,
                                         individual_id = "PTID", sample_id = "name",
-                                        mp = NULL, countFilterThreshold = 5000,
+                                        mp = NULL,
                                         matchmethod = c("Levenshtein","regex"),
-                                        markers = NA,swap=FALSE) {
+                                        markers = NA,swap=FALSE, countFilterThreshold = 5000) {
   if (require(flowWorkspace)) {
     
     ## R CMD check silencing
@@ -273,18 +273,10 @@ COMPASSContainerFromGatingSet<-function(gs = NULL, node = NULL, filter.fun = NUL
       stop()
     }
     
-    message("Filtering low counts")
-    filter <- counts > countFilterThreshold
-    keep.names <- names(counts)[filter]
-    sc_data <- sc_data[keep.names]
-    counts <- counts[keep.names]
-    pd <- subset(pd, eval(as.name(sample_id)) %in% keep.names)
-    message(gettextf("Filtering %s samples due to low counts", length(filter) -
-                       length(keep.names)))
-    
+        
     message("Creating COMPASS Container")
     cc <- COMPASSContainer(data = sc_data, counts = counts, meta = pd,
-                           individual_id = individual_id, sample_id = sample_id)
+                           individual_id = individual_id, sample_id = sample_id, countFilterThreshold = countFilterThreshold)
     return(cc)
   }
   
