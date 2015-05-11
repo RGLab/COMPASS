@@ -167,7 +167,7 @@ COMPASSContainerFromGatingSet<-function(gs = NULL, node = NULL, filter.fun = NUL
       if (warnflag) {
         warning("Not all markers are shared across files.")
         message("Disparate markers are:")
-        message(gettextf("%s "), setdiff(unyn, common))
+        message(gettextf("%s ", setdiff(unyn, common)))
       }
     }
     
