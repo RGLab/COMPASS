@@ -46,11 +46,11 @@ COMPASSContainerFromGatingSet<-function(gs = NULL, node = NULL, filter.fun = NUL
                                         mp = NULL,
                                         matchmethod = c("Levenshtein","regex"),
                                         markers = NA,swap=FALSE, countFilterThreshold = 5000) {
-  if (require(flowWorkspace)) {
-    
+  if (requireNamespace("flowWorkspace",quietly = TRUE)) {
+
     ## R CMD check silencing
     desc.upper <- desc <- name <- NULL
-    
+
     if (is.null(gs) | is.null(node)) {
       stop("Must specify a gating set and parent node.")
     }
@@ -60,7 +60,7 @@ COMPASSContainerFromGatingSet<-function(gs = NULL, node = NULL, filter.fun = NUL
     if (!substring(node, 1, 1) == "/") node <- paste0("/", node)
     if (!substring(node, n, n) == "$") node <- paste0(node, "$")
     node <- gsub("(?<!\\\\)\\+", "\\\\+", node, perl=TRUE)
-    
+
     # extract all the counts
     message("Extracting cell counts")
     .getOneStat<-function(x,y){
@@ -71,7 +71,7 @@ COMPASSContainerFromGatingSet<-function(gs = NULL, node = NULL, filter.fun = NUL
       names(parent.counts) <- flowWorkspace::sampleNames(x)
       parent.counts
     }
-    
+
     nnames <- flowWorkspace::getNodes(gs[[1]], path="full")
     parent.pop<-nnames[grepl(node, nnames, fixed = FALSE)]
     if (length(parent.pop) > 1) {
@@ -81,16 +81,16 @@ COMPASSContainerFromGatingSet<-function(gs = NULL, node = NULL, filter.fun = NUL
       stop(gettextf("The node expression %s doesn't identify any nodes.",
                     node))
     }
-    
+
     # Extract the parent node name from the full population name
     # we can just use the parent.pop
     parent.node <- laply(strsplit(parent.pop, "/"), function(x) x[length(x)])
     message(gettextf("Fetching %s", parent.node))
-    
+
     counts<-.getOneStat(gs,unique.node)
-    
+
     #stats <- getPopStats(gs, statistic = "count")
-    
+
     pd <- pData(gs)
     # Do the expected columns exist?
     if (!all(c(sample_id, individual_id) %in% colnames(pd))) {
@@ -100,30 +100,30 @@ COMPASSContainerFromGatingSet<-function(gs = NULL, node = NULL, filter.fun = NUL
                                                                             colnames(pd))]))
       stop("Quitting")
     }
-    #validity check for name column (since at flowSet level, flowCore now allows name column to be different from row.names) 
-    if(!all.equal(rownames(pd), pd[[sample_id]]))
+    #validity check for name column (since at flowSet level, flowCore now allows name column to be different from row.names)
+    if(!all.equal(I(rownames(pd)), pd[[sample_id]]))
       stop("sample names are not consistent with rownames of pData!")
-    
+
     # Get the children of that parent and filter out boolean gates Test if
     # children exist, and test if non-empty set returned.
     message("Fetching child nodes")
     full.child.nodes<-flowWorkspace::getChildren(gs[[1]], unique.node,path="auto")
     child.nodes <- basename(flowWorkspace::getChildren(gs[[1]], unique.node))
-    
+
     if (length(child.nodes) == 0) {
       stop(gettextf("Population %s has no children! Choose a different parent population.",
                     parent.node))
     }
-    
+
     child.nodes <- child.nodes[!sapply(full.child.nodes, function(x) .isBoolGate(gs[[1]],
                                                                                  x))]
     full.child.nodes <- full.child.nodes[!sapply(full.child.nodes, function(x) .isBoolGate(gs[[1]],x))]
-    
+
     if (length(child.nodes) == 0) {
       stop(gettextf("All the children of %s are boolean gates. Choose a population with non-boolean child gates.",
                     parent.node))
     }
-    
+
     # Make sure the child node names are mapped to channel names correctly.
     # This is awful.. we don't have a way to track which dimension of a 2D
     # gate is of importance.. so this code tries to take a guess by matching
@@ -173,7 +173,7 @@ COMPASSContainerFromGatingSet<-function(gs = NULL, node = NULL, filter.fun = NUL
         message(gettextf("%s ", setdiff(unyn, common)))
       }
     }
-    
+
     .checkMarkerConsistency(gs)
     if (is.null(mp)) {
       params <- parameters(flowWorkspace::getData(gs[[1]], use.exprs = FALSE))@data
@@ -193,10 +193,10 @@ COMPASSContainerFromGatingSet<-function(gs = NULL, node = NULL, filter.fun = NUL
         }
       }
       child.nodes[, `:=`(child.nodes.upper, filter.fun(child.nodes.upper))]
-      
+
       matchmethod <- match.arg(arg = matchmethod, choices = c("Levenshtein",
                                                               "regex"))
-      
+
       if (matchmethod == "Levenshtein") {
         distances <- adist(child.nodes[, child.nodes.upper], na.omit(params[,
                                                                             desc.upper]))
@@ -226,7 +226,7 @@ COMPASSContainerFromGatingSet<-function(gs = NULL, node = NULL, filter.fun = NUL
           })
           map <- map[-c(row.remove), ]
         }
-        
+
         # Some error checking
         if (nrow(map) != length(child.nodes[, child.nodes])) {
           message(gettextf("We failed to guess the mapping between the node %s and the markers in the flowFrame\n",
@@ -242,7 +242,7 @@ COMPASSContainerFromGatingSet<-function(gs = NULL, node = NULL, filter.fun = NUL
         }
         map <- map[, c(2, 3, 6), with = FALSE]
       }
-      
+
       # Filter based on selected markers
       if (!is.na(markers)) {
         setkey(map, desc)
@@ -250,8 +250,8 @@ COMPASSContainerFromGatingSet<-function(gs = NULL, node = NULL, filter.fun = NUL
       }
       message("We will map the following nodes to markers:")
       kable(as.data.frame(map))
-      
-      
+
+
       # construct the map
       #       if(swap){
       #         mp <- as.character(map[,name])
@@ -264,7 +264,7 @@ COMPASSContainerFromGatingSet<-function(gs = NULL, node = NULL, filter.fun = NUL
     # Construct the expression
     expr <- as.name(paste(names(mp), collapse = "|"))
     message(gettextf("Extracting single cell data for %s", as.character(expr)))
-    
+
     # extract the single cell values
     #exprs can now be a vector of characters
     expr<-do.call(c,strsplit(as.character(expr),"\\|"))
@@ -275,14 +275,14 @@ COMPASSContainerFromGatingSet<-function(gs = NULL, node = NULL, filter.fun = NUL
       kable(na.omit(data.frame(params[,1:2,with=FALSE])))
       stop()
     }
-    
-        
+
+
     message("Creating COMPASS Container")
     cc <- COMPASSContainer(data = sc_data, counts = counts, meta = pd,
                            individual_id = individual_id, sample_id = sample_id, countFilterThreshold = countFilterThreshold)
     return(cc)
   }
-  
+
   .needsFlowWorkspace()
-  
+
 }

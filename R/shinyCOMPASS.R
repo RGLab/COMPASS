@@ -41,7 +41,7 @@ shinyCOMPASS <- function(x, dir=NULL, meta.vars, facet1="None", facet2="None",
     return(shinyCOMPASSDeps())
   }
 
-  if (!require(shiny)) {
+  if (!requireNamespace("shiny",quietly=TRUE)) {
     stop("You must have 'shiny' installed to run the Shiny application -- try 'install.packages(\"shiny\")'.",
       call.=FALSE)
   }
