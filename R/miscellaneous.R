@@ -5,7 +5,7 @@
 
 ## Copied from flowWorkspace
 .isBoolGate <- function (x, y) {
-  if (require(flowWorkspace)) {
+  if (requireNamespace("flowWorkspace",quietly=TRUE)) {
     return(class(flowWorkspace::getGate(x, y)) == "booleanFilter")
   } else {
     .needsFlowWorkspace()
