@@ -22,7 +22,7 @@ shinyCOMPASSDeps <- function(verbose=TRUE) {
   ## necessary
   flag_install_required <- FALSE
 
-  if (!require("devtools")) {
+  if (!requireNamespace("devtools", quietly = TRUE)) {
     flag_install_required <- TRUE
     message("You will need to install 'devtools' in order to download some of ",
       "the necessary packages: try install.packages('devtools').")

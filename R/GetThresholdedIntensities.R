@@ -22,7 +22,7 @@
 ##' @export
 GetThresholdedIntensities <- function(gs, node, map) {
 
-  if (require(flowWorkspace)) {
+  if (requireNamespace("flowWorkspace",quietly = TRUE)) {
 
     node_names <- names(map)
     channel_names <- unlist( unname(map) )
