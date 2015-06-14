@@ -3,9 +3,12 @@
 %\VignetteIndexEntry{COMPASS}
 \usepackage[utf8]{inputenc}
 -->
-
 COMPASS - Combinatorial Polyfunctionality Analysis of Single Cells
 ==================================================================
+<center>
+**Kevin Ushey, Lynn Lin, and Greg Finak**  
+**`r Sys.Date()`**  
+</center>
 
 Introduction
 ------------
