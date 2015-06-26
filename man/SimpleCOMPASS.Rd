@@ -38,7 +38,11 @@ A \code{list} with class \code{COMPASSResult} with two components,
 }
 \description{
 This function fits the \code{COMPASS} model from a user-provided set of
-stimulated / unstimulated matrices.
+stimulated / unstimulated matrices. See the NOTE for important details.
+}
+\note{
+n_s and n_u counts matrices should contain ALL 2^M possible combinations of markers, even if they are 0 for some combinations. The code expects the marker combinations to be named in the following way:
+\code{"M1&M2&!M3"} means the combination represents cells expressing marker "M1" and "M2" and not "M3". For 3 markers, there should be 8 such combinations, such that n_s and n_u have 8 columns.
 }
 \examples{
 \dontrun{
