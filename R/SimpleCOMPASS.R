@@ -1,8 +1,10 @@
 ##' Fit the discrete COMPASS Model
 ##'
 ##' This function fits the \code{COMPASS} model from a user-provided set of
-##' stimulated / unstimulated matrices.
+##' stimulated / unstimulated matrices. See the NOTE for important details.
 ##'
+##' @note n_s and n_u counts matrices should contain ALL 2^M possible combinations of markers, even if they are 0 for some combinations. The code expects the marker combinations to be named in the following way:
+##' \code{"M1&M2&!M3"} means the combination represents cells expressing marker "M1" and "M2" and not "M3". For 3 markers, there should be 8 such combinations, such that n_s and n_u have 8 columns.
 ##' @param n_s The cell counts for stimulated cells.
 ##' @param n_u The cell counts for unstimulated cells.
 ##' @param meta A \code{data.frame} of metadata, describing the individuals
@@ -78,9 +80,13 @@ SimpleCOMPASS <- function(n_s, n_u, meta, individual_id, sample_id,
 
   cats <- as.data.frame( matrix(0, nrow=ncol(n_s), ncol=n_markers) )
   rownames(cats) <- colnames(n_s)
+  colnames(cats) = marker_names
   colnames(cats) <-
   for (i in seq_along(cats)) {
-    cats[, i] <- as.integer(grepl( paste0( colnames(cats)[i], "+" ), rownames(cats), fixed=TRUE ))
+    #cats[, i] <- as.integer(grepl( paste0( colnames(cats)[i], "+" ), rownames(cats), fixed=TRUE ))
+    cats[,i] <-
+      as.integer(!grepl(paste0("!",colnames(cats)[i]),rownames(cats),fixed =
+                          TRUE))
   }
   cats$Counts <- apply(cats, 1, sum)
   cats <- as.matrix(cats)
