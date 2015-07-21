@@ -181,6 +181,13 @@ plot.COMPASSResult <- function(x, y, subset=NULL,
 
   ## Construct the base of the 'rowann' data.frame -- annotates rows
   rowann <- data.frame(.id=rownames(M))
+  
+  ## the merge() below expects the COMPASS metadata x$data$meta to be a data.frame
+  
+  if (is(x$data$meta, "data.table")) {
+    x$data$meta <- as.data.frame(x$data$meta)
+  }
+      
   rowann <- merge(
     rowann,
     x$data$meta[c(x$data$individual_id, row_annotation)],
