@@ -101,8 +101,8 @@ SimpleCOMPASS <- function(n_s, n_u, meta, individual_id, sample_id,
     n_s=n_s,
     n_u=n_u,
     categories=cats,
-    iterations=100,
-    replications=8,
+    iterations=iterations,
+    replications=replications,
     verbose=TRUE
   )
 
