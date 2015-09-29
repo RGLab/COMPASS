@@ -85,8 +85,8 @@ SimpleCOMPASS <- function(n_s, n_u, meta, individual_id, sample_id,
   for (i in seq_along(cats)) {
     #cats[, i] <- as.integer(grepl( paste0( colnames(cats)[i], "+" ), rownames(cats), fixed=TRUE ))
     cats[,i] <-
-      as.integer(!grepl(paste0("!",colnames(cats)[i]),rownames(cats),fixed =
-                          TRUE))
+      as.integer(!grepl(paste0("!",colnames(cats)[i],"(&|$)+"),rownames(cats),fixed =
+                          FALSE))
   }
   cats$Counts <- apply(cats, 1, sum)
   cats <- as.matrix(cats)
@@ -101,8 +101,8 @@ SimpleCOMPASS <- function(n_s, n_u, meta, individual_id, sample_id,
     n_s=n_s,
     n_u=n_u,
     categories=cats,
-    iterations=100,
-    replications=8,
+    iterations=iterations,
+    replications=replications,
     verbose=TRUE
   )
 
