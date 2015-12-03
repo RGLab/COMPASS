@@ -101,7 +101,7 @@ COMPASSContainerFromGatingSet<-function(gs = NULL, node = NULL, filter.fun = NUL
       stop("Quitting")
     }
     #validity check for name column (since at flowSet level, flowCore now allows name column to be different from row.names)
-    if(!all.equal(I(rownames(pd)), pd[[sample_id]]))
+    if(!isTRUE(all.equal(as.vector(rownames(pd)), as.vector(pd[[sample_id]]))))
       stop("sample names are not consistent with rownames of pData!")
 
     # Get the children of that parent and filter out boolean gates Test if
