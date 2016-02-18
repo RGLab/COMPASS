@@ -9,7 +9,7 @@
   minimum_dof = 1, maximum_dof = Inf, must_express = NULL, row_annotation,
   palette = colorRampPalette(brewer.pal(10, "Purples"))(20),
   show_rownames = FALSE, show_colnames = FALSE, measure = NULL,
-  order_by = FunctionalityScore, ...)
+  order_by = FunctionalityScore, order_by_max_functionality = TRUE, ...)
 }
 \arguments{
 \item{x}{An object of class \code{COMPASSResult}.}
@@ -58,6 +58,9 @@ examples.}
 \item{order_by}{Order rows within a group. This should be a function;
 e.g. \code{FunctionalityScore}, \code{mean}, \code{median}, and so on.
 Set this to \code{NULL} to preserve the original ordering of the data.}
+
+\item{order_by_max_functionality}{Order columns by functionality within each degree subset.
+to \code{TRUE}.}
 
 \item{...}{Optional arguments passed to \code{pheatmap}.}
 }
