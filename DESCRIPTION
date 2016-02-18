@@ -48,3 +48,4 @@ Suggests:
 LazyLoad: yes
 LazyData: yes
 biocViews: FlowCytometry
+RoxygenNote: 5.0.1
