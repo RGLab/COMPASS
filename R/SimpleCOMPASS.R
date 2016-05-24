@@ -57,7 +57,7 @@
 ##' }
 SimpleCOMPASS <- function(n_s, n_u, meta, individual_id, sample_id,
   iterations=1E4, replications=8, verbose=TRUE) {
-
+  set.seed(100);
   if (!all(colnames(n_s) == colnames(n_u))) {
     stop("The column names of 'n_s' and 'n_u' do not match.")
   }
