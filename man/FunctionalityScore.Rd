@@ -6,11 +6,11 @@
 \alias{FunctionalityScore.default}
 \title{Compute the Functionality Score for each subject fit in a COMPASS model}
 \usage{
-FunctionalityScore(x, n)
+FunctionalityScore(x, n, markers = NULL)
 
-\method{FunctionalityScore}{COMPASSResult}(x, n)
+\method{FunctionalityScore}{COMPASSResult}(x, n, markers = NULL)
 
-\method{FunctionalityScore}{default}(x, n)
+\method{FunctionalityScore}{default}(x, n, markers = NULL)
 }
 \arguments{
 \item{x}{An object of class \code{COMPASSResult}, as returned by
@@ -19,6 +19,8 @@ used under the assumption that the 'null' category has been dropped.}
 
 \item{n}{The number of markers included in an experiment. It is inferred
 from the data when \code{x} is a \code{COMPASSResult}.}
+
+\item{markers}{The set of markers for which to compute a Functionality score. By default uses all markers. Must match names returned by \code{markers()}.}
 }
 \value{
 A numeric vector of functionality scores.

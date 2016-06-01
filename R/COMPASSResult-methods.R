@@ -15,21 +15,22 @@ print.COMPASSResult <- function(x, ...) {
 
 ##' Fetch the table of scores and metadata from a COMPASSResult Object
 ##'
-##' This function extracts the functionality and polyfunctionality scores from 
-##' a COMPASS result merged with the sample metadata table, accounting for any 
+##' This function extracts the functionality and polyfunctionality scores from
+##' a COMPASS result merged with the sample metadata table, accounting for any
 ##' dropped samples due to filtering.
 ##' @param x A \code{COMPASSResult} object.
+##' @param markers A \code{character} vector of markers for which to compute the scores. Defaults to all markers. Must match the names returned by \code{markers()}.
 ##' @export
 ##' @import plyr
 ##' @import data.table
 ##' @examples
 ##' scores(CR)
-scores = function(x){
+scores = function(x,markers=NULL){
   if(class(x)!="COMPASSResult"){
     stop("x must be of class COMPASSResult")
   }
-	FS = ldply(FunctionalityScore(x))
-	PFS = ldply(PolyfunctionalityScore(x))
+	FS = ldply(FunctionalityScore(x,markers=markers))
+	PFS = ldply(PolyfunctionalityScore(x,markers=markers))
 	m = x$data$meta
 	setDT(m)
 	setDT(FS)

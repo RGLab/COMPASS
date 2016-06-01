@@ -6,11 +6,11 @@
 \alias{PolyfunctionalityScore.default}
 \title{Compute the Polyfunctionality Score for each subject fit in a COMPASS model}
 \usage{
-PolyfunctionalityScore(x, degree, n)
+PolyfunctionalityScore(x, degree, n, markers = NULL)
 
-\method{PolyfunctionalityScore}{COMPASSResult}(x, degree, n)
+\method{PolyfunctionalityScore}{COMPASSResult}(x, degree, n, markers = NULL)
 
-\method{PolyfunctionalityScore}{default}(x, degree, n)
+\method{PolyfunctionalityScore}{default}(x, degree, n, markers = NULL)
 }
 \arguments{
 \item{x}{An object of class \code{COMPASSResult}, as returned by
@@ -22,6 +22,8 @@ category.}
 
 \item{n}{The total number of markers. This is inferred when \code{x} is a
 \code{COMPASSResult}, and is unused in that case.}
+
+\item{markers}{A \code{character} specifying the markers for which to compute the score. Must match names in \code{markers()}.}
 }
 \value{
 A numeric vector of polyfunctionality scores.
