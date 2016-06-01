@@ -13,6 +13,33 @@ print.COMPASSResult <- function(x, ...) {
   cat("A COMPASS model fit on", n, "paired samples.\n")
 }
 
+##' Fetch the table of scores and metadata from a COMPASSResult Object
+##'
+##' This function extracts the functionality and polyfunctionality scores from
+##' a COMPASS result merged with the sample metadata table, accounting for any
+##' dropped samples due to filtering.
+##' @param x A \code{COMPASSResult} object.
+##' @param markers A \code{character} vector of markers for which to compute the scores. Defaults to all markers. Must match the names returned by \code{markers()}.
+##' @export
+##' @import plyr
+##' @import data.table
+##' @examples
+##' scores(CR)
+scores = function(x,markers=NULL){
+  if(class(x)!="COMPASSResult"){
+    stop("x must be of class COMPASSResult")
+  }
+	FS = ldply(FunctionalityScore(x,markers=markers))
+	PFS = ldply(PolyfunctionalityScore(x,markers=markers))
+	m = x$data$meta
+	setDT(m)
+	setDT(FS)
+	setDT(PFS)
+	setnames(FS,c(".id","V1"),c(x$data$individual_id,"FS"))
+	setnames(PFS,c(".id","V1"),c(x$data$individual_id,"PFS"))
+	merge(merge(FS,PFS,by=x$data$individual_id),m,by=x$data$individual_id)
+}
+
 ##' Summarize a COMPASSResult Object
 ##'
 ##' This function prints basic information about the model fit by a
