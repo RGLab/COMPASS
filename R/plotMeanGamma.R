@@ -63,6 +63,7 @@ plot.COMPASSResult <- function(x, y, subset=NULL,
                                show_colnames=FALSE,
                                measure=NULL,
                                order_by=FunctionalityScore,
+										 markers=NULL,
                                ...) {
 
   call <- match.call()
@@ -87,7 +88,29 @@ plot.COMPASSResult <- function(x, y, subset=NULL,
       stop("'subset' should be an expression", call.=FALSE)
     }
   }
-
+  ## Construct an object based on a reduced set of markers for plotting a heatmap
+  if(!is.null(markers)){
+  	if(!all(markers%in%markers(x))){
+  		stop("Invalid marker names")
+  	}
+  	message("Computing a heatmap based on ",paste(markers,collapse=", "))
+  	new_categories = unique(categories(x,FALSE)[,markers,drop=FALSE])
+  	all_categories=categories(x,FALSE)[,markers,drop=FALSE]
+  	dmat = as.matrix(pdist(new_categories,all_categories))
+  	cat_indices = apply(dmat,1,function(y)which(y==0))
+  	new_mean_gamma=sapply(cat_indices,function(i)apply(Gamma(x)[,i,],1,mean))
+  	new_categories=cbind(new_categories,Counts=rowSums(new_categories))
+  	reord=c(setdiff(1:nrow(new_categories),which(new_categories[,"Counts"]==0)),which(new_categories[,"Counts"]==0))
+   new_categories=new_categories[reord,]
+  	new_mean_gamma=new_mean_gamma[,reord]
+   colnames(new_mean_gamma)=apply(new_categories[,-ncol(new_categories)],1,function(x)paste0(x,collapse=""))
+  	# copy and reassign
+  	X=x
+  	X$fit$mean_gamma=new_mean_gamma
+  	X$fit$categories = new_categories
+  	x=X
+  }	
+  
   ## Number of markers
   .n <- ncol(x$fit$categories) - 1
 
