@@ -27,7 +27,7 @@ FunctionalityScore <- function(x, n,markers=NULL) {
 FunctionalityScore.COMPASSResult <- function(x, n,markers=NULL) {
   ## we drop the last column as it is the 'NULL' category
   n <- ncol(x$fit$categories) - 1
-  y <- x$fit$mean_gamma[, -ncol(x$fit$mean_gamma)]
+  y <- x$fit$mean_gamma[, -ncol(x$fit$mean_gamma),drop=FALSE]
   fs = apply(y, 1, function(row) {
     sum(row) / (2^n - 1)
   })
