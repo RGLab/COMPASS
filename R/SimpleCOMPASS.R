@@ -81,7 +81,7 @@ SimpleCOMPASS <- function(n_s, n_u, meta, individual_id, sample_id,
   cats <- as.data.frame( matrix(0, nrow=ncol(n_s), ncol=n_markers) )
   rownames(cats) <- colnames(n_s)
   colnames(cats) = marker_names
-  colnames(cats) <-
+  
   for (i in seq_along(cats)) {
     #cats[, i] <- as.integer(grepl( paste0( colnames(cats)[i], "+" ), rownames(cats), fixed=TRUE ))
     cats[,i] <-
