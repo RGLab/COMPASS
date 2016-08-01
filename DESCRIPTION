@@ -36,7 +36,8 @@ Imports:
     abind,
     clue,
     grDevices,
-    utils
+    utils,
+    pdist
 Suggests:
     flowWorkspace (>= 3.9.66),
     flowCore,

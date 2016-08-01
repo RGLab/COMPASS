@@ -63,6 +63,8 @@ Set this to \code{NULL} to preserve the original ordering of the data.}
 \item{order_by_max_functionality}{Order columns by functionality within each degree subset.
 to \code{TRUE}.}
 
+\item{markers}{specifies a subset of markers to plot. default is NULL, which means all markers.}
+
 \item{...}{Optional arguments passed to \code{pheatmap}.}
 }
 \value{
