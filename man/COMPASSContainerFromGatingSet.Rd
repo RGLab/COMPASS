@@ -5,9 +5,8 @@
 \title{Create a COMPASS Container from a GatingSet}
 \usage{
 COMPASSContainerFromGatingSet(gs = NULL, node = NULL, filter.fun = NULL,
-  individual_id = "PTID", sample_id = "name", mp = NULL,
-  matchmethod = c("Levenshtein", "regex"), markers = NA, swap = FALSE,
-  countFilterThreshold = 5000)
+  individual_id = "PTID", mp = NULL, matchmethod = c("Levenshtein",
+  "regex"), markers = NA, swap = FALSE, countFilterThreshold = 5000)
 }
 \arguments{
 \item{gs}{a \code{GatingSet} or \code{GatingSetList}}
@@ -18,8 +17,6 @@ COMPASSContainerFromGatingSet(gs = NULL, node = NULL, filter.fun = NULL,
 match against the \code{parameters} slot of the \code{flowFrames} in \code{gs}}
 
 \item{individual_id}{a \code{character} identifying the subject id column in the \code{gs} metadata}
-
-\item{sample_id}{a \code{character} idetifying the sample id column in the \code{gs} metadata.}
 
 \item{mp}{a \code{list} mapping node names to markers. This function tries to guess, but may fail. The user can override the guesswork.}
 
@@ -39,8 +36,8 @@ It expects a regular expression for the node name
 (i.e. '/4\\+$' would match '/4+' in a node name with the plus
 sign at the end of the string. Alternatively, you can supply a
 partial path.
-The user must supply the individual_id and sample_id,
-but they have default values suitable for the data we commonly see.
+The user must supply the 'individual_id', which has the default value suitable for the data we commonly see.
+'sample_id' is the 'rownames' of 'pData' of 'GatingSet'.
 Sometimes the child node names don't match the marker names exactly.
 This function will try to make some guesses about how to match these up.
 The \code{filter.fun} parameter is a function that does some regular expression string

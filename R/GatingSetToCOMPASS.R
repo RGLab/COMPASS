@@ -5,8 +5,8 @@
 ##' (i.e. '/4\\+$' would match '/4+' in a node name with the plus
 ##' sign at the end of the string. Alternatively, you can supply a
 ##' partial path.
-##' The user must supply the individual_id and sample_id,
-##' but they have default values suitable for the data we commonly see.
+##' The user must supply the 'individual_id', which has the default value suitable for the data we commonly see.
+##' 'sample_id' is the 'rownames' of 'pData' of 'GatingSet'.
 ##' Sometimes the child node names don't match the marker names exactly.
 ##' This function will try to make some guesses about how to match these up.
 ##' The \code{filter.fun} parameter is a function that does some regular expression string
@@ -23,7 +23,6 @@
 ##' @param filter.fun a \code{function} that does string substitution to clean up node names, i.e. turns a 'CD4+' into a 'CD4' to try and
 ##' match against the \code{parameters} slot of the \code{flowFrames} in \code{gs}
 ##' @param individual_id a \code{character} identifying the subject id column in the \code{gs} metadata
-##' @param sample_id a \code{character} idetifying the sample id column in the \code{gs} metadata.
 ##' @param mp a \code{list} mapping node names to markers. This function tries to guess, but may fail. The user can override the guesswork.
 ##' @param matchmethod a \code{character} either 'regex' or 'Levenshtein' for matching nodes to markers.
 ##' @param markers a \code{character} vector of marker names to include.
@@ -42,7 +41,7 @@
 ##' @importFrom clue solve_LSAP
 ##' @export
 COMPASSContainerFromGatingSet<-function(gs = NULL, node = NULL, filter.fun = NULL,
-                                        individual_id = "PTID", sample_id = "name",
+                                        individual_id = "PTID",
                                         mp = NULL,
                                         matchmethod = c("Levenshtein","regex"),
                                         markers = NA,swap=FALSE, countFilterThreshold = 5000) {
@@ -92,6 +91,9 @@ COMPASSContainerFromGatingSet<-function(gs = NULL, node = NULL, filter.fun = NUL
     #stats <- getPopStats(gs, statistic = "count")
 
     pd <- pData(gs)
+    #now we force 'name' column to be the same as rownames
+    sample_id <- "name"
+    pd[["name"]] <- rownames(pd)
     # Do the expected columns exist?
     if (!all(c(sample_id, individual_id) %in% colnames(pd))) {
       message("Some columns not found in metadata")
@@ -100,10 +102,7 @@ COMPASSContainerFromGatingSet<-function(gs = NULL, node = NULL, filter.fun = NUL
                                                                             colnames(pd))]))
       stop("Quitting")
     }
-    #validity check for name column (since at flowSet level, flowCore now allows name column to be different from row.names)
-    if(!isTRUE(all.equal(as.vector(rownames(pd)), as.vector(pd[[sample_id]]))))
-      stop("sample names are not consistent with rownames of pData!")
-
+    
     # Get the children of that parent and filter out boolean gates Test if
     # children exist, and test if non-empty set returned.
     message("Fetching child nodes")
