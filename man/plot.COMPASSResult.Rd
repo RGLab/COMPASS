@@ -9,7 +9,8 @@
   minimum_dof = 1, maximum_dof = Inf, must_express = NULL, row_annotation,
   palette = colorRampPalette(brewer.pal(10, "Purples"))(20),
   show_rownames = FALSE, show_colnames = FALSE, measure = NULL,
-  order_by = FunctionalityScore, ...)
+  order_by = FunctionalityScore, order_by_max_functionality = TRUE,
+  markers = NULL, ...)
 }
 \arguments{
 \item{x}{An object of class \code{COMPASSResult}.}
