@@ -40,6 +40,8 @@
 ##' @param order_by Order rows within a group. This should be a function;
 ##' e.g. \code{FunctionalityScore}, \code{mean}, \code{median}, and so on.
 ##' Set this to \code{NULL} to preserve the original ordering of the data.
+##' @param order_by_max_functionality Order columns by functionality within each degree subset.
+##' to \code{TRUE}.
 ##' @param ... Optional arguments passed to \code{pheatmap}.
 ##' @importFrom RColorBrewer brewer.pal
 ##' @importFrom grDevices colorRampPalette
@@ -63,6 +65,7 @@ plot.COMPASSResult <- function(x, y, subset=NULL,
                                show_colnames=FALSE,
                                measure=NULL,
                                order_by=FunctionalityScore,
+                               order_by_max_functionality=TRUE,
 										 markers=NULL,
                                ...) {
 
@@ -204,13 +207,13 @@ plot.COMPASSResult <- function(x, y, subset=NULL,
 
   ## Construct the base of the 'rowann' data.frame -- annotates rows
   rowann <- data.frame(.id=rownames(M))
-  
+
   ## the merge() below expects the COMPASS metadata x$data$meta to be a data.frame
-  
+
   if (is(x$data$meta, "data.table")) {
     x$data$meta <- as.data.frame(x$data$meta)
   }
-      
+
   rowann <- merge(
     rowann,
     x$data$meta[c(x$data$individual_id, row_annotation)],
@@ -304,8 +307,12 @@ plot.COMPASSResult <- function(x, y, subset=NULL,
   rownames(cats_df) <- colnames(M)
 
   ## Reorder data within degrees of functionality
-  means <- apply(M, 2, mean)
-  ord <- order(dof, means, decreasing = FALSE)
+  if(order_by_max_functionality){
+    means <- apply(M, 2, mean)
+    ord <- order(dof, means, decreasing = FALSE)
+  }else{
+    ord <- order(dof, decreasing = FALSE)
+  }
   M <- M[, ord, drop=FALSE]
 
   pheatmap(M,
