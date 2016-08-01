@@ -63,7 +63,7 @@ if (require("flowWorkspace")) {
   )
 
   system.time(
-    output <- COMPASSContainerFromGatingSet(gs, "dummy", individual_id="PTID", sample_id="name")
+    output <- COMPASSContainerFromGatingSet(gs, "dummy", individual_id="PTID")
   )
 
   str(output)
