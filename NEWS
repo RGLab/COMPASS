@@ -1,4 +1,11 @@
+COMPASS 1.9.2
+=============
+* start updating the NEWS file!
+* scores accessor for COMPASSResult returns merged metadata with functionality and polyfunctionality scores
+* order_by_max_functionality now respected in plot function call.
+
 COMPASS 0.9.0
 =============
 
 * First release.
+
