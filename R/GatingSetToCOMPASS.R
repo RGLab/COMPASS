@@ -267,6 +267,13 @@ COMPASSContainerFromGatingSet<-function(gs = NULL, node = NULL, filter.fun = NUL
     # extract the single cell values
     #exprs can now be a vector of characters
     expr<-do.call(c,strsplit(as.character(expr),"\\|"))
+    
+    ##validity check on the parent children relationship
+    children.ids <- sapply(full.child.nodes, flowWorkspace:::.getNodeInd, obj = gs[[1]], USE.NAMES = FALSE)
+    map.ids <- sapply(expr, flowWorkspace:::.getNodeInd, obj = gs[[1]], USE.NAMES = FALSE)
+    ind <- !map.ids %in% children.ids
+    if(any(ind))
+      stop(paste(expr[ind], collapse = "|"), " are not the children node of ", unique.node)
     sc_data <- try(getSingleCellExpression( x=gs, nodes = expr, map = mp,swap=swap))
     if(inherits(sc_data,"try-error")){
       message("getData failed. Perhaps the marker list is not unique in the flowFrame.")
