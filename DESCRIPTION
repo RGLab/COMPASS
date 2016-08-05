@@ -45,7 +45,8 @@ Suggests:
     shiny,
     testthat,
     devtools,
-    Kmisc
+    Kmisc,
+    flowWorkspaceData
 LazyLoad: yes
 LazyData: yes
 biocViews: FlowCytometry
