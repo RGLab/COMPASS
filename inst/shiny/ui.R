@@ -2,6 +2,7 @@ library(lattice)
 library(shinyGridster)
 
 source("withHelp.R")
+source("common_functions.R")
 
 zoomButton <- function(inputId) {
   tags$i(class="icon-zoom-in", id=inputId, style="position: absolute; right: 10px; bottom: 10px")
