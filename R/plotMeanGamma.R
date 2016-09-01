@@ -324,6 +324,7 @@ plot.COMPASSResult <- function(x, y, subset=NULL,
            cluster_rows=FALSE,
            cluster_cols=FALSE,
            cytokine_annotation=cats_df,
+	   order_by_max_functionalit=order_by_max_functionality,
            ...
   )
 

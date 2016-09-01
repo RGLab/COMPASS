@@ -1,6 +1,6 @@
 lo = function(rown, coln, nrow, ncol, cellheight = NA, cellwidth = NA, treeheight_col, treeheight_row, legend, annotation, annotation_colors, annotation_legend, main, fontsize, fontsize_row, fontsize_col,row_annotation,row_annotation_legend,row_annotation_colors, cytokine_annotation, polar=FALSE,...){
   annot_legend_width = unit(0, "npc")
-
+ 
   tl <- tryCatch( get("trtLabels", parent.frame()),
     error=function(e) NULL )
 
