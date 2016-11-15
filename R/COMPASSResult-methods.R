@@ -54,3 +54,21 @@ summary.COMPASSResult <- function(object, ...) {
   n <- nrow(object$data$n_s)
   cat("A COMPASSResult model fit on", n, "paired samples.\n")
 }
+
+#' Get a data.table of counts of polyfunctional subsets
+#'
+#'@param object An object of class \code{COMPASSResult}
+#'@export
+#'@import data.table
+getCounts <- function(object, ...){
+  if(class(object)!="COMPASSResult"){
+    stop("object must be of class COMPASSResult")
+  }
+  s = melt(object$data$n_s)
+  u = melt(object$data$n_u)
+  colnames(s) = c("ID","subset","stim")
+  colnames(u) = c("ID","subset","unstim")
+  counts = merge(s,u,by=c("ID","subset"))
+  counts = data.table(counts)
+  return(counts)
+}
