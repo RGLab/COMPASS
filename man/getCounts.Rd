@@ -4,12 +4,15 @@
 \alias{getCounts}
 \title{Get a data.table of counts of polyfunctional subsets}
 \usage{
-getCounts(object, ...)
+getCounts(object)
 }
 \arguments{
 \item{object}{An object of class \code{COMPASSResult}}
 }
 \description{
 Get a data.table of counts of polyfunctional subsets
+}
+\examples{
+getCounts(CR)
 }
 

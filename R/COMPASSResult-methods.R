@@ -59,8 +59,15 @@ summary.COMPASSResult <- function(object, ...) {
 #'
 #'@param object An object of class \code{COMPASSResult}
 #'@export
-#'@import data.table
-getCounts <- function(object, ...){
+#'@import data.table methods
+#'@importFrom grDevices bmp colorRamp dev.off hsv jpeg pdf png rainbow rgb rgb2hsv tiff
+#'@importFrom graphics hist strwidth
+#'@importFrom methods is
+#'@importFrom stats as.dist cor dist hclust kmeans median na.omit runif sd setNames
+#'@importFrom utils combn head installed.packages sessionInfo
+#'@examples
+#'getCounts(CR)
+getCounts <- function(object){
   if(class(object)!="COMPASSResult"){
     stop("object must be of class COMPASSResult")
   }
