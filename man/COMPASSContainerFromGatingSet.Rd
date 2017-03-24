@@ -59,4 +59,3 @@ COMPASSContainerFromGatingSet(gs, "4+")
 \seealso{
 \code{\link{COMPASSContainer}}
 }
-

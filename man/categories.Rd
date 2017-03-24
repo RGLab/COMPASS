@@ -15,4 +15,3 @@ functionality) as well.}
 \description{
 Returns the categories matrix in a \code{COMPASSResult} object.
 }
-

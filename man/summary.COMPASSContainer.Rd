@@ -19,4 +19,3 @@ and so on.
 \examples{
 summary(CC)
 }
-

@@ -29,4 +29,3 @@ for \strong{C}\code{OMPASS}\strong{R}\code{esult}.
 Please see \code{\link{COMPASS}} for more information on the output from
 a \code{COMPASS} model fit.
 }
-

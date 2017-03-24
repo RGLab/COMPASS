@@ -22,4 +22,3 @@ application.
 \details{
 Information about the \code{COMPASS} results will be auto-generated.
 }
-

@@ -19,4 +19,3 @@ dropped samples due to filtering.
 \examples{
 scores(CR)
 }
-

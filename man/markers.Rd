@@ -12,4 +12,3 @@ markers(object)
 \description{
 Returns the markers associated with an experiment.
 }
-

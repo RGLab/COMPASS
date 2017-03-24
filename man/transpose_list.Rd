@@ -18,4 +18,3 @@ stopifnot( identical(
   transpose_list( transpose_list(l) ), l
 ) )
 }
-

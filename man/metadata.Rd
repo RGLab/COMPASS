@@ -27,4 +27,3 @@ typically a \code{data.frame}.}
 \description{
 Functions for getting and setting the metadata associated with an object.
 }
-

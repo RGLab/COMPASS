@@ -18,4 +18,3 @@ information about the object and the data it encapsulates.
 \examples{
 print(CC)
 }
-
