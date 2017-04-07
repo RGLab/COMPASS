@@ -37,4 +37,3 @@ If items to be stacked are not of the same internal type, they will be
 promoted in the order \code{logical} > \code{integer} > \code{numeric} >
 \code{character}.
 }
-

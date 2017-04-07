@@ -20,4 +20,3 @@ Use this function to subset a \code{COMPASSContainer}.
 \examples{
 subset(CC, iid == "iid_1")
 }
-

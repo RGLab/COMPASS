@@ -17,4 +17,3 @@ between samples of cells subjected to different stimulations.
   \item \code{\link{COMPASS}}, for the main model fitting routine.
   }
 }
-

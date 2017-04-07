@@ -26,4 +26,3 @@ be occasionally useful to the end user.
 \examples{
 UniqueCombinations(CC)
 }
-

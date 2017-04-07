@@ -99,3 +99,65 @@ MeanGamma <- function(x) {
   return(x$fit$mean_gamma)
 }
 
+
+#' Flag COMPASS boolean populations
+#'
+#' Returns a boolean vector indexing cell populations in \code{cellpops} that match
+#' the pattern for boolean combinations of \code{markers}.
+#'
+#' @details
+#' If markers A, B, C, D make up the population names in \code{cellpops} and they
+#'the names match the pattern e.g. "A+B-C+D+,Count" (typical of exports from some gating tools),
+#'then \code{markers} should be a vector of markers in the same order they appear in \code{cellpops}.
+#'
+#' @param cellpops \code{vector} of character names of cell populations.
+#' @param markers \code{vector} of character names of markers in the order they appear in the population names.
+#'
+#' @return A boolean vector indexing \code{cellpops} with \code{TRUE} for populations matchin
+#' the pattern.
+#'
+#' @export
+#' @seealso translate_marker_names
+#' @examples
+#' #Generate some population names
+#' markers = LETTERS[1:4]
+#' pos = c("+","-")
+#' popnames = apply(expand.grid(pos,pos,pos,pos),1,
+#'             function(x)paste(paste(paste(markers,x,sep=""),
+#'             collapse=""),",Count",sep=""))
+#' popnames = sample(c(popnames,paste(paste(markers,sample(c("+","-"),
+#'              length(markers),replace=TRUE),sep=""),",Count",sep="")))
+#' popnames[select_compass_pops(popnames,LETTERS[1:4])]
+select_compass_pops = function(cellpops,markers){
+  pattern = paste0(paste0(paste0(markers,"[+-]"),collapse=""),",Count$",sep="")
+  grepl(pattern,cellpops)
+}
+
+#' Translate marker names to format use by COMPASS
+#'
+#' Translate boolean population names from format exported by common
+#' software tools to a format used by COMPASS.
+#'
+#' @param cellpops \code{character} vector of cell population names.
+#'
+#' @return \code{character} vector of cell population names used by COMPASS
+#' @export
+#' @seealso select_compass_pops
+#' @examples
+#' #Generate marker names
+#' markers = LETTERS[1:4]
+#' pos = c("+","-")
+#' popnames = apply(expand.grid(pos,pos,pos,pos),1,
+#'               function(x) paste(paste(paste(markers,x,sep=""),
+#'               collapse=""),",Count",sep=""))
+#' popnames = sample(c(popnames,
+#'            paste(paste(markers,sample(c("+","-"),
+#'            length(markers),replace=TRUE),sep=""),
+#'            ",Count",sep="")))
+#' popnames = popnames[select_compass_pops(popnames,LETTERS[1:4])]
+#' #Translate
+#' translate_marker_names(popnames)
+translate_marker_names = function(x){
+  gsub(",Count$","",gsub("&$","",gsub("(\\w*)\\+","\\1&",gsub("(\\w*)-","!\\1&",x))))
+}
+

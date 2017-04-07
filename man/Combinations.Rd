@@ -18,4 +18,3 @@ users in some scenarios.
 \examples{
 Combinations(3)
 }
-

@@ -83,4 +83,3 @@ counts <- setNames( as.integer(counts), names(counts) )
 ## insert everything into a COMPASSContainer
 CC <- COMPASSContainer(data, counts, meta, "iid", "sid")
 }
-

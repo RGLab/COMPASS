@@ -56,4 +56,3 @@ that is, the probability that there is a difference in response between
 samples subjected to the 'treatment' condition, and samples subjected
 to the 'control' condition.
 }
-

@@ -136,6 +136,7 @@ criteria,
 indicates that we should only retain categories for which at least three samples
 had at least six cells expressing that particular combination of markers.
 }
+
 \examples{
 data(COMPASS) ## loads the COMPASSContainer 'CC'
 fit <- COMPASS(CC,
@@ -152,4 +153,3 @@ fit <- COMPASS(CC,
 required by \code{COMPASS}
 }
 }
-

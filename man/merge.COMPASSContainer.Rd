@@ -24,4 +24,3 @@ merged <- merge(CC1, CC2)
 res <- identical(CC, merge(CC1, CC2)) ## should return TRUE in this case
 stopifnot( isTRUE(res) )
 }
-

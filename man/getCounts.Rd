@@ -15,4 +15,3 @@ Get a data.table of counts of polyfunctional subsets
 \examples{
 getCounts(CR)
 }
-

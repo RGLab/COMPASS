@@ -17,4 +17,3 @@ to launch the Shiny app.
 \examples{
 shinyCOMPASSDeps()
 }
-

@@ -38,4 +38,3 @@ The null category is implicitly dropped when computing the functionality
 \examples{
 FunctionalityScore(CR)
 }
-
