@@ -26,6 +26,7 @@ Depends:
 LinkingTo: Rcpp (>= 0.11.0)
 Maintainer: Greg Finak <gfinak@fhcrc.org>
 Imports:
+    methods,
     Rcpp,
     data.table,
     methods,
