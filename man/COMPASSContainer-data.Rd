@@ -2,8 +2,8 @@
 % Please edit documentation in R/COMPASS-data.R
 \docType{data}
 \name{COMPASSContainer-data}
-\alias{CC}
 \alias{COMPASSContainer-data}
+\alias{CC}
 \title{Simulated COMPASSContainer}
 \description{
 This dataset contains simulated data for an intracellular cytokine
@@ -18,4 +18,3 @@ components of this object.
 The dataset is exported as \code{CC}, which is a short alias
 for \strong{C}\code{OMPASS}\strong{C}\code{ontainer}.
 }
-

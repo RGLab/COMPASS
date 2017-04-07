@@ -52,4 +52,3 @@ if (interactive()) {
 \code{\link{shinyCOMPASSDeps}}, for identifying packages that you
   need in order to run the Shiny application.
 }
-

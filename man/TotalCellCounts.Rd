@@ -25,4 +25,3 @@ TotalCellCounts(CC, trt == "Treatment")
 TotalCellCounts(CC, trt == "Control")
 TotalCellCounts(CC)
 }
-

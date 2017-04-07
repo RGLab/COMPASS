@@ -230,4 +230,3 @@ pheatmap(test, clustering_distance_rows = drows, clustering_distance_cols = dcol
 Original version by Raivo Kolde <rkolde@gmail.com>, with modifications
  by Greg Finak <gfinak@fhcrc.org> and Kevin Ushey <kushey@fhcrc.org>.
 }
-

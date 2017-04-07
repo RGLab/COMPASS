@@ -78,4 +78,3 @@ n_u <- CellCounts( data[(n/2+1):n], Combinations(k) )
 SimpleCOMPASS(n_s, n_u, meta, "iid", "sid", iterations=100)
 }
 }
-

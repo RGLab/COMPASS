@@ -18,4 +18,3 @@ This function prints basic information about the model fit by a
 \examples{
 print(CR)
 }
-

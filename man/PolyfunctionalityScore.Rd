@@ -36,4 +36,3 @@ one.
 \examples{
 PolyfunctionalityScore(CR)
 }
-
