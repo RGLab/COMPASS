@@ -39,7 +39,8 @@ Imports:
     clue,
     grDevices,
     utils,
-    pdist
+    pdist,
+    magrittr
 Suggests:
     flowWorkspace (>= 3.9.66),
     flowCore,
@@ -52,4 +53,4 @@ Suggests:
 LazyLoad: yes
 LazyData: yes
 biocViews: FlowCytometry
-RoxygenNote: 6.0.1
+RoxygenNote: 6.0.1.9000
