@@ -23,38 +23,41 @@
 ##'   the \code{fit} containing parameter estimates and parameter acceptance
 ##'   rates, and \code{data} containing the generated data used as input for
 ##'   the model.
-##' @examples \dontrun{
-##' set.seed(123)
-##' n <- 10 ## number of samples
-##' k <- 3 ## number of markers
-##'
-##' ## generate some sample data
-##' sid_vec <- paste0("sid_", 1:n) ## sample ids; unique names used to denote samples
-##' iid_vec <- rep_len( paste0("iid_", 1:(n/2) ), n ) ## individual ids
-##' data <- replicate(n, {
-##'   nrow <- round(runif(1) * 1E4 + 1000)
-##'   ncol <- k
-##'   vals <- rexp( nrow * ncol, runif(1, 1E-5, 1E-3) )
-##'   vals[ vals < 2000 ] <- 0
-##'   output <- matrix(vals, nrow, ncol)
-##'   output <- output[ apply(output, 1, sum) > 0, ]
-##'   colnames(output) <- paste0("M", 1:k)
-##'   return(output)
-##' })
-##' meta <- data.frame(
-##'   sid=sid_vec,
-##'   iid=iid_vec,
-##'   trt=rep( c("Control", "Treatment"), each=(n/2) )
-##' )
-##'
-##' ## generate counts for n_s, n_u
-##' n_s <- CellCounts( data[1:(n/2)], Combinations(k) )
-##' n_u <- CellCounts( data[(n/2+1):n], Combinations(k) )
-##'
-##' ## A smaller number of iterations is used here for running speed;
-##' ## prefer using more iterations for a real fit
-##' SimpleCOMPASS(n_s, n_u, meta, "iid", "sid", iterations=100)
-##' }
+##' @export
+##' @examples
+#' set.seed(123)
+#' n <- 10 ## number of samples
+#' k <- 3 ## number of markers
+#'
+#' ## generate some sample data
+#' sid_vec <- paste0("sid_", 1:n) ## sample ids; unique names used to denote samples
+#' iid_vec <- rep_len( paste0("iid_", 1:(n/2) ), n ) ## individual ids
+#' data <- replicate(n, {
+#'   nrow <- round(runif(1) * 1E4 + 1000)
+#'   ncol <- k
+#'   vals <- rexp( nrow * ncol, runif(1, 1E-5, 1E-3) )
+#'   vals[ vals < 2000 ] <- 0
+#'   output <- matrix(vals, nrow, ncol)
+#'   output <- output[ apply(output, 1, sum) > 0, ]
+#'   colnames(output) <- paste0("M", 1:k)
+#'   return(output)
+#' })
+#' meta <- data.frame(
+#'   sid=sid_vec,
+#'   iid=iid_vec,
+#'   trt=rep( c("Control", "Treatment"), each=(n/2) )
+#' )
+#'
+#' ## generate counts for n_s, n_u
+#' n_s <- CellCounts( data[1:(n/2)], Combinations(k) )
+#' n_u <- CellCounts( data[(n/2+1):n], Combinations(k) )
+#' rownames(n_s) = unique(meta$iid)
+#' rownames(n_u) = rownames(n_s)
+#'
+#' ## A smaller number of iterations is used here for running speed;
+#' ## prefer using more iterations for a real fit
+#' scr = SimpleCOMPASS(n_s, n_u, meta, "iid", "sid", iterations=1000)
+#'
 SimpleCOMPASS <- function(n_s, n_u, meta, individual_id, sample_id,
   iterations=1E4, replications=8, verbose=TRUE) {
   set.seed(100);
@@ -81,7 +84,7 @@ SimpleCOMPASS <- function(n_s, n_u, meta, individual_id, sample_id,
   cats <- as.data.frame( matrix(0, nrow=ncol(n_s), ncol=n_markers) )
   rownames(cats) <- colnames(n_s)
   colnames(cats) = marker_names
-  
+
   for (i in seq_along(cats)) {
     #cats[, i] <- as.integer(grepl( paste0( colnames(cats)[i], "+" ), rownames(cats), fixed=TRUE ))
     cats[,i] <-
@@ -119,8 +122,6 @@ SimpleCOMPASS <- function(n_s, n_u, meta, individual_id, sample_id,
       individual_id=individual_id
     )
   )
-
-  class(fit) <- c("SimpleCOMPASSResult", "COMPASSResult")
+  class(fit) <- c("COMPASSResult")
   return(fit)
-
 }

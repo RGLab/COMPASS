@@ -45,7 +45,6 @@ n_s and n_u counts matrices should contain ALL 2^M possible combinations of mark
 \code{"M1&M2&!M3"} means the combination represents cells expressing marker "M1" and "M2" and not "M3". For 3 markers, there should be 8 such combinations, such that n_s and n_u have 8 columns.
 }
 \examples{
-\dontrun{
 set.seed(123)
 n <- 10 ## number of samples
 k <- 3 ## number of markers
@@ -72,9 +71,11 @@ meta <- data.frame(
 ## generate counts for n_s, n_u
 n_s <- CellCounts( data[1:(n/2)], Combinations(k) )
 n_u <- CellCounts( data[(n/2+1):n], Combinations(k) )
+rownames(n_s) = unique(meta$iid)
+rownames(n_u) = rownames(n_s)
 
 ## A smaller number of iterations is used here for running speed;
 ## prefer using more iterations for a real fit
-SimpleCOMPASS(n_s, n_u, meta, "iid", "sid", iterations=100)
-}
+scr = SimpleCOMPASS(n_s, n_u, meta, "iid", "sid", iterations=1000)
+
 }

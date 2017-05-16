@@ -1,3 +1,8 @@
+COMPASS 1.15.1
+==============
+* Exported SimpleCOMPASS interface for use with count matrices
+* Previous versions - added translate_marker_names API for use with SimpleCOMPASS
+
 COMPASS 1.9.2
 =============
 * start updating the NEWS file!
