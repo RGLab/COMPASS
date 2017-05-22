@@ -9,12 +9,10 @@
 ##' @param n_u The cell counts for unstimulated cells.
 ##' @param meta A \code{data.frame} of metadata, describing the individuals
 ##'   in the experiment. Each row in \code{meta} should correspond to a row
-##'   in \code{data}. There should be one row for each sample;
+##'   in \code{data}. There should be one row for each subject;
 ##'   i.e., one row for each element of \code{n_s} and \code{n_u}.
 ##' @param individual_id The name of the vector in \code{meta} that denotes the
 ##'   individuals from which samples were drawn.
-##' @param sample_id The name of the vector in \code{meta} that denotes the samples.
-##'   This vector should contain all of the names in the \code{data} input.
 ##' @param iterations The number of iterations (per 'replication') to perform.
 ##' @param replications The number of 'replications' to perform. In order to
 ##'   conserve memory, we only keep the model estimates from the last replication.
@@ -25,41 +23,51 @@
 ##'   the model.
 ##' @export
 ##' @examples
-#' set.seed(123)
-#' n <- 10 ## number of samples
-#' k <- 3 ## number of markers
-#'
-#' ## generate some sample data
-#' sid_vec <- paste0("sid_", 1:n) ## sample ids; unique names used to denote samples
-#' iid_vec <- rep_len( paste0("iid_", 1:(n/2) ), n ) ## individual ids
-#' data <- replicate(n, {
-#'   nrow <- round(runif(1) * 1E4 + 1000)
-#'   ncol <- k
-#'   vals <- rexp( nrow * ncol, runif(1, 1E-5, 1E-3) )
-#'   vals[ vals < 2000 ] <- 0
-#'   output <- matrix(vals, nrow, ncol)
-#'   output <- output[ apply(output, 1, sum) > 0, ]
-#'   colnames(output) <- paste0("M", 1:k)
-#'   return(output)
-#' })
-#' meta <- data.frame(
-#'   sid=sid_vec,
-#'   iid=iid_vec,
-#'   trt=rep( c("Control", "Treatment"), each=(n/2) )
-#' )
-#'
-#' ## generate counts for n_s, n_u
-#' n_s <- CellCounts( data[1:(n/2)], Combinations(k) )
-#' n_u <- CellCounts( data[(n/2+1):n], Combinations(k) )
-#' rownames(n_s) = unique(meta$iid)
-#' rownames(n_u) = rownames(n_s)
-#'
-#' ## A smaller number of iterations is used here for running speed;
-#' ## prefer using more iterations for a real fit
-#' scr = SimpleCOMPASS(n_s, n_u, meta, "iid", "sid", iterations=1000)
-#'
-SimpleCOMPASS <- function(n_s, n_u, meta, individual_id, sample_id,
+##'  set.seed(123)
+##' n <- 10 ## number of subjects
+##' k <- 3 ## number of markers
+##'
+##' ## generate some sample data
+##' iid_vec <- paste0("iid_", 1:n) # Subject id
+##' data <- replicate(2*n, {
+##' nrow <- round(runif(1) * 1E4 + 1000)
+##' ncol <- k
+##' vals <- rexp( nrow * ncol, runif(1, 1E-5, 1E-3) )
+##' vals[ vals < 2000 ] <- 0
+##' output <- matrix(vals, nrow, ncol)
+##'output <- output[ apply(output, 1, sum) > 0, ]
+##'colnames(output) <- paste0("M", 1:k)
+##'return(output)
+##'})
+##'
+##' meta <- cbind(iid=iid_vec, data.frame(trt=rep( c("Control", "Treatment"), each=n/2 )))
+##'
+##' ## generate counts for n_s, n_u
+##' n_s <- CellCounts( data[1:n], Combinations(k) )
+##' n_u <- CellCounts( data[(n+1):(2*n)], Combinations(k) )
+##' rownames(n_s) = unique(meta$iid)
+##' rownames(n_u) = rownames(n_s)
+
+##' ## A smaller number of iterations is used here for running speed;
+##' ## prefer using more iterations for a real fit
+##' scr = SimpleCOMPASS(n_s, n_u, meta, "iid", iterations=1000)
+
+SimpleCOMPASS <- function(n_s, n_u, meta, individual_id,
   iterations=1E4, replications=8, verbose=TRUE) {
+
+
+  # Order, n_s, n_u, and meta (if needed)
+  rn_s <- rownames(n_s)
+  rn_u <- rownames(n_u)
+  iid <- as.character(meta[, individual_id])
+
+  if(!all.equal(rn_s, rn_u) | !all.equal(rn_s, iid)) {
+  n_s <- n_s[order(rn_s),]
+  n_u <- n_u[order(rn_u),]
+  meta <- meta[order(iid),]
+  warning("Ordering meta, n_s and n_u by individual_id since this wasn't done",
+          "If you think this is an error, check your data and rerun the code.")
+  }
   set.seed(100);
   if (!all(colnames(n_s) == colnames(n_u))) {
     stop("The column names of 'n_s' and 'n_u' do not match.")
@@ -67,23 +75,19 @@ SimpleCOMPASS <- function(n_s, n_u, meta, individual_id, sample_id,
 
   n_markers <- log2( ncol(n_s) )
   if (!(n_markers == as.integer(n_markers))) {
-    stop("Could not infer the number of markers correctly; be sure that ",
-      "each possible combination of cells is represented in your counts matrix.")
+    warning("Could not infer the number of markers correctly; it looks like ",
+      "you may have filtered some cell-subsets. If that is the case, you can ignore this warning.")
   }
 
   ## Guess the marker names
   marker_names <- unique(
     unlist( strsplit( gsub("!", "", colnames(n_s)), "&", fixed=TRUE ) )
   )
-
-  if (length(marker_names) != n_markers) {
-    stop("Internal error: could not infer the marker names from the ",
-      "data supplied!", call.=FALSE)
-  }
+  n_markers <- length(marker_names)
 
   cats <- as.data.frame( matrix(0, nrow=ncol(n_s), ncol=n_markers) )
   rownames(cats) <- colnames(n_s)
-  colnames(cats) = marker_names
+  colnames(cats) <- marker_names
 
   for (i in seq_along(cats)) {
     #cats[, i] <- as.integer(grepl( paste0( colnames(cats)[i], "+" ), rownames(cats), fixed=TRUE ))
@@ -118,7 +122,6 @@ SimpleCOMPASS <- function(n_s, n_u, meta, individual_id, sample_id,
       counts_u=counts_u,
       categories=cats,
       meta=meta,
-      sample_id=sample_id,
       individual_id=individual_id
     )
   )

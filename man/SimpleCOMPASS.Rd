@@ -4,7 +4,7 @@
 \alias{SimpleCOMPASS}
 \title{Fit the discrete COMPASS Model}
 \usage{
-SimpleCOMPASS(n_s, n_u, meta, individual_id, sample_id, iterations = 10000,
+SimpleCOMPASS(n_s, n_u, meta, individual_id, iterations = 10000,
   replications = 8, verbose = TRUE)
 }
 \arguments{
@@ -14,14 +14,11 @@ SimpleCOMPASS(n_s, n_u, meta, individual_id, sample_id, iterations = 10000,
 
 \item{meta}{A \code{data.frame} of metadata, describing the individuals
 in the experiment. Each row in \code{meta} should correspond to a row
-in \code{data}. There should be one row for each sample;
+in \code{data}. There should be one row for each subject;
 i.e., one row for each element of \code{n_s} and \code{n_u}.}
 
 \item{individual_id}{The name of the vector in \code{meta} that denotes the
 individuals from which samples were drawn.}
-
-\item{sample_id}{The name of the vector in \code{meta} that denotes the samples.
-This vector should contain all of the names in the \code{data} input.}
 
 \item{iterations}{The number of iterations (per 'replication') to perform.}
 
@@ -45,37 +42,31 @@ n_s and n_u counts matrices should contain ALL 2^M possible combinations of mark
 \code{"M1&M2&!M3"} means the combination represents cells expressing marker "M1" and "M2" and not "M3". For 3 markers, there should be 8 such combinations, such that n_s and n_u have 8 columns.
 }
 \examples{
-set.seed(123)
-n <- 10 ## number of samples
+ set.seed(123)
+n <- 10 ## number of subjects
 k <- 3 ## number of markers
 
 ## generate some sample data
-sid_vec <- paste0("sid_", 1:n) ## sample ids; unique names used to denote samples
-iid_vec <- rep_len( paste0("iid_", 1:(n/2) ), n ) ## individual ids
-data <- replicate(n, {
-  nrow <- round(runif(1) * 1E4 + 1000)
-  ncol <- k
-  vals <- rexp( nrow * ncol, runif(1, 1E-5, 1E-3) )
-  vals[ vals < 2000 ] <- 0
-  output <- matrix(vals, nrow, ncol)
-  output <- output[ apply(output, 1, sum) > 0, ]
-  colnames(output) <- paste0("M", 1:k)
-  return(output)
+iid_vec <- paste0("iid_", 1:n) # Subject id
+data <- replicate(2*n, {
+nrow <- round(runif(1) * 1E4 + 1000)
+ncol <- k
+vals <- rexp( nrow * ncol, runif(1, 1E-5, 1E-3) )
+vals[ vals < 2000 ] <- 0
+output <- matrix(vals, nrow, ncol)
+output <- output[ apply(output, 1, sum) > 0, ]
+colnames(output) <- paste0("M", 1:k)
+return(output)
 })
-meta <- data.frame(
-  sid=sid_vec,
-  iid=iid_vec,
-  trt=rep( c("Control", "Treatment"), each=(n/2) )
-)
+
+meta <- cbind(iid=iid_vec, data.frame(trt=rep( c("Control", "Treatment"), each=n/2 )))
 
 ## generate counts for n_s, n_u
-n_s <- CellCounts( data[1:(n/2)], Combinations(k) )
-n_u <- CellCounts( data[(n/2+1):n], Combinations(k) )
+n_s <- CellCounts( data[1:n], Combinations(k) )
+n_u <- CellCounts( data[(n+1):(2*n)], Combinations(k) )
 rownames(n_s) = unique(meta$iid)
 rownames(n_u) = rownames(n_s)
-
 ## A smaller number of iterations is used here for running speed;
 ## prefer using more iterations for a real fit
-scr = SimpleCOMPASS(n_s, n_u, meta, "iid", "sid", iterations=1000)
-
+scr = SimpleCOMPASS(n_s, n_u, meta, "iid", iterations=1000)
 }
