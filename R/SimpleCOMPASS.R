@@ -61,11 +61,11 @@ SimpleCOMPASS <- function(n_s, n_u, meta, individual_id,
   rn_u <- rownames(n_u)
   iid <- as.character(meta[, individual_id])
 
-  if(!all.equal(rn_s, rn_u) | !all.equal(rn_s, iid)) {
+  if(!identical(rn_s, rn_u) | !identical(rn_s, iid)) {
   n_s <- n_s[order(rn_s),]
   n_u <- n_u[order(rn_u),]
   meta <- meta[order(iid),]
-  warning("Ordering meta, n_s and n_u by individual_id since this wasn't done",
+  message("Ordering meta, n_s and n_u by individual_id since this wasn't done.\n",
           "If you think this is an error, check your data and rerun the code.")
   }
   set.seed(100);
