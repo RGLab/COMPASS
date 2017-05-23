@@ -301,7 +301,7 @@ plot.COMPASSResult <- function(x, y, subset=NULL,
   }
 
   ## Make sure the categories matrix is re-set as an appropriate df
-  cats_df <- as.data.frame(cats[, -ncol(cats)]) ## drop the "Counts" column
+  cats_df <- as.data.frame(cats[, -ncol(cats),drop=FALSE]) ## drop the "Counts" column
   cats_df[] <- lapply(cats_df, function(x) {
     as.factor(x)
   })
