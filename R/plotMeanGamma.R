@@ -327,7 +327,7 @@ plot.COMPASSResult <- function(x, y, subset=NULL,
 	   order_by_max_functionality=order_by_max_functionality,
            ...
   )
-
-  return( invisible(ret) )
+  ret = grid.grab(wrap = TRUE)
+  return(invisible(ret))
 
 }
