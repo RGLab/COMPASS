@@ -113,8 +113,8 @@ plot.COMPASSResult <- function(x, y, subset=NULL,
   	X$fit$mean_gamma=new_mean_gamma
   	X$fit$categories = new_categories
   	x=X
-  }	
-  
+  }
+
   ## Number of markers
   .n <- ncol(x$fit$categories) - 1
 
@@ -316,7 +316,7 @@ plot.COMPASSResult <- function(x, y, subset=NULL,
   }
   M <- M[, ord, drop=FALSE]
 
-  pheatmap(M,
+  ret = pheatmap(M,
            color=palette,
            show_rownames=show_rownames,
            show_colnames=show_colnames,
@@ -328,6 +328,6 @@ plot.COMPASSResult <- function(x, y, subset=NULL,
            ...
   )
 
-  return( invisible(grid.grab()) )
+  return( invisible(ret) )
 
 }
