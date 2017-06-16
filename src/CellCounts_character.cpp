@@ -1,4 +1,4 @@
-// [[Rcpp::interfaces]]
+// [[Rcpp::interfaces(r)]]
 
 #include <Rcpp.h>
 using namespace Rcpp;

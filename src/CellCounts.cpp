@@ -1,4 +1,4 @@
-// [[Rcpp::interfaces]]
+// [[Rcpp::interfaces(r)]]
 
 #include <Rcpp.h>
 using namespace Rcpp;
@@ -36,8 +36,13 @@ IntegerMatrix CellCounts(List x, List combos) {
       int num = 0;
       IntegerVector c_combo = as<IntegerVector>(combos[k]);
       int n_c = c_combo.size();
-
-      IntegerVector c_combo_abs = sapply(c_combo, ::abs);
+      /* sapply is not compiling on BioC with clang4, nor on my local
+       * machine with El Capitan.
+       */
+      IntegerVector c_combo_abs(c_combo.size());
+      for(int q = 0; q < c_combo.size(); ++q){
+        c_combo_abs[q] = ::abs(c_combo[i]);
+      }
 
       for (int j = 0; j < nrows; ++j) {
 
