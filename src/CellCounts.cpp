@@ -3,6 +3,12 @@
 #include <Rcpp.h>
 using namespace Rcpp;
 
+template <typename T>
+T my_abs( const T& x){
+	return ::abs(x) ;
+}
+
+
 #define rownames(x) as<CharacterVector>(VECTOR_ELT(x.attr("dimnames"), 0))
 #define colnames(x) as<CharacterVector>(VECTOR_ELT(x.attr("dimnames"), 1))
 
@@ -36,13 +42,7 @@ IntegerMatrix CellCounts(List x, List combos) {
       int num = 0;
       IntegerVector c_combo = as<IntegerVector>(combos[k]);
       int n_c = c_combo.size();
-      /* sapply is not compiling on BioC with clang4, nor on my local
-       * machine with El Capitan.
-       */
-      IntegerVector c_combo_abs(c_combo.size());
-      for(int q = 0; q < c_combo.size(); ++q){
-        c_combo_abs[q] = ::abs(c_combo[i]);
-      }
+      IntegerVector c_combo_abs = sapply(c_combo,my_abs<int>);
 
       for (int j = 0; j < nrows; ++j) {
 
