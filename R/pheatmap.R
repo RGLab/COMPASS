@@ -1,7 +1,8 @@
-lo = function(rown, coln, nrow, ncol, cellheight = NA, cellwidth = NA, treeheight_col, treeheight_row, legend, annotation, annotation_colors, annotation_legend, main, fontsize, fontsize_row, fontsize_col,row_annotation,row_annotation_legend,row_annotation_colors, cytokine_annotation, polar=FALSE,...){
+lo = function(rown, coln, nrow, ncol, cellheight = NA, cellwidth = NA, treeheight_col, treeheight_row, legend, annotation, annotation_colors, annotation_legend, main, fontsize, fontsize_row, fontsize_col,row_annotation,row_annotation_legend,row_annotation_colors, cytokine_annotation, polar=FALSE, cytokine_annotation_colors, cytokine_height_multiplier,...){
   annot_legend_width = unit(0, "npc")
+
   tl <- tryCatch( get("trtLabels", parent.frame()),
-    error=function(e) NULL )
+                  error=function(e) NULL )
 
   #cytokine labels
   if(!is.na(cytokine_annotation[[1]][1])){
@@ -89,8 +90,8 @@ lo = function(rown, coln, nrow, ncol, cellheight = NA, cellwidth = NA, treeheigh
     max_nm_annot <- max(nchar( as.matrix( row_annotation ) ))
     if (max_nm_nchars > max_nm_annot) {
       annot_legend_width <- unit(1.5, "grobwidth",
-        textGrob( names(row_annotation)[ which.max( nchar( names(row_annotation) ) ) ],
-          gp=gpar(...))) + unit(12,"bigpts")+annot_legend_width
+                                 textGrob( names(row_annotation)[ which.max( nchar( names(row_annotation) ) ) ],
+                                           gp=gpar(...))) + unit(12,"bigpts")+annot_legend_width
       if(!row_annotation_legend&!annotation_legend){
         annot_legend_width = unit(0,"npc")
       }
@@ -114,6 +115,7 @@ lo = function(rown, coln, nrow, ncol, cellheight = NA, cellwidth = NA, treeheigh
   }else{
     cytokine_height = unit(0,"bigpts")
   }
+  cytokine_height = cytokine_height * cytokine_height_multiplier
 
   # Tree height
   treeheight_col = unit(treeheight_col, "bigpts") + unit(5, "bigpts")
@@ -138,9 +140,9 @@ lo = function(rown, coln, nrow, ncol, cellheight = NA, cellwidth = NA, treeheigh
   # Produce layout()
   ## Another hack in a series of terrible hacks
   pushViewport(viewport(name="layout", layout =
-      grid.layout(nrow = 6, ncol = 6,
-        widths = unit.c(treeheight_row, matwidth, row_annotation_width, rown_width, legend_width, annot_legend_width),
-        heights = unit.c(main_height, treeheight_col, annot_height, matheight, coln_height, cytokine_height)), gp = do.call(gpar, gp)))
+                          grid.layout(nrow = 6, ncol = 6,
+                                      widths = unit.c(treeheight_row, matwidth, row_annotation_width, rown_width, legend_width, annot_legend_width),
+                                      heights = unit.c(main_height, treeheight_col, annot_height, matheight, coln_height, cytokine_height)), gp = do.call(gpar, gp)))
 
 
   # Get cell dimensions
@@ -186,7 +188,7 @@ draw_dendrogram = function(hc, horizontal = TRUE){
   else{
     gr = rectGrob()
     pushViewport(viewport(name="left_dendrogram",
-      height = unit(1, "grobwidth", gr), width = unit(1, "grobheight", gr), angle = 90))
+                          height = unit(1, "grobwidth", gr), width = unit(1, "grobheight", gr), angle = 90))
     dist[, 1] = 1 - dist[, 1]
     for(i in 1:nrow(m)){
       draw_connection(dist[m[i, 1], 1], dist[m[i, 2], 1], dist[m[i, 1], 2], dist[m[i, 2], 2], h[i])
@@ -198,7 +200,7 @@ draw_dendrogram = function(hc, horizontal = TRUE){
 draw_headerplot = function(order,data,ylabel){
   gr<-rectGrob(y=0.4,height=0.9)
   pushViewport(viewport(name="headerplot",
-    height = unit(1, "grobheight", gr), width = unit(1, "grobwidth", gr)))
+                        height = unit(1, "grobheight", gr), width = unit(1, "grobwidth", gr)))
   pushViewport(dataViewport(1:length(data),data,extension=c(1/length(data)/2,0.05)))
   grid.rect()
   grid.points(x=1:length(data),y=data[order],gp=gpar(cex=0.25,col="red",lwd=3))
@@ -286,7 +288,7 @@ draw_legend = function(color, breaks, legend, ...){
 
 ## Convert the cytokine annotations matrix of 0s and 1s to a matrix
 ## of appropriate colors.
-convert_cytokine_annotations <- function(annotation) {
+convert_cytokine_annotations <- function(annotation, cytokine_annotation_colors=NA) {
 
   ## Convert the annotation matrix to numeric
   annot <- as.matrix( as.data.frame( lapply(annotation, function(x) {
@@ -302,7 +304,11 @@ convert_cytokine_annotations <- function(annotation) {
   })
 
   ## Swap these numbers with appropriate colors
-  pal <- brewer.pal( ncol(annot), "Paired" )
+  pal <- if(is.na(cytokine_annotation_colors)) {
+    brewer.pal( ncol(annot), "Paired" )
+  } else {
+    cytokine_annotation_colors
+  }
   annot <- as.data.frame(annot)
   annot[] <- lapply(annot, function(x) {
     swap(x, -1:ncol(annot), c("#AAAAAB", "#FFFFFF", pal))
@@ -335,13 +341,13 @@ convert_annotations = function(annotation, annotation_colors){
   return(as.matrix(new))
 }
 
-draw_annotations = function(converted_annotations, border_color){
+draw_annotations = function(converted_annotations, border_color, cytokine_height_multiplier){
   n = ncol(converted_annotations)
   m = nrow(converted_annotations)
   x = (1:m)/m - 1/2/m
-  y = cumsum(rep(8, n)) - 4 + cumsum(rep(2, n))
+  y = (cumsum(rep(8, n)) - 4 + cumsum(rep(2, n)))*cytokine_height_multiplier
   for(i in 1:m){
-    grid.rect(x = x[i], unit(y[1:n], "bigpts"), width = 1/m, height = unit(8, "bigpts"), gp = gpar(fill = converted_annotations[i, ], col = border_color))
+    grid.rect(x = x[i], unit(y[1:n], "bigpts"), width = 1/m, height = unit(8*(cytokine_height_multiplier + 0.2), "bigpts"), gp = gpar(fill = converted_annotations[i, ], col = border_color))
   }
 }
 
@@ -390,7 +396,7 @@ vplayout = function(x, y, ...){
   return(viewport(layout.pos.row = x, layout.pos.col = y, ...))
 }
 
-heatmap_motor = function(matrix, border_color, cellwidth, cellheight, tree_col, tree_row, treeheight_col, treeheight_row, filename, width, height, breaks, color, legend, annotation, annotation_colors, annotation_legend, main, fontsize, fontsize_row, fontsize_col, fmat, fontsize_number, row_annotation, row_annotation_legend, row_annotation_colors, cytokine_annotation, headerplot,polar=polar,...){
+heatmap_motor = function(matrix, border_color, cellwidth, cellheight, tree_col, tree_row, treeheight_col, treeheight_row, filename, width, height, breaks, color, legend, annotation, annotation_colors, annotation_legend, main, fontsize, fontsize_row, fontsize_col, fmat, fontsize_number, row_annotation, row_annotation_legend, row_annotation_colors, cytokine_annotation, headerplot,polar=polar, cytokine_annotation_colors,cytokine_height_multiplier,...){
   grid.newpage()
   if(length(list(...))>0){
     if(exists("trtLabels",list(...))){
@@ -401,7 +407,7 @@ heatmap_motor = function(matrix, border_color, cellwidth, cellheight, tree_col, 
   }
 
   # Set layout
-  mindim = lo(coln = colnames(matrix), rown = rownames(matrix), nrow = nrow(matrix), ncol = ncol(matrix), cellwidth = cellwidth, cellheight = cellheight, treeheight_col = treeheight_col, treeheight_row = treeheight_row, legend = legend, annotation = annotation, annotation_colors = annotation_colors, annotation_legend = annotation_legend, main = main, fontsize = fontsize, fontsize_row = fontsize_row, fontsize_col = fontsize_col, row_annotation = row_annotation, row_annotation_legend = row_annotation_legend, row_annotation_colors = row_annotation_colors, cytokine_annotation = cytokine_annotation,headerplot=headerplot,polar=polar,...)
+  mindim = lo(coln = colnames(matrix), rown = rownames(matrix), nrow = nrow(matrix), ncol = ncol(matrix), cellwidth = cellwidth, cellheight = cellheight, treeheight_col = treeheight_col, treeheight_row = treeheight_row, legend = legend, annotation = annotation, annotation_colors = annotation_colors, annotation_legend = annotation_legend, main = main, fontsize = fontsize, fontsize_row = fontsize_row, fontsize_col = fontsize_col, row_annotation = row_annotation, row_annotation_legend = row_annotation_legend, row_annotation_colors = row_annotation_colors, cytokine_annotation = cytokine_annotation,headerplot=headerplot,polar=polar,cytokine_annotation_colors=cytokine_annotation_colors,cytokine_height_multiplier=cytokine_height_multiplier,...)
 
   if(!is.na(filename)){
     pushViewport(vplayout(1:5, 1:6))
@@ -419,18 +425,18 @@ heatmap_motor = function(matrix, border_color, cellwidth, cellheight, tree_col, 
     ending = substr(filename, r + 1, r + attr(r, "match.length"))
 
     f = switch(ending,
-      pdf = function(x, ...) pdf(x, ...),
-      png = function(x, ...) png(x, units = "in", res = 300, ...),
-      jpeg = function(x, ...) jpeg(x, units = "in", res = 300, ...),
-      jpg = function(x, ...) jpeg(x, units = "in", res = 300, ...),
-      tiff = function(x, ...) tiff(x, units = "in", res = 300, compression = "lzw", ...),
-      bmp = function(x, ...) bmp(x, units = "in", res = 300, ...),
-      stop("File type should be: pdf, png, bmp, jpg, tiff")
+               pdf = function(x, ...) pdf(x, ...),
+               png = function(x, ...) png(x, units = "in", res = 300, ...),
+               jpeg = function(x, ...) jpeg(x, units = "in", res = 300, ...),
+               jpg = function(x, ...) jpeg(x, units = "in", res = 300, ...),
+               tiff = function(x, ...) tiff(x, units = "in", res = 300, compression = "lzw", ...),
+               bmp = function(x, ...) bmp(x, units = "in", res = 300, ...),
+               stop("File type should be: pdf, png, bmp, jpg, tiff")
     )
 
     # print(gettextf("height:%f width:%f", height, width))
     f(filename, height = height, width = width)
-    heatmap_motor(matrix, cellwidth = cellwidth, cellheight = cellheight, border_color = border_color, tree_col = tree_col, tree_row = tree_row, treeheight_col = treeheight_col, treeheight_row = treeheight_row, breaks = breaks, color = color, legend = legend, annotation = annotation, annotation_colors = annotation_colors, annotation_legend = annotation_legend, filename = NA, main = main, fontsize = fontsize, fontsize_row = fontsize_row, fontsize_col = fontsize_col, fmat = fmat, fontsize_number =  fontsize_number, row_annotation = row_annotation, row_annotation_legend = row_annotation_legend, cytokine_annotation = cytokine_annotation, ...)
+    heatmap_motor(matrix, cellwidth = cellwidth, cellheight = cellheight, border_color = border_color, tree_col = tree_col, tree_row = tree_row, treeheight_col = treeheight_col, treeheight_row = treeheight_row, breaks = breaks, color = color, legend = legend, annotation = annotation, annotation_colors = annotation_colors, annotation_legend = annotation_legend, filename = NA, main = main, fontsize = fontsize, fontsize_row = fontsize_row, fontsize_col = fontsize_col, fmat = fmat, fontsize_number =  fontsize_number, row_annotation = row_annotation, row_annotation_legend = row_annotation_legend, cytokine_annotation = cytokine_annotation, cytokine_annotation_colors, ...)
     dev.off()
     popViewport()
     return()
@@ -492,7 +498,7 @@ heatmap_motor = function(matrix, border_color, cellwidth, cellheight, tree_col, 
   if(!is.na(annotation[[1]][1])){
     pushViewport(vplayout(3, 2, name="annotation_track"))
     converted_annotation = convert_annotations(annotation, annotation_colors)
-    draw_annotations(converted_annotation, border_color)
+    draw_annotations(converted_annotation, border_color, cytokine_height_multiplier)
     popViewport()
   }
 
@@ -513,8 +519,8 @@ heatmap_motor = function(matrix, border_color, cellwidth, cellheight, tree_col, 
   if(!is.na(cytokine_annotation[[1]][1])){
     pushViewport(vplayout(6,2, name="cytokine_annotation"))
 
-    converted_cytokine_annotations = convert_cytokine_annotations(cytokine_annotation)
-    draw_annotations(converted_cytokine_annotations, border_color)
+    converted_cytokine_annotations = convert_cytokine_annotations(cytokine_annotation, cytokine_annotation_colors)
+    draw_annotations(converted_cytokine_annotations, border_color, cytokine_height_multiplier)
     popViewport()
 
     #label the rows
@@ -583,7 +589,7 @@ draw_polar_legend <- function(fontsize=NA,treatmentLabel=trtLabels){
   height =unit(0.25,"npc")
   width = unit(1,"npc")
   pushViewport(viewport(name="polar_legend",
-    x = unit(0,"npc"), y = unit(0.8, "npc"), just = c(0, 1), width=width,height = height))
+                        x = unit(0,"npc"), y = unit(0.8, "npc"), just = c(0, 1), width=width,height = height))
   C=0.4 #center
   R=0.25 #radius
   N=51   #number of points
@@ -601,7 +607,7 @@ draw_polar_legend <- function(fontsize=NA,treatmentLabel=trtLabels){
 
   o<-order(polar_legend$position[,"x"],polar_legend$position[,"y"],decreasing=TRUE)
   #for(i in (1:nrow(polar_legend$position))[o]){
-    pts<-pointsGrob(x=polar_legend$position[,"y"]*R+C,y=polar_legend$position[,"x"]*R+C,gp=gpar(col=polar_legend$color,cex=0.25),default.units="npc")
+  pts<-pointsGrob(x=polar_legend$position[,"y"]*R+C,y=polar_legend$position[,"x"]*R+C,gp=gpar(col=polar_legend$color,cex=0.25),default.units="npc")
   #}
   #for(i in (1:nrow(polar_legend$position))[o]){
   #  grid.points(x=polar_legend$position[i,"x"]*R+C,y=polar_legend$position[i,"y"]*R+C,gp=gpar(col=polar_legend$color[i],cex=0.4),default.units="npc")
@@ -705,7 +711,7 @@ generate_annotation_colours = function(annotation, annotation_colors, drop){
   }
 
   factor_colors = hsv((seq(0, 1, length.out = count + 1)[-1] +
-      0.2)%%1, 0.7, 0.95)
+                         0.2)%%1, 0.7, 0.95)
 
   set.seed(3453)
 
@@ -754,7 +760,7 @@ generate_row_annotation_colours = function(annotation, annotation_colors, drop){
   }
 
   factor_colors = hsv((seq(0, 1, length.out = count + 1)[-1] +
-      0.2)%%1, 0.7, 0.95)
+                         0.2)%%1, 0.7, 0.95)
   #factor_colors = brewer.pal(name="Paired",n=count)
 
   set.seed(3453)
@@ -888,6 +894,8 @@ kmeans_pheatmap = function(mat, k = min(nrow(mat), 150), sd_limit = NA, ...){
 #' @param cytokine_annotation A \code{data.frame} of factors, with either levels \code{0} = unexpressed, \code{1} = expressed, or optionally with a third level \code{-1} = 'left out'.
 #' of the categories for each column. They will be colored by their degree of functionality and ordered by degree of functionality
 #' and by amount of expression if column clustering is not done.
+#' @param cytokine_annotation_colors list of colors for cytokine annotation
+#' @param cytokine_height_multiplier increase the height of the cytokine legend rows
 #' @param headerplot is a list with two components, order and data. Order tells how to reorder the columns of the matrix.
 #' @param polar Boolean; if \code{TRUE} we draw a polar legend. Primarily for
 #'  internal use.
@@ -953,8 +961,7 @@ kmeans_pheatmap = function(mat, k = min(nrow(mat), 150), sd_limit = NA, ...){
 #' #Specify row annotations
 #' row_ann <- data.frame(foo=gl(2,nrow(test)/2),`Bar`=relevel(gl(2,nrow(test)/2),"2"))
 #' rownames(row_ann)<-rownames(test)
-#' pheatmap(test, annotation = annotation, annotation_legend = FALSE,
-#'     drop_levels = FALSE,row_annotation = row_ann)
+#' pheatmap(test, annotation = annotation, annotation_legend = FALSE, drop_levels = FALSE,row_annotation = row_ann)
 #'
 #' #Using cytokine annotations
 #' M<-matrix(rnorm(8*20),ncol=8)
@@ -965,9 +972,7 @@ kmeans_pheatmap = function(mat, k = min(nrow(mat), 150), sd_limit = NA, ...){
 #' rownames(M)<-1:nrow(M)
 #' colnames(M)<-rownames(eg)
 #' cytokine_annotation=eg
-#' pheatmap(M,annotation=annotation,row_annotation=row_annotation,
-#'      annotation_legend=TRUE,row_annotation_legend=TRUE,
-#'     cluster_rows=FALSE,cytokine_annotation=cytokine_annotation,cluster_cols=FALSE)
+#' pheatmap(M,annotation=annotation,row_annotation=row_annotation,annotation_legend=TRUE,row_annotation_legend=TRUE,cluster_rows=FALSE,cytokine_annotation=cytokine_annotation,cluster_cols=FALSE)
 #'
 #' # Specifying clustering from distance matrix
 #' drows = dist(test, method = "minkowski")
@@ -975,7 +980,7 @@ kmeans_pheatmap = function(mat, k = min(nrow(mat), 150), sd_limit = NA, ...){
 #' pheatmap(test, clustering_distance_rows = drows, clustering_distance_cols = dcols)
 #' @importFrom RColorBrewer brewer.pal
 #' @export
-pheatmap = function(mat, color = colorRampPalette(rev(brewer.pal(n = 7, name = "RdYlBu")))(100), kmeans_k = NA, breaks = NA, border_color = "grey60", cellwidth = NA, cellheight = NA, scale = "none", cluster_rows = TRUE, cluster_cols = TRUE, clustering_distance_rows = "euclidean", clustering_distance_cols = "euclidean", clustering_method = "complete",  treeheight_row = ifelse(cluster_rows, 50, 0), treeheight_col = ifelse(cluster_cols, 50, 0), legend = TRUE, legend_breaks = NA, legend_labels = NA, annotation = NA, annotation_colors = NA, annotation_legend = TRUE, drop_levels = TRUE, show_rownames = TRUE, show_colnames = TRUE, main = NA, fontsize = 10, fontsize_row = fontsize, fontsize_col = fontsize, display_numbers = FALSE, number_format = "%.2f", fontsize_number = 0.8 * fontsize, filename = NA, width = NA, height = NA, row_annotation = NA, row_annotation_legend = TRUE, row_annotation_colors=NA, cytokine_annotation=NA, headerplot=NA, polar=FALSE, order_by_max_functionality=TRUE, ...){
+pheatmap = function(mat, color = colorRampPalette(rev(brewer.pal(n = 7, name = "RdYlBu")))(100), kmeans_k = NA, breaks = NA, border_color = "grey60", cellwidth = NA, cellheight = NA, scale = "none", cluster_rows = TRUE, cluster_cols = TRUE, clustering_distance_rows = "euclidean", clustering_distance_cols = "euclidean", clustering_method = "complete",  treeheight_row = ifelse(cluster_rows, 50, 0), treeheight_col = ifelse(cluster_cols, 50, 0), legend = TRUE, legend_breaks = NA, legend_labels = NA, annotation = NA, annotation_colors = NA, annotation_legend = TRUE, drop_levels = TRUE, show_rownames = TRUE, show_colnames = TRUE, main = NA, fontsize = 10, fontsize_row = fontsize, fontsize_col = fontsize, display_numbers = FALSE, number_format = "%.2f", fontsize_number = 0.8 * fontsize, filename = NA, width = NA, height = NA, row_annotation = NA, row_annotation_legend = TRUE, row_annotation_colors=NA, cytokine_annotation=NA, headerplot=NA, polar=FALSE, order_by_max_functionality=TRUE, cytokine_annotation_colors=NA, cytokine_height_multiplier=1, ...){
   #Do the arguments even make sense?
   oldwarn<-options("warn")
   options("warn"=-1)
@@ -1137,7 +1142,7 @@ pheatmap = function(mat, color = colorRampPalette(rev(brewer.pal(n = 7, name = "
   }
 
   # Draw heatmap
-  heatmap_motor(mat, border_color = border_color, cellwidth = cellwidth, cellheight = cellheight, treeheight_col = treeheight_col, treeheight_row = treeheight_row, tree_col = tree_col, tree_row = tree_row, filename = filename, width = width, height = height, breaks = breaks, color = color, legend = legend, annotation = annotation, annotation_colors = annotation_colors, annotation_legend = annotation_legend, main = main, fontsize = fontsize, fontsize_row = fontsize_row, fontsize_col = fontsize_col, fmat = fmat, fontsize_number = fontsize_number, row_annotation = row_annotation, row_annotation_legend = row_annotation_legend, row_annotation_colors = row_annotation_colors, cytokine_annotation = cytokine_annotation, headerplot=headerplot, polar=polar,...)
+  heatmap_motor(mat, border_color = border_color, cellwidth = cellwidth, cellheight = cellheight, treeheight_col = treeheight_col, treeheight_row = treeheight_row, tree_col = tree_col, tree_row = tree_row, filename = filename, width = width, height = height, breaks = breaks, color = color, legend = legend, annotation = annotation, annotation_colors = annotation_colors, annotation_legend = annotation_legend, main = main, fontsize = fontsize, fontsize_row = fontsize_row, fontsize_col = fontsize_col, fmat = fmat, fontsize_number = fontsize_number, row_annotation = row_annotation, row_annotation_legend = row_annotation_legend, row_annotation_colors = row_annotation_colors, cytokine_annotation = cytokine_annotation, headerplot=headerplot, polar=polar, cytokine_annotation_colors=cytokine_annotation_colors,cytokine_height_multiplier=cytokine_height_multiplier,...)
   options("warn"=oldwarn$warn)
   invisible(list(tree_row = tree_row, tree_col = tree_col, kmeans = km))
 }
