@@ -21,8 +21,8 @@
 ##'   individuals from which samples were drawn.
 ##' @param sample_id The name of the vector in \code{meta} that denotes the samples.
 ##'   This vector should contain all of the names in the \code{data} input.
-##' @param countFilterThreshold Numeric; if the number of cells expressing at
-##'   least one marker of interest is less than this threshold, we remove that
+##' @param countFilterThreshold Numeric; if the number of parent cells
+##'    is less than this threshold, we remove that
 ##'   file. Default is 0, which means filter is disabled.
 ##' @return A \code{COMPASSContainer} returns a list made up of the same
 ##' components as input the model, but checks and sanitizes the supplied data
