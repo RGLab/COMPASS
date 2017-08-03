@@ -27,8 +27,8 @@
 ##' @param matchmethod a \code{character} either 'regex' or 'Levenshtein' for matching nodes to markers.
 ##' @param markers a \code{character} vector of marker names to include.
 ##' @param swap a \code{logical} default FALSE. Set to TRUE if the marker and channel names are swapped.
-##' @param countFilterThreshold \code{numeric} threshold. if the number of cells expressing at
-##'   least one marker of interest is less than this threshold, we remove that
+##' @param countFilterThreshold \code{numeric} threshold. if the number of parent cells
+##'  is less than this threshold, we remove that
 ##'   file. Default is 5000.
 ##' @seealso \code{\link{COMPASSContainer}}
 ##' @examples \dontrun{
