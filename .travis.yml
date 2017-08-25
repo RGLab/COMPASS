@@ -6,6 +6,8 @@ dist: trusty
 
 before_install:
   - R -e 'install.packages("devtools")'
+  - R -e 'install.packages("reshape2")'
+  - R -e 'install.packages("covr")'
   - tlmgr install index
 
 install:
