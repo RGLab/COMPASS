@@ -225,6 +225,7 @@ mergeMatricesForPlotCOMPASSResultStack <- function(x,
 ##' with e.g. \code{grid::grid.draw()}.
 ##' @export
 ##' @examples
+##' \dontrun{
 ##' # allCompassResults is a list of 4 COMPASSResults
 ##' names(allCompassResults) <- c("Antigen 85A", "CFP-10", "CMV", "ESAT-6")
 ##' plotCOMPASSResultStack(allCompassResults,
@@ -232,6 +233,7 @@ mergeMatricesForPlotCOMPASSResultStack <- function(x,
 ##'     variable = "Antigen", show_rownames = FALSE,
 ##'     main = "Heatmap of Mean Probability of Response to Antigens, CD8+",
 ##'     fontsize = 14, fontsize_row = 13, fontsize_col = 11)
+##'   }
 plotCOMPASSResultStack <- function(x,
                                    threshold=0.01,
                                    minimum_dof=1,

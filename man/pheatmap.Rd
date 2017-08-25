@@ -208,7 +208,8 @@ ann_colors = list(Var1 = Var1, Var2 = Var2)
 #Specify row annotations
 row_ann <- data.frame(foo=gl(2,nrow(test)/2),`Bar`=relevel(gl(2,nrow(test)/2),"2"))
 rownames(row_ann)<-rownames(test)
-pheatmap(test, annotation = annotation, annotation_legend = FALSE, drop_levels = FALSE,row_annotation = row_ann)
+pheatmap(test, annotation = annotation, annotation_legend = FALSE,
+    drop_levels = FALSE,row_annotation = row_ann)
 
 #Using cytokine annotations
 M<-matrix(rnorm(8*20),ncol=8)
@@ -219,7 +220,9 @@ rownames(eg)<-apply(eg,1,function(x)paste0(x,collapse=""))
 rownames(M)<-1:nrow(M)
 colnames(M)<-rownames(eg)
 cytokine_annotation=eg
-pheatmap(M,annotation=annotation,row_annotation=row_annotation,annotation_legend=TRUE,row_annotation_legend=TRUE,cluster_rows=FALSE,cytokine_annotation=cytokine_annotation,cluster_cols=FALSE)
+pheatmap(M,annotation=annotation,row_annotation=row_annotation,
+     annotation_legend=TRUE,row_annotation_legend=TRUE,
+    cluster_rows=FALSE,cytokine_annotation=cytokine_annotation,cluster_cols=FALSE)
 
 # Specifying clustering from distance matrix
 drows = dist(test, method = "minkowski")

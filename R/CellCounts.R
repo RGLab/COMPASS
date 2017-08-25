@@ -1,3 +1,6 @@
+globalVariables(c("name","trtLabels","show_colnames","runApp"))
+
+
 ##' Compute Number of Cells Positive for Certain Cytokine Combinations
 ##'
 ##' Compute the number of cells expressing a particular

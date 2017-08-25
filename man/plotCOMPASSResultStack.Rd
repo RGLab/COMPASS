@@ -49,6 +49,7 @@ The code is heavily based on the plot.COMPASSResult and plot2 functions.
 Not all options from plot.COMPASSResult are supported yet.
 }
 \examples{
+\dontrun{
 # allCompassResults is a list of 4 COMPASSResults
 names(allCompassResults) <- c("Antigen 85A", "CFP-10", "CMV", "ESAT-6")
 plotCOMPASSResultStack(allCompassResults,
@@ -56,4 +57,5 @@ plotCOMPASSResultStack(allCompassResults,
     variable = "Antigen", show_rownames = FALSE,
     main = "Heatmap of Mean Probability of Response to Antigens, CD8+",
     fontsize = 14, fontsize_row = 13, fontsize_col = 11)
+  }
 }

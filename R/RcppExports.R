@@ -2,10 +2,10 @@
 # Generator token: 10BE3573-1514-4C36-9D1C-5A225CD40393
 
 CellCounts_character <- function(data, combinations) {
-    .Call(`_COMPASS_CellCounts_character`, data, combinations)
+    .Call(`C_COMPASS_CellCounts_character`, data, combinations)
 }
 
 .CellCounts <- function(x, combos) {
-    .Call(`_COMPASS_CellCounts`, x, combos)
+    .Call(`C_COMPASS_CellCounts`, x, combos)
 }
 

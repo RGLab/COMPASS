@@ -99,7 +99,7 @@ GetThresholdedIntensities <- function(gs, node, map) {
     ## Try to guess whether we should be pulling names from the 'desc'
     ## column or the 'name' column of the flowSets
     ff <- flowWorkspace::getData(gs[[1]], use.exprs=FALSE)
-    params <- parameters(ff)@data
+    params <- flowCore::parameters(ff)@data
 
     ## First, check for a perfect match using a basic regex
     .check_match <- function(x, vec) {
@@ -112,7 +112,7 @@ GetThresholdedIntensities <- function(gs, node, map) {
     column_to_use <- NULL ## are we going to use 'desc' or 'name'?
     indices <- NULL ## what indices are we using to pull from the flowFrame?
 
-    if (!all(params$name == colnames( exprs(ff) ))) {
+    if (!all(params$name == colnames( flowCore::exprs(ff) ))) {
       stop("Internal Error: expected 'params$desc' and 'colnames( exprs(ff) )' to ",
         "be identical but they are not!", call.=FALSE)
     }
@@ -140,7 +140,7 @@ GetThresholdedIntensities <- function(gs, node, map) {
     ## Extract the intensities
     message("Extracting cell intensities and thresholding...")
     intensities <- lapply(gslist, function(x) {
-      exprs <- exprs( getData(x, path) )[, expr_nms, drop=FALSE]
+      exprs <- flowCore::exprs( flowWorkspace::getData(x, path) )[, expr_nms, drop=FALSE]
       for (i in seq_along(node_names)) {
         cNode <- node_names[i]
         cChannel <- channel_names[i]

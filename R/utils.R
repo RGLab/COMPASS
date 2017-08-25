@@ -157,7 +157,7 @@ select_compass_pops = function(cellpops,markers){
 #' popnames = popnames[select_compass_pops(popnames,LETTERS[1:4])]
 #' #Translate
 #' translate_marker_names(popnames)
-translate_marker_names = function(x){
-  gsub(",Count$","",gsub("&$","",gsub("(\\w*)\\+","\\1&",gsub("(\\w*)-","!\\1&",x))))
+translate_marker_names = function(cellpops){
+  gsub(",Count$","",gsub("&$","",gsub("(\\w*)\\+","\\1&",gsub("(\\w*)-","!\\1&",cellpops))))
 }
 

@@ -29,7 +29,6 @@ Imports:
     methods,
     Rcpp,
     data.table,
-    methods,
     RColorBrewer,
     scales,
     grid,

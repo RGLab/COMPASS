@@ -90,7 +90,7 @@ COMPASSContainerFromGatingSet<-function(gs = NULL, node = NULL, filter.fun = NUL
 
     #stats <- getPopStats(gs, statistic = "count")
 
-    pd <- pData(gs)
+    pd <- flowWorkspace::pData(gs)
     #now we force 'name' column to be the same as rownames
     sample_id <- "name"
     pd[["name"]] <- rownames(pd)
@@ -102,7 +102,7 @@ COMPASSContainerFromGatingSet<-function(gs = NULL, node = NULL, filter.fun = NUL
                                                                             colnames(pd))]))
       stop("Quitting")
     }
-    
+
     # Get the children of that parent and filter out boolean gates Test if
     # children exist, and test if non-empty set returned.
     message("Fetching child nodes")
@@ -137,19 +137,19 @@ COMPASSContainerFromGatingSet<-function(gs = NULL, node = NULL, filter.fun = NUL
           dat <- flowWorkspace::getData(x, use.exprs=FALSE)
           lapply( objects(dat@frames), function(obj) {
             fr <- get(obj, envir=dat@frames)
-            return(na.omit( parameters(fr)@data$desc ))
+            return(na.omit( flowCore::parameters(fr)@data$desc ))
           })
         }) )
       } else if (inherits(xx, "GatingSet")) {
         dat <- flowWorkspace::getData(xx, use.exprs=FALSE)
         mlist <- lapply( objects(dat@frames), function(obj) {
           fr <- get(obj, envir=dat@frames)
-          return(na.omit( parameters(fr)@data$desc ))
+          return(na.omit( flowCore::parameters(fr)@data$desc ))
         })
       } else {
         stop("Expected object of type 'GatingSetList' or 'GatingSet'")
       }
-      mlist <- flowWorkspace::lapply(xx, function(x) na.omit(parameters(getData(x,
+      mlist <- flowWorkspace::lapply(xx, function(x) na.omit(flowCore::parameters(flowWorkspace::getData(x,
                                                                                 use.exprs = FALSE))@data$desc))
       common <- Reduce(intersect, mlist)
       unyn <- Reduce(union, mlist)
@@ -175,7 +175,7 @@ COMPASSContainerFromGatingSet<-function(gs = NULL, node = NULL, filter.fun = NUL
 
     .checkMarkerConsistency(gs)
     if (is.null(mp)) {
-      params <- parameters(flowWorkspace::getData(gs[[1]], use.exprs = FALSE))@data
+      params <- flowCore::parameters(flowWorkspace::getData(gs[[1]], use.exprs = FALSE))@data
       params <- data.table(params[, c("name", "desc")])
       if(swap){
         setnames(params,c("name","desc"),c("desc","name"))
@@ -267,14 +267,14 @@ COMPASSContainerFromGatingSet<-function(gs = NULL, node = NULL, filter.fun = NUL
     # extract the single cell values
     #exprs can now be a vector of characters
     expr<-do.call(c,strsplit(as.character(expr),"\\|"))
-    
+
     ##validity check on the parent children relationship
     children.ids <- sapply(full.child.nodes, flowWorkspace:::.getNodeInd, obj = gs[[1]], USE.NAMES = FALSE)
     map.ids <- sapply(expr, flowWorkspace:::.getNodeInd, obj = gs[[1]], USE.NAMES = FALSE)
     ind <- !map.ids %in% children.ids
     if(any(ind))
       stop(paste(expr[ind], collapse = "|"), " are not the children node of ", unique.node)
-    sc_data <- try(getSingleCellExpression( x=gs, nodes = expr, map = mp,swap=swap))
+    sc_data <- try(flowWorkspace::getSingleCellExpression( x=gs, nodes = expr, map = mp,swap=swap))
     if(inherits(sc_data,"try-error")){
       message("getData failed. Perhaps the marker list is not unique in the flowFrame.")
       message("All markers and channels:")

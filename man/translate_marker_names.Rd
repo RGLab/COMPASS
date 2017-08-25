@@ -4,7 +4,7 @@
 \alias{translate_marker_names}
 \title{Translate marker names to format use by COMPASS}
 \usage{
-translate_marker_names(x)
+translate_marker_names(cellpops)
 }
 \arguments{
 \item{cellpops}{\code{character} vector of cell population names.}
