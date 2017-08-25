@@ -132,7 +132,7 @@ subsetNamesAfter <- c("!M1&!M2&!M3&M4&!M5&!M6", "!M1&!M2&!M3&!M4&M5&!M6", "!M1&!
                       "M1&M2&M3&M4&M5&M6", "!M1&!M2&!M3&!M4&!M5&!M6")
 
 test_that("getCatsAndSubsetNames function orders catsMatrix columns and creates subset names correctly", {
-  getCatsAndSubsetNamesOut <- getCatsAndSubsetNames(catsMatrixBefore)
+  getCatsAndSubsetNamesOut <- COMPASS:::getCatsAndSubsetNames(catsMatrixBefore)
   expect_true(identical(getCatsAndSubsetNamesOut$cats, catsMatrixAfter))
   expect_true(identical(getCatsAndSubsetNamesOut$subsets, subsetNamesAfter))
 })
@@ -165,7 +165,7 @@ checkMeanGammasMergedCorrectly <- function(crList, MMerged) {
     # We do this using getCatsAndSubsetNames(), defined in plotMeanGammaMulti.R
     # (Note: It is not a great idea to create tests for plotCOMPASSResultStack
     # using a function which is called by plotCOMPASSResultStack)
-    catsData <- getCatsAndSubsetNames(cr$fit$categories)
+    catsData <- COMPASS:::getCatsAndSubsetNames(cr$fit$categories)
     # cr$fit$categories <- catsData$cats # Columns might be re-ordered, nothing else
     subsets <- catsData$subsets
     colnames(cr$fit$mean_gamma) <- subsets
@@ -196,7 +196,7 @@ test_that("mergeMatricesForPlotCOMPASSResultStack merges mean_gamma matrices cor
                          "Seed2" = cr5,
                          "Seed3" = cr6)
 
-  mergedMatrices <- mergeMatricesForPlotCOMPASSResultStack(compassResults,
+  mergedMatrices <- COMPASS:::mergeMatricesForPlotCOMPASSResultStack(compassResults,
                                                            row_annotation = c("Seed"),
                                                            variable = "Seed")
 
