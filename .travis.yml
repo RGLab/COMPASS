@@ -29,6 +29,7 @@ notifications:
 
 r_package:
   - covr
+  - reshape2
 
 after_success: 
   - Rscript -e 'library(covr); codecov()'
