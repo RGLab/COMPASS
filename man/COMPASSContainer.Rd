@@ -28,8 +28,8 @@ individuals from which samples were drawn.}
 \item{sample_id}{The name of the vector in \code{meta} that denotes the samples.
 This vector should contain all of the names in the \code{data} input.}
 
-\item{countFilterThreshold}{Numeric; if the number of cells expressing at
-least one marker of interest is less than this threshold, we remove that
+\item{countFilterThreshold}{Numeric; if the number of parent cells
+ is less than this threshold, we remove that
 file. Default is 0, which means filter is disabled.}
 }
 \value{

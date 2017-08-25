@@ -26,9 +26,9 @@ match against the \code{parameters} slot of the \code{flowFrames} in \code{gs}}
 
 \item{swap}{a \code{logical} default FALSE. Set to TRUE if the marker and channel names are swapped.}
 
-\item{countFilterThreshold}{\code{numeric} threshold. if the number of cells expressing at
-least one marker of interest is less than this threshold, we remove that
-file. Default is 5000.}
+\item{countFilterThreshold}{\code{numeric} threshold. if the number of parent cells
+is less than this threshold, we remove that
+ file. Default is 5000.}
 }
 \description{
 This code expects a \code{GatingSet} or \code{GatingSetList}.

@@ -12,8 +12,8 @@ SEXP melt_dataframe(SEXP x,
                     SEXP value_name);
 SEXP melt_matrix(SEXP x);
 SEXP transpose_list(SEXP x);
-SEXP COMPASS_CellCounts_character(SEXP dataSEXP, SEXP combinationsSEXP);
-SEXP COMPASS_CellCounts(SEXP xSEXP, SEXP combosSEXP);
+SEXP _COMPASS_CellCounts_character(SEXP dataSEXP, SEXP combinationsSEXP);
+SEXP _COMPASS_CellCounts(SEXP xSEXP, SEXP combosSEXP);
 SEXP samplePuPs(SEXP alphau,
                 SEXP alphas,
                 SEXP gammat,
@@ -63,9 +63,9 @@ R_CallMethodDef callMethods[] = {
     {"C_melt_dataframe", (DL_FUNC) & melt_dataframe, 5},
     {"C_melt_matrix", (DL_FUNC) & melt_matrix, 1},
     {"C_transpose_list", (DL_FUNC) & transpose_list, 1},
-    {"C_COMPASS_CellCounts_character", (DL_FUNC) & COMPASS_CellCounts_character,
+    {"C_COMPASS_CellCounts_character", (DL_FUNC) & _COMPASS_CellCounts_character,
      2},
-    {"C_COMPASS_CellCounts", (DL_FUNC) & COMPASS_CellCounts, 2},
+    {"C_COMPASS_CellCounts", (DL_FUNC) & _COMPASS_CellCounts, 2},
     {"C_samplePuPs", (DL_FUNC) & samplePuPs, 9},
     {"C_updatealphas_Exp", (DL_FUNC) & updatealphas_Exp, 10},
     {"C_updatealphau_noPu_Exp", (DL_FUNC) & updatealphau_noPu_Exp, 9},

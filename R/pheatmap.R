@@ -1,6 +1,6 @@
 lo = function(rown, coln, nrow, ncol, cellheight = NA, cellwidth = NA, treeheight_col, treeheight_row, legend, annotation, annotation_colors, annotation_legend, main, fontsize, fontsize_row, fontsize_col,row_annotation,row_annotation_legend,row_annotation_colors, cytokine_annotation, polar=FALSE,...){
   annot_legend_width = unit(0, "npc")
- 
+
   tl <- tryCatch( get("trtLabels", parent.frame()),
     error=function(e) NULL )
 
@@ -235,7 +235,7 @@ draw_colnames = function(cnames, ...){
 draw_rownames = function(rown, ...){
   n = length(rown)
   y = 1 - ((1:n)/n - 1/2/n)
-  grid.text(rown, x = unit(0.04, "npc"), y = y, vjust = 0.5, hjust = 0, gp = gpar(...))	
+  grid.text(rown, x = unit(0.04, "npc"), y = y, vjust = 0.5, hjust = 0, gp = gpar(...))
 }
 
 .toCart<-function(r,theta,C=0.5){
@@ -306,7 +306,7 @@ convert_cytokine_annotations <- function(annotation) {
   pal <- brewer.pal( ncol(annot), "Paired" )
   annot <- as.data.frame(annot)
   annot[] <- lapply(annot, function(x) {
-    swap(x, -1:5, c("#AAAAAB", "#FFFFFF", pal))
+    swap(x, -1:ncol(annot), c("#AAAAAB", "#FFFFFF", pal))
   })
 
   ## Return the annotations
@@ -791,7 +791,7 @@ kmeans_pheatmap = function(mat, k = min(nrow(mat), 150), sd_limit = NA, ...){
   # Filter data
   if(!is.na(sd_limit)){
     s = apply(mat, 1, sd)
-    mat = mat[s > sd_limit, ]	
+    mat = mat[s > sd_limit, ]
   }
 
   # Cluster data

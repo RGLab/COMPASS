@@ -7,7 +7,7 @@ using namespace Rcpp;
 
 // CellCounts_character
 IntegerMatrix CellCounts_character(List data, List combinations);
-RcppExport SEXP COMPASS_CellCounts_character(SEXP dataSEXP, SEXP combinationsSEXP) {
+RcppExport SEXP _COMPASS_CellCounts_character(SEXP dataSEXP, SEXP combinationsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -19,7 +19,7 @@ END_RCPP
 }
 // CellCounts
 IntegerMatrix CellCounts(List x, List combos);
-RcppExport SEXP COMPASS_CellCounts(SEXP xSEXP, SEXP combosSEXP) {
+RcppExport SEXP _COMPASS_CellCounts(SEXP xSEXP, SEXP combosSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
