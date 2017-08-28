@@ -65,6 +65,7 @@ summary.COMPASSResult <- function(object, ...) {
 #'@importFrom methods is
 #'@importFrom stats as.dist cor dist hclust kmeans median na.omit runif sd setNames
 #'@importFrom utils combn head installed.packages sessionInfo
+#'@importFrom reshape2 melt
 #'@examples
 #'getCounts(CR)
 getCounts <- function(object){

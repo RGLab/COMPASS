@@ -39,7 +39,8 @@ Imports:
     grDevices,
     utils,
     pdist,
-    magrittr
+    magrittr,
+    reshape2
 Suggests:
     flowWorkspace (>= 3.9.66),
     flowCore,
