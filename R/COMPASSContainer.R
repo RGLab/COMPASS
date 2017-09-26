@@ -11,7 +11,7 @@
 ##'   intensity information from an intracellular cytokine experiment.
 ##'   Each element of the list should be named; this name denotes which
 ##'   sample the cell intensities were measured from.
-##' @param counts A named integer vector of the cell counts(of the parent population) for each
+##' @param counts A named integer vector of the cell counts (of the parent population) for each
 ##'   sample in \code{data}.
 ##' @param meta A \code{data.frame} of metadata, describing the individuals
 ##'   in the experiment. Each row in \code{meta} should correspond to a row
@@ -144,7 +144,11 @@ COMPASSContainer <- function(data, counts, meta,
   }
 
   .check_has_names(data, counts)
-  
+
+  # We know that data and counts have the same names.
+  # Now re-order the items in data so that they match the order in counts.
+  data <- data[names(counts)]
+
   if(countFilterThreshold > 0){
     message("Filtering low counts")
     filter <- counts > countFilterThreshold
@@ -153,13 +157,13 @@ COMPASSContainer <- function(data, counts, meta,
     counts <- counts[keep.names]
     meta <- subset(meta, eval(as.name(sample_id)) %in% keep.names)
     message(gettextf("Filtering %s samples due to low counts", length(filter) -
-                length(keep.names)))  
+                length(keep.names)))
   }
-  
-  
+
+
   ## ensure that the counts are >= the number of rows in the data
   if (any(sapply(data, nrow) > counts)) {
-    stop("There are entries in 'counts' that are greater than the ",
+    stop("There are entries in 'counts' that are less than the ",
          "number of rows included in the 'data' matrices.", call.=FALSE)
   }
 
