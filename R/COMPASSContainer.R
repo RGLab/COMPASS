@@ -159,7 +159,7 @@ COMPASSContainer <- function(data, counts, meta,
   
   ## ensure that the counts are >= the number of rows in the data
   if (any(sapply(data, nrow) > counts)) {
-    stop("There are entries in 'counts' that are greater than the ",
+    stop("There are entries in 'counts' that are less than the ",
          "number of rows included in the 'data' matrices.", call.=FALSE)
   }
 
