@@ -161,3 +161,43 @@ translate_marker_names = function(cellpops){
   gsub(",Count$","",gsub("&$","",gsub("(\\w*)\\+","\\1&",gsub("(\\w*)-","!\\1&",cellpops))))
 }
 
+
+#' @name COMPASSfitToCountsTable
+#' @title Extract a table of counts from a COMPASSResult object
+#' @desciption Returns a table of counts and parent counts for each cell subset in a COMPASS fit.
+#' @param x \code{COMPASSResult}
+#' @param idcol unquote variable name in the metadata for the subject id.
+#' @param stimName the name of the stimulation
+#' @param drop numeric vector indicating the columns in the metadata to drop from the output. Usually sample-specific columns rather than subject specific columns.
+#' @param parent character name of the parent population for this model fit. e.g. "CD4"
+#' @export
+COMPASSfitToCountsTable = function(x,idcol=NULL,parent=NULL,drop=NULL, stimName=NULL){
+    require(dplyr)
+    require(tidyr)
+    stopifnot(inherits(x,"COMPASSResult"))
+    ns = x$data$n_s
+    ns = data.frame(id = rownames(ns),ns,check.names = FALSE)
+    nu = x$data$n_u
+    nu = data.frame(id = rownames(nu), nu,check.names = FALSE)
+    cs = x$data$counts_s
+    cs = data.frame(id = names(cs), ParentCount = cs,check.names = FALSE)
+    cu = x$data$counts_u
+    cu = data.frame(id = names(cu),ParentCount = cu,check.names = FALSE)
+    ns = tidyr::gather(ns,population,Count,-1L)
+    nu = tidyr::gather(nu,population,Count,-1L)
+    stim = dplyr::left_join(ns,cs,by = "id")
+    unstim = dplyr::left_join(nu,cu,by = "id")
+    meta = x$data$meta
+    `%>%` = tidyr::`%>%`
+    stim = stim %>% dplyr::mutate(Stim = stimName)
+    unstim = unstim %>% dplyr::mutate(Stim = "UNS")
+    data = dplyr::bind_rows(stim,unstim) %>% mutate(id = as.character(id))
+    if(is.null(match.call()$parent)){
+      stop("argument 'parent' is missing. 'parent' is a character string describing the cell population parent subset: .e.g. \"cd4\"",call. =FALSE)
+    }
+    idcol = enquo(idcol)
+    parent = enquo(parent)
+    meta = meta %>% rename(id = !!idcol) %>% select(-!!drop) %>% mutate(id = as.character(id))
+    data = left_join(data,meta, by ="id")
+    return(data)
+}
