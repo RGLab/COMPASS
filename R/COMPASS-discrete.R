@@ -69,7 +69,11 @@
     if (tt %% 1000 == 0) vmessage("Iteration ", tt, " of ", iterations, ".")
 
     # update alphau
-    res2 <- .Call(C_updatealphau_noPu_Exp, alphaut = alpha_u[tt-1,],n_s = n_s,n_u=n_u, I=I, K=K, lambda_u = lambda_u, var_p = varp_u, ttt = ttt,gammat =gamma[,,tt-1])
+    res2 <- .Call(C_updatealphau_noPu_Exp, lphaut = alpha_u[tt-1,],n_s = n_s,n_u=n_u, I=I, K=K, lambda_u = lambda_u, var_p = varp_u, ttt = ttt,gammat =gamma[,,tt-1])
+    if(length(alpha_u[tt,])!=res2$alphau_tt){
+      vmessage("res2 length:",length(res2$alphau_tt),"\n")    
+      vmessage("alpha_u[tt,] length: ",length(alpha_u[tt,]),"\n")
+    }
     alpha_u[tt,] = res2$alphau_tt;
     A_alphau[,tt] = res2$Aalphau;
 
