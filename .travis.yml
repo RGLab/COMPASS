@@ -16,6 +16,7 @@ install:
 cache: packages
   
 warnings_are_errors: false 
+group: deprecated-2017Q3
 sudo: required 
 
 bioc_required: true

@@ -144,7 +144,7 @@ COMPASSContainer <- function(data, counts, meta,
   }
 
   .check_has_names(data, counts)
-  
+
   if(countFilterThreshold > 0){
     message("Filtering low counts")
     filter <- counts > countFilterThreshold
@@ -153,14 +153,16 @@ COMPASSContainer <- function(data, counts, meta,
     counts <- counts[keep.names]
     meta <- subset(meta, eval(as.name(sample_id)) %in% keep.names)
     message(gettextf("Filtering %s samples due to low counts", length(filter) -
-                length(keep.names)))  
+                length(keep.names)))
   }
-  
-  
+
+
   ## ensure that the counts are >= the number of rows in the data
-  if (any(sapply(data, nrow) > counts)) {
-    stop("There are entries in 'counts' that are greater than the ",
-         "number of rows included in the 'data' matrices.", call.=FALSE)
+  for(n in names(data)) {
+    if(nrow(data[[n]]) > counts[[n]]) {
+      stop("There are entries in 'counts' that are less than the ",
+           "number of rows included in the 'data' matrices.", call.=FALSE)
+    }
   }
 
   ## check for negative values in the data
