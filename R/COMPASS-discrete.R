@@ -71,7 +71,7 @@
     # update alphau
     res2 <- .Call(C_updatealphau_noPu_Exp, alphaut = alpha_u[tt-1,],n_s = n_s,n_u=n_u, I=I, K=K, lambda_u = lambda_u, var_p = varp_u, ttt = ttt,gammat =gamma[,,tt-1])
     if(length(alpha_u[tt,])!=length(res2$alphau_tt)){
-      vmessage("res2 length:",length(res2$alphau_tt),"\n")    
+      vmessage("res2 alphau_tt length:",length(res2$alphau_tt),"\n")    
       vmessage("alpha_u[tt,] length: ",length(alpha_u[tt,]),"\n")
     }
     alpha_u[tt,] = res2$alphau_tt;
@@ -88,6 +88,16 @@
 
     # update alphas
     res3 <- .Call(C_updatealphas_Exp, alphast = alpha_s[tt-1,], n_s = n_s,  K=K, I=I, lambda_s = lambda_s, gammat =gamma[,,tt], var_1 = varp_s1,var_2 = varp_s2,p_var = pvar_s,ttt = ttt)
+    if(length(alpha_s[tt,])!=length(res3$alphas_tt)){
+      vmessage("res3 alphas_tt length:",length(res3$alphas_tt),"\n")
+      vmessage("alpha_s[tt,] length: ",length(alpha_s[tt,]),"\n")
+    }
+    if(length(A_alphas[,tt])!=length(res3$Aalphas)){
+      vmessage("res3 Aalphas length:",length(res3$Aalphas),"\n")
+      vmessage("A_alphas[,tt] length: ",length(A_alphas[,tt]),"\n")
+    }
+
+
     alpha_s[tt,] = res3$alphas_tt;
     A_alphas[,tt] = res3$Aalphas;
     ####
@@ -146,6 +156,14 @@
       # update alphas
       res3 <- .Call(C_updatealphas_Exp, alphast = alpha_s[tt-1,], n_s = n_s,  K=K, I=I, lambda_s = lambda_s, gammat =gamma[,,tt], var_1 = varp_s1,var_2 = varp_s2,p_var = pvar_s,ttt = ttt)
 
+    if(length(alpha_s[tt,])!=length(res3$alphas_tt)){
+      vmessage("res3 alphas_tt length:",length(res3$alphas_tt),"\n")
+      vmessage("alpha_s[tt,] length: ",length(alpha_s[tt,]),"\n")
+    }
+    if(length(A_alphas[,tt])!=length(res3$Aalphas)){
+      vmessage("res3 Aalphas length:",length(res3$Aalphas),"\n")
+      vmessage("A_alphas[,tt] length: ",length(A_alphas[,tt]),"\n")
+    }
       alpha_s[tt,] = res3$alphas_tt;
       A_alphas[,tt] = res3$Aalphas;
       if (tt %% 1000 == 0) vmessage("Iteration ", tt, " of ", iterations, ".")
