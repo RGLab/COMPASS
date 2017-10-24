@@ -21,7 +21,6 @@ print.COMPASSResult <- function(x, ...) {
 ##' @param x A \code{COMPASSResult} object.
 ##' @param markers A \code{character} vector of markers for which to compute the scores. Defaults to all markers. Must match the names returned by \code{markers()}.
 ##' @export
-##' @import plyr
 ##' @import data.table
 ##' @examples
 ##' scores(CR)
