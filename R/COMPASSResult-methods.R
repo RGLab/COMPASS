@@ -64,15 +64,14 @@ summary.COMPASSResult <- function(object, ...) {
 #'@importFrom methods is
 #'@importFrom stats as.dist cor dist hclust kmeans median na.omit runif sd setNames
 #'@importFrom utils combn head installed.packages sessionInfo
-#'@importFrom reshape2 melt
 #'@examples
 #'getCounts(CR)
 getCounts <- function(object){
   if(class(object)!="COMPASSResult"){
     stop("object must be of class COMPASSResult")
   }
-  s = melt(object$data$n_s)
-  u = melt(object$data$n_u)
+  s = reshape2::melt(object$data$n_s)
+  u = reshape2::melt(object$data$n_u)
   colnames(s) = c("ID","subset","stim")
   colnames(u) = c("ID","subset","unstim")
   counts = merge(s,u,by=c("ID","subset"))
