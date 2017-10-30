@@ -81,6 +81,10 @@
     res1 <- .Call(C_updategammak_noPu, n_s = n_s,n_u=n_u,gammat = gamma[,,tt-1],I=I,K=K,SS = SS,alphau = alpha_u[tt,],alphas = alpha_s[tt-1,],alpha=1,mk=mk,Istar = Istar,
       mKstar = mKstar,pp=pp, pb1 = pb1, pb2 = pb2, indi=indi)
     gamma[,,tt] = res1$gamma_tt;
+    if(length(A_gm[,tt]) != length(res1$Ag)){
+	vmessage("res1 Ag length: ",length(res1$Ag),"\n")
+	vmessage("A_gm[,tt] length: ",length(A_gm[,tt]),"\n")
+    1}
     A_gm[,tt] = res1$Ag;
     Istar = res1$xIstar;
     mk = res1$xmk;
