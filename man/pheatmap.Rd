@@ -19,7 +19,8 @@ pheatmap(mat, color = colorRampPalette(rev(brewer.pal(n = 7, name =
   * fontsize, filename = NA, width = NA, height = NA,
   row_annotation = NA, row_annotation_legend = TRUE,
   row_annotation_colors = NA, cytokine_annotation = NA, headerplot = NA,
-  polar = FALSE, order_by_max_functionality = TRUE, ...)
+  polar = FALSE, order_by_max_functionality = TRUE,
+  cytokine_annotation_colors = NA, cytokine_height_multiplier = 1, ...)
 }
 \arguments{
 \item{mat}{numeric matrix of the values to be plotted.}
@@ -141,6 +142,10 @@ Cytokine ordering is ignored when the headerplot argument is passed.}
 \item{order_by_max_functionality}{Boolean; re-order the cytokine labels by
 maximum functionality?}
 
+\item{cytokine_annotation_colors}{list of colors for cytokine annotation}
+
+\item{cytokine_height_multiplier}{increase the height of the cytokine legend rows}
+
 \item{\dots}{graphical parameters for the text used in plot. Parameters passed to
 \code{\link{grid.text}}, see \code{\link{gpar}}.}
 }
@@ -208,8 +213,7 @@ ann_colors = list(Var1 = Var1, Var2 = Var2)
 #Specify row annotations
 row_ann <- data.frame(foo=gl(2,nrow(test)/2),`Bar`=relevel(gl(2,nrow(test)/2),"2"))
 rownames(row_ann)<-rownames(test)
-pheatmap(test, annotation = annotation, annotation_legend = FALSE,
-    drop_levels = FALSE,row_annotation = row_ann)
+pheatmap(test, annotation = annotation, annotation_legend = FALSE, drop_levels = FALSE,row_annotation = row_ann)
 
 #Using cytokine annotations
 M<-matrix(rnorm(8*20),ncol=8)
@@ -220,9 +224,7 @@ rownames(eg)<-apply(eg,1,function(x)paste0(x,collapse=""))
 rownames(M)<-1:nrow(M)
 colnames(M)<-rownames(eg)
 cytokine_annotation=eg
-pheatmap(M,annotation=annotation,row_annotation=row_annotation,
-     annotation_legend=TRUE,row_annotation_legend=TRUE,
-    cluster_rows=FALSE,cytokine_annotation=cytokine_annotation,cluster_cols=FALSE)
+pheatmap(M,annotation=annotation,row_annotation=row_annotation,annotation_legend=TRUE,row_annotation_legend=TRUE,cluster_rows=FALSE,cytokine_annotation=cytokine_annotation,cluster_cols=FALSE)
 
 # Specifying clustering from distance matrix
 drows = dist(test, method = "minkowski")
