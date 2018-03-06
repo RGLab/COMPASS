@@ -158,7 +158,7 @@ select_compass_pops = function(cellpops,markers){
 #' #Translate
 #' translate_marker_names(popnames)
 translate_marker_names = function(cellpops){
-  gsub(",Count$","",gsub("&$","",gsub("(\\w*)\\+","\\1&",gsub("(\\w*)-","!\\1&",cellpops))))
+  gsub("&$","",gsub(",Count$","",gsub("&$","",gsub("(\\w*)\\+","\\1&",gsub("(\\w*)-","!\\1&",cellpops)))))
 }
 
 
@@ -171,7 +171,7 @@ translate_marker_names = function(cellpops){
 #' @param drop numeric vector indicating the columns in the metadata to drop from the output. Usually sample-specific columns rather than subject specific columns.
 #' @param parent character name of the parent population for this model fit. e.g. "CD4"
 #' @importFrom dplyr left_join
-#' @importFrom tidyr gather 
+#' @importFrom tidyr gather
 #' @importFrom tidyr %>%
 #' @importFrom dplyr mutate
 #' @importFrom dplyr bind_rows
