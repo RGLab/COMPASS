@@ -302,8 +302,17 @@ convert_cytokine_annotations <- function(annotation) {
   })
 
   ## Swap these numbers with appropriate colors
-  pal <- brewer.pal( ncol(annot), "Paired" )
-  annot <- as.data.frame(annot)
+  if(nrow(annotation)==1){
+    pal  <- brewer.pal(ncol(annotation), "Paired" )
+  }else{ 
+     pal <- brewer.pal( ncol(annot), "Paired" )
+  }
+ 
+  if(nrow(annotation)==1){
+	annot = as.data.frame(t(annot))
+  }else{
+     annot <- as.data.frame(annot)
+  }
   annot[] <- lapply(annot, function(x) {
     swap(x, -1:ncol(annot), c("#AAAAAB", "#FFFFFF", pal))
   })
