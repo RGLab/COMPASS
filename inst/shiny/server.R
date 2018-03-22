@@ -1,4 +1,3 @@
-library(Kmisc)
 library(data.table.extras)
 library(hexbin)
 library(scales)

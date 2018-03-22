@@ -29,7 +29,7 @@ shinyCOMPASSDeps <- function(verbose=TRUE) {
   }
 
   needed_pkgs <- list(
-    CRAN=c("Kmisc", "hexbin", "scales", "gridExtra", "ggplot2", "shiny", "reshape2",
+    CRAN=c("hexbin", "scales", "gridExtra", "ggplot2", "shiny", "reshape2",
       "data.table", "gtools", "stringr", "RColorBrewer"),
     KevinGitHub=c("data.table.extras"),
     WinstonGitHub="shinyGridster"

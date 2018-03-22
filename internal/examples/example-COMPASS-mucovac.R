@@ -1,10 +1,9 @@
 library(MIMOSA)
 library(pheatmap)
-library(Kmisc)
 
 CD4 <- readRDS("data/Mucovac_CD4.rds")
 unique(CD4$meta$Stim)
-Kmisc::counts(CD4$meta$Stim)
+table(CD4$meta$Stim)
 
 CD8 <- readRDS("data/Mucovac_CD8.rds")
 
