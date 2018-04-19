@@ -18,8 +18,8 @@
 ##'   in \code{data}. There should be one row for each sample;
 ##'   i.e., one row for each element of \code{data}.
 ##' @param individual_id The name of the vector in \code{meta} that denotes the
-##'   individuals from which samples were drawn.
-##' @param sample_id The name of the vector in \code{meta} that denotes the samples.
+##'   individuals from which samples were drawn. In this sense an individual equates to a single subject, or person. 
+##' @param sample_id The name of the vector in \code{meta} that denotes the samples. The sample_id identifies a combination of a subject with visit (if any), cell subset measured (e.g. CD4), and stimulation. 
 ##'   This vector should contain all of the names in the \code{data} input.
 ##' @param countFilterThreshold Numeric; if the number of parent cells
 ##'    is less than this threshold, we remove that
