@@ -23,9 +23,9 @@ in \code{data}. There should be one row for each sample;
 i.e., one row for each element of \code{data}.}
 
 \item{individual_id}{The name of the vector in \code{meta} that denotes the
-individuals from which samples were drawn.}
+individuals from which samples were drawn. In this sense an individual equates to a single subject, or person.}
 
-\item{sample_id}{The name of the vector in \code{meta} that denotes the samples.
+\item{sample_id}{The name of the vector in \code{meta} that denotes the samples. The sample_id identifies a combination of a subject with visit (if any), cell subset measured (e.g. CD4), and stimulation. 
 This vector should contain all of the names in the \code{data} input.}
 
 \item{countFilterThreshold}{Numeric; if the number of parent cells
