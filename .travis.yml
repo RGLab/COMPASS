@@ -9,6 +9,7 @@ before_install:
   - R -e 'install.packages("reshape2")'
   - R -e 'install.packages("covr")'
   - R -e 'install.packages("readxl")'
+  - R -e 'install.packages("ggplot2")'
   - tlmgr install index
 
 install:
