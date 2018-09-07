@@ -20,7 +20,7 @@ Install the release version of `COMPASS` with:
 or the development version with:
 
     library(BiocManager)
-    useDevel()
+    BiocManager::install(version = "devel")
     BiocManager::install("COMPASS")
 
 To get an idea of how to use `COMPASS`, read 
