@@ -1,3 +1,7 @@
+COMPASS 1.19.4
+==============
+* Fixed a bug in the FunctionalityScore and PolyfunctionalityScore APIs when `markers=` argument is passed in and not null. 
+
 COMPASS 1.15.1
 ==============
 * Exported SimpleCOMPASS interface for use with count matrices
