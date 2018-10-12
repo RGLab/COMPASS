@@ -14,14 +14,14 @@ Getting Started
 
 Install the release version of `COMPASS` with:
 
-    library(BiocInstaller)
-    biocLite("COMPASS")
+    library(BiocManager)
+    BiocManager::install("COMPASS")
 
 or the development version with:
 
-    library(BiocInstaller)
-    useDevel()
-    biocLite("COMPASS")
+    library(BiocManager)
+    BiocManager::install(version = "devel")
+    BiocManager::install("COMPASS")
 
 To get an idea of how to use `COMPASS`, read 
 [the vignette](http://www.bioconductor.org/packages/devel/bioc/vignettes/COMPASS/inst/doc/COMPASS.html).

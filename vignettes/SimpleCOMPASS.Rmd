@@ -31,8 +31,8 @@ We'll assume that the data are provided as an `excel` document. We'll use some o
 We need a good package to load the excel file, we'll use the tidyverse pacakge `readxl`. If it's not installed, you can install it with the command
 
 ```{r install_readxl, eval=FALSE}
-library(BiocInstaller)
-biocLite("readxl")
+library(BiocManager)
+BiocManager::install("readxl")
 ```
 
 ```{r load_readxl}
