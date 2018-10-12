@@ -41,7 +41,7 @@ FunctionalityScore.COMPASSResult <- function(x, n,markers=NULL) {
     all_categories=categories(x,FALSE)[,markers,drop=FALSE]
     dmat = as.matrix(pdist(new_categories,all_categories))
     cat_indices = apply(dmat,1,function(y)which(y==0))
-    new_mean_gamma=sapply(cat_indices,function(i)apply(Gamma(x)[,i,],1,mean))
+    new_mean_gamma=apply(cat_indices,2,function(i)apply(Gamma(x)[,i,],1,mean))
     new_scores = rowSums(new_mean_gamma)
     new_scores=new_scores/(2^length(markers)-1)
     fs=new_scores
@@ -98,7 +98,7 @@ PolyfunctionalityScore.COMPASSResult <- function(x, degree, n,markers=NULL) {
     all_categories=categories(x,FALSE)[,markers,drop=FALSE]
     dmat = as.matrix(pdist(new_categories,all_categories))
     cat_indices = apply(dmat,1,function(y)which(y==0))
-    new_mean_gamma=sapply(cat_indices,function(i)apply(Gamma(x)[,i,],1,mean))
+    new_mean_gamma=apply(cat_indices,2,function(i)apply(Gamma(x)[,i,],1,mean))
     degree <- rowSums(new_categories)
     n <- ncol(new_categories)
     y <- new_mean_gamma
