@@ -13,12 +13,12 @@ before_install:
   - tlmgr install index
 
 install:
-  - R -e 'devtools::install_deps()'
+   - R -e 'devtools::install_deps(dep = T)'
 
 cache: packages
   
 warnings_are_errors: false 
-group: deprecated-2017Q3
+group: stable
 sudo: required 
 
 bioc_required: true
