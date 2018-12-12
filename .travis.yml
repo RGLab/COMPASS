@@ -12,8 +12,6 @@ before_install:
   - R -e 'install.packages("ggplot2")'
   - tlmgr install index
 
-install:
-   - R -e 'devtools::install_deps(dep = T)'
 
 cache: packages
   
