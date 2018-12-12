@@ -53,7 +53,7 @@ COMPASSContainerFromGatingSet<-function(gs = NULL, node = NULL, filter.fun = NUL
     if (is.null(gs) | is.null(node)) {
       stop("Must specify a gating set and parent node.")
     }
-    unique.node<-node
+
     ## Make 'node' act more like a regular expression if it isn't one already
     n <- nchar(node)
     if (!substring(node, 1, 1) == "/") node <- paste0("/", node)
@@ -80,7 +80,7 @@ COMPASSContainerFromGatingSet<-function(gs = NULL, node = NULL, filter.fun = NUL
       stop(gettextf("The node expression %s doesn't identify any nodes.",
                     node))
     }
-
+    unique.node<-parent.pop
     # Extract the parent node name from the full population name
     # we can just use the parent.pop
     parent.node <- laply(strsplit(parent.pop, "/"), function(x) x[length(x)])
