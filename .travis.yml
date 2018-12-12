@@ -1,22 +1,25 @@
 # Sample .travis.yml for R projects
 
 language: r
-r: bioc-devel
-dist: trusty
+r: 
+    - devel
+cache: packages
 
 before_install:
   - R -e 'install.packages("devtools")'
+  - R -e 'devtools::install_github("RGLab/ggcyto", ref = "trunk")'
   - R -e 'install.packages("reshape2")'
   - R -e 'install.packages("covr")'
-  - R -e 'install.packages("readxl")'
+  - R -e 'devtools::install_github("RGLab/flowClust", ref = "bioc")'
+  - R -e 'install.packages("openCyto")'
   - R -e 'install.packages("ggplot2")'
   - tlmgr install index
 
+install:
+  - R -e 'devtools::install_deps(dep = T)'
 
-cache: packages
-  
-warnings_are_errors: false 
 group: stable
+warnings_are_errors: false 
 sudo: required 
 
 bioc_required: true
@@ -30,8 +33,8 @@ notifications:
     on_success: change
     on_failure: change
 
-r_package:
-  - covr
+r_github_packages:
+  - r-lib/covr
 
 after_success: 
   - Rscript -e 'library(covr); codecov()'
