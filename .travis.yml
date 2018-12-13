@@ -17,7 +17,8 @@ before_install:
 
 install:
   - R -e 'devtools::install_github("hadley/devtools")'
-
+  - R -e 'devtools::install_deps(dep = T)'
+  
 group: stable
 warnings_are_errors: false 
 sudo: required 
