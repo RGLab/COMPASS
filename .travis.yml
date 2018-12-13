@@ -16,6 +16,7 @@ before_install:
   - tlmgr install index
 
 install:
+  - R -e 'devtools::install_github("hadley/devtools")'
   - R -e 'devtools::install_deps(dep = T)'
 
 group: stable
