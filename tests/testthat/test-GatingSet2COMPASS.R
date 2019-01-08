@@ -3,8 +3,9 @@ dataDir <- system.file("extdata/gs_manual",package="flowWorkspaceData")
 library(flowWorkspace)
 gs <- load_gs(dataDir)
 gs1 <- clone(gs)
-sampleNames(gs1) <- "sample2.fcs"
-gs <- rbind2(GatingSetList(list(gs, gs1)))
+gs2 <- clone(gs)
+sampleNames(gs2) <- "sample2.fcs"
+gs <- rbind2(GatingSetList(list(gs1, gs2)))
 pd <- pData(gs)
 pd[["name"]] <- rownames(pd)
 pd[["PTID"]] <- 1
@@ -32,5 +33,5 @@ test_that("COMPASSContainerFromGatingSet", {
   expect_equal(colnames(mat), c("HLA-DR V500", "CD38 APC"))
   expect_equal(nrow(mat), 5785)
   expect_equal(cc[["counts"]][[1]], 14564)
-  
+
 })
