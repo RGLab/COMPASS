@@ -103,6 +103,9 @@ plot.COMPASSResult <- function(x, y, subset=NULL,
   	dmat = as.matrix(pdist(new_categories,all_categories))
   	cat_indices = apply(dmat,1,function(y)which(y==0))
   	# new_mean_gamma=sapply(cat_indices,function(i)apply(Gamma(x)[,i,],1,mean))
+  	if(!is.matrix(cat_indices)){
+  	  cat_indices = matrix(cat_indices,ncol=nrow(dmat))
+  	}
   	new_mean_gamma = apply(cat_indices, 2, function(i)rowMeans(Gamma(x)[, i, ]))
   	new_categories=cbind(new_categories,Counts=rowSums(new_categories))
   	reord=c(setdiff(1:nrow(new_categories),which(new_categories[,"Counts"]==0)),which(new_categories[,"Counts"]==0))
@@ -114,7 +117,8 @@ plot.COMPASSResult <- function(x, y, subset=NULL,
   	X$fit$mean_gamma=new_mean_gamma
   	X$fit$categories = new_categories
   	x=X
-  }
+    }
+
 
   ## Number of markers
   .n <- ncol(x$fit$categories) - 1
