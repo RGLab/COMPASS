@@ -107,17 +107,19 @@ plot.COMPASSResult <- function(x, y, subset=NULL,
   	  cat_indices = matrix(cat_indices,ncol=nrow(dmat))
   	}
   	new_mean_gamma = apply(cat_indices, 2, function(i)rowMeans(Gamma(x)[, i, ]))
-  	new_categories=cbind(new_categories,Counts=rowSums(new_categories))
-  	reord=c(setdiff(1:nrow(new_categories),which(new_categories[,"Counts"]==0)),which(new_categories[,"Counts"]==0))
-   new_categories=new_categories[reord,]
-  	new_mean_gamma=new_mean_gamma[,reord]
-   colnames(new_mean_gamma)=apply(new_categories[,-ncol(new_categories)],1,function(x)paste0(x,collapse=""))
+  	new_categories = cbind(new_categories, Counts = rowSums(new_categories))
+  	reord = c(setdiff(1:nrow(new_categories), which(new_categories[, "Counts"] ==
+  	                                                  0)), which(new_categories[, "Counts"] == 0))
+  	new_categories = new_categories[reord, ]
+  	new_mean_gamma = new_mean_gamma[, reord]
+  	colnames(new_mean_gamma) = apply(new_categories[, -ncol(new_categories)], 1, function(x)
+  	  paste0(x, collapse = ""))
   	# copy and reassign
-  	X=x
-  	X$fit$mean_gamma=new_mean_gamma
+  	X = x
+  	X$fit$mean_gamma = new_mean_gamma
   	X$fit$categories = new_categories
-  	x=X
-    }
+  	x = X
+  }
 
 
   ## Number of markers

@@ -32,19 +32,31 @@ FunctionalityScore.COMPASSResult <- function(x, n,markers=NULL) {
     sum(row) / (2^n - 1)
   })
   #If markers was given, we compute a functionality score based on the subset of markers
-  if(!is.null(markers)){
-    if(!all(markers%in%markers(x))){
+  if (!is.null(markers)) {
+    if (!all(markers %in% markers(x))){
       stop("Invalid marker names")
     }
-    message("Computing a Functionality Score based on ",paste(markers,collapse=", "))
-    new_categories = unique(categories(x,FALSE)[,markers,drop=FALSE])
-    all_categories=categories(x,FALSE)[,markers,drop=FALSE]
-    dmat = as.matrix(pdist(new_categories,all_categories))
-    cat_indices = apply(dmat,1,function(y)which(y==0))
-    new_mean_gamma=apply(cat_indices,2,function(i)apply(Gamma(x)[,i,],1,mean))
-    new_scores = rowSums(new_mean_gamma)
-    new_scores=new_scores/(2^length(markers)-1)
-    fs=new_scores
+    message("Computing a Functionality Score based on ",
+            paste(markers, collapse = ", "))
+    new_categories = unique(categories(x, FALSE)[, markers, drop = FALSE])
+    all_categories = categories(x, FALSE)[, markers, drop = FALSE]
+    suppressWarnings({dmat = as.matrix(pdist(new_categories,all_categories))})
+    cat_indices = apply(dmat,1,function(y)which(y == 0))
+    if (!is.matrix(cat_indices)) {
+      cat_indices <- matrix(cat_indices, ncol = length(cat_indices))
+    }
+    new_mean_gamma = apply(cat_indices, 2, function(i)
+      apply(COMPASS:::Gamma(x)[, i, ], 1, mean))
+    new_categories = cbind(new_categories, Counts = rowSums(new_categories))
+    reord = c(setdiff(1:nrow(new_categories), which(new_categories[, "Counts"] ==
+                                                      0)), which(new_categories[, "Counts"] == 0))
+    new_categories = new_categories[reord, ]
+    new_mean_gamma = new_mean_gamma[, reord]
+    colnames(new_mean_gamma) = apply(new_categories[, -ncol(new_categories)], 1, function(x)
+      paste0(x, collapse = ""))
+    new_scores = rowSums(new_mean_gamma[,-ncol(new_mean_gamma)])
+    new_scores = new_scores/(2^length(markers) - 1)
+    fs = new_scores
   }
   return(fs)
 }
@@ -85,24 +97,27 @@ PolyfunctionalityScore.COMPASSResult <- function(x, degree, n,markers=NULL) {
   degree <- x$fit$categories[, "Counts"]
   n <- ncol(x$fit$categories) - 1
   y <- x$fit$mean_gamma
-  pfs= apply(y, 1, function(row) {
+  pfs = apply(y, 1, function(row) {
     ## (2 / (n+1)) is a factor that normalized the score between 0 and 1
     sum(row * degree / choose(n, degree)) / n * (2 / (n + 1))
   })
-  if(!is.null(markers)){
-    if(!all(markers%in%markers(x))){
+  if (!is.null(markers)) {
+    if (!all(markers %in% markers(x))) {
       stop("Invalid marker names")
     }
     message("Computing a Polyfunctionality Score based on ",paste(markers,collapse=", "))
-    new_categories = unique(categories(x,FALSE)[,markers,drop=FALSE])
-    all_categories=categories(x,FALSE)[,markers,drop=FALSE]
-    dmat = as.matrix(pdist(new_categories,all_categories))
-    cat_indices = apply(dmat,1,function(y)which(y==0))
-    new_mean_gamma=apply(cat_indices,2,function(i)apply(Gamma(x)[,i,],1,mean))
+    new_categories = unique(categories(x,FALSE)[,markers,drop = FALSE])
+    all_categories = categories(x,FALSE)[,markers,drop = FALSE]
+    suppressWarnings({dmat = as.matrix(pdist(new_categories,all_categories))})
+    cat_indices = apply(dmat,1,function(y)which(y == 0))
+    if (!is.matrix(cat_indices)) {
+      cat_indices <- matrix(cat_indices, ncol = length(cat_indices))
+    }
+    new_mean_gamma = apply(cat_indices,2,function(i)apply(Gamma(x)[,i,],1,mean))
     degree <- rowSums(new_categories)
     n <- ncol(new_categories)
     y <- new_mean_gamma
-    pfs= apply(y, 1, function(row) {
+    pfs = apply(y, 1, function(row) {
       ## (2 / (n+1)) is a factor that normalized the score between 0 and 1
       sum(row * degree / choose(n, degree)) / n * (2 / (n + 1))
     })
