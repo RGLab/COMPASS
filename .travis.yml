@@ -13,6 +13,7 @@ before_install:
   - R -e 'devtools::install_github("RGLab/flowClust", ref = "bioc")'
   - R -e 'install.packages("openCyto")'
   - R -e 'install.packages("ggplot2")'
+  - R -e 'install.packages("readxl")'
   - tlmgr install index
 
 install:
