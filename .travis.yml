@@ -37,6 +37,7 @@ r_packages:
   - magrittr
   - rmarkdown
   - robustbase
+  - ggplot2
 
 r_github_packages:
   - jrowen/rhandsontable
