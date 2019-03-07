@@ -139,7 +139,7 @@ CellCounts.COMPASSContainer <- function(data, combinations) {
 .CellCounts_numeric <- function(data, combinations) {
 
   cn <- colnames(data[[1]])
-  if (is.null(cn) || is.na(cn)) {
+  if (any(is.null(cn)) || any(is.na(cn))) {
     warning("The column names of the matrices in your data are NA or NULL;",
       " they need to be set for the output to have sensible names.")
   }
