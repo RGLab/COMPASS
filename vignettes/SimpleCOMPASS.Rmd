@@ -32,12 +32,12 @@ We need a good package to load the excel file, we'll use the tidyverse pacakge `
 
 ```{r install_readxl, eval=FALSE}
 library(BiocManager)
-install.packages("readxl")
+# install.packages("readxl")
 ```
 
 ```{r load_readxl}
 library(COMPASS)
-library(readxl)
+# library(readxl)
 ```
 
 # Using SimpleCOMPASS 
@@ -52,14 +52,14 @@ The data used in this vignette are installed along with the `COMPASS` package, a
 # retrieve the path to the data file in the package installation directory
 example_data_path = 
   system.file("extdata",
-              "SimpleCOMPASSExample.xlsx",
+              "SimpleCOMPASSExamples.csv",
               package = "COMPASS")
 ```
 
 With the path to the data in hand we load the file.
 
 ```{r load_data}
-compass_data = read_excel(example_data_path)
+compass_data = read.csv(example_data_path, check.names=FALSE)
 ```
 
 ## Formatting the data
@@ -92,7 +92,7 @@ This seems like a lot of work, but it's relatively straightforward. When using t
 
 We assign the first three columns of the data set to a new `metadata` variable. These are the `PATIENT ID`, `Stimulation` and `Group` variables. We also want `metadata` to be a `data.frame` rather than a `tibble`. 
 ```{r}
-metadata = compass_data[,1:3]
+metadata = compass_data[,2:4]
 metadata = as.data.frame(metadata)
 ```
 
@@ -100,7 +100,7 @@ metadata = as.data.frame(metadata)
 
 ```{r}
 # Take the remaining columns
-counts = as.matrix(compass_data[,4:260])
+counts = as.matrix(compass_data[,5:261])
 dim(counts) 
 # NOTE that we still have too many columns. 
 # We should have 256, not 257.
