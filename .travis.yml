@@ -1,43 +1,78 @@
-# Sample .travis.yml for R projects
+# R for travis: see documentation at https://docs.travis-ci.com/user/languages/r
 
 language: r
-r: 
-    - release
-    - devel
-cache: packages
+dist: trusty
+sudo: required
+
+matrix:
+  include:
+   - os: linux
+     r: release
+   - os: linux
+     r: devel
+     env: R_CODECOV=true
+   - os: osx
+     osx_image: xcode9.3
+   - os: osx
+     osx_image: xcode7.3
+     disable_homebrew: true
+
+cache: 
+  packages: TRUE
 
 before_install:
   - R -e 'install.packages("devtools")'
-  - R -e 'devtools::install_github("RGLab/ggcyto", ref = "trunk")'
-  - R -e 'install.packages("reshape2")'
-  - R -e 'install.packages("covr")'
-  - R -e 'devtools::install_github("RGLab/flowClust", ref = "bioc")'
-  - R -e 'install.packages("openCyto")'
-  - R -e 'install.packages("ggplot2")'
-  - R -e 'install.packages("readxl")'
-  - tlmgr install index
 
-install:
-  - R -e 'devtools::install_github("hadley/devtools")'
-  - R -e 'devtools::install_deps(dep = T, upgrade = "always")'
+r_packages:
+  - data.table
+  - shiny
+  - shinythemes
+  - MASS
+  - methods
+  - stats
+  - utils
+  - graphics
+  - grDevices
+  - tools
+  - magrittr
+  - rmarkdown
+  - robustbase
+
+r_github_packages:
+  - jrowen/rhandsontable
+  - rlbarter/superheat
+  - yihui/knitr
+  - r-lib/covr
+  - r-lib/testthat
+  - r-lib/vdiffr
+  - r-lib/pkgdown
+  - rstudio/shinytest
+  - DillonHammill/CytoRSuiteData
   
-group: stable
-warnings_are_errors: false 
-sudo: required 
+use_bioc: true
 
-bioc_required: true
+bioc_packages:
+  - BiocGenerics
+  - RProtoBufLib
+  - flowCore
+  - ncdfFlow
+  - cytolib
+  - flowWorkspace
+  
+warnings_are_errors: false
 
+after_success:
+  -  if [[ "${R_CODECOV}" ]]; then R -e 'covr::codecov()'; fi
+  
 env:
  global:
    - CRAN: http://cran.rstudio.com
+   - BIOC_USE_DEVEL="FALSE"
 
-notifications:
-  email:
-    on_success: change
-    on_failure: change
+addons:
+  apt:
+    packages:
+      - libhdf5-7
+      - libhdf5-dev
+  
 
-r_github_packages:
-  - r-lib/covr
-
-after_success: 
-  - Rscript -e 'library(covr); codecov()'
