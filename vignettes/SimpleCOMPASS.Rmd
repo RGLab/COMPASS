@@ -32,7 +32,7 @@ We need a good package to load the excel file, we'll use the tidyverse pacakge `
 
 ```{r install_readxl, eval=FALSE}
 library(BiocManager)
-BiocManager::install("readxl")
+install.packages("readxl")
 ```
 
 ```{r load_readxl}
