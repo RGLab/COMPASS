@@ -266,7 +266,7 @@ COMPASSContainerFromGatingSet<-function(gs = NULL, node = NULL, filter.fun = NUL
 
     # extract the single cell values
     #exprs can now be a vector of characters
-    expr<-do.call(c,strsplit(as.character(expr),"\\|"))
+    expr <- do.call(c,strsplit(as.character(expr),"\\|"))
 
     ##validity check on the parent children relationship
     children.ids <- sapply(full.child.nodes, flowWorkspace:::.getNodeInd, obj = gs[[1]], USE.NAMES = FALSE)

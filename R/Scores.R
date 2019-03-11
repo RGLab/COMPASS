@@ -46,7 +46,7 @@ FunctionalityScore.COMPASSResult <- function(x, n,markers=NULL) {
       cat_indices <- matrix(cat_indices, ncol = length(cat_indices))
     }
     new_mean_gamma = apply(cat_indices, 2, function(i)
-      apply(COMPASS:::Gamma(x)[, i, ], 1, mean))
+      apply(Gamma(x)[, i, ], 1, mean))
     new_categories = cbind(new_categories, Counts = rowSums(new_categories))
     reord = c(setdiff(1:nrow(new_categories), which(new_categories[, "Counts"] ==
                                                       0)), which(new_categories[, "Counts"] == 0))

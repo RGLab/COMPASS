@@ -16,3 +16,4 @@ data/.*.rds$
 ^examples/
 ^.*\.Rproj$
 ^\.Rproj\.user$
+^.github/
