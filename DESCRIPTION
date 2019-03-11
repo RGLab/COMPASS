@@ -57,4 +57,5 @@ Suggests:
 LazyLoad: yes
 LazyData: yes
 biocViews: ImmunoOncology, FlowCytometry
-RoxygenNote: 6.0.1.9000
+Encoding: UTF-8
+RoxygenNote: 6.1.1

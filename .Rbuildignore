@@ -10,6 +10,7 @@ data/.*.rds$
 ^internal/
 .Rhistory$
 .gitignore$
+^.git/
 ^old/
 ^TODO.md
 ^examples/

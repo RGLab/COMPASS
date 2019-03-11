@@ -15,6 +15,4 @@ MeanGamma(x)
 }
 \description{
 These functions can be used for accessing data within a \code{COMPASSResult}.
-
-The gamma array associated with a \code{COMPASS} model fit.
 }

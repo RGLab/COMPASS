@@ -4,9 +4,9 @@
 \alias{plot2}
 \title{Plot a pair of COMPASSResults}
 \usage{
-plot2(x, y, subset, threshold = 0.01, minimum_dof = 1, maximum_dof = Inf,
-  must_express = NULL, row_annotation = NULL, palette = NA,
-  show_rownames = FALSE, show_colnames = FALSE, ...)
+plot2(x, y, subset, threshold = 0.01, minimum_dof = 1,
+  maximum_dof = Inf, must_express = NULL, row_annotation = NULL,
+  palette = NA, show_rownames = FALSE, show_colnames = FALSE, ...)
 }
 \arguments{
 \item{x}{An object of class \code{COMPASSResult}.}
