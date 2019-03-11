@@ -19,7 +19,7 @@ Response <- function(x, markers, degree){
   UseMethod("Response")
 }
 
-##' @rdname FunctionalityScore
+##' @rdname Response
 ##' @export
 Response.COMPASSResult <- function(x, markers = NULL, degree = 1) {
   ## we drop the last column as it is the 'NULL' category

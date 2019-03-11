@@ -2,9 +2,12 @@
 % Please edit documentation in R/Response.R
 \name{Response}
 \alias{Response}
+\alias{Response.COMPASSResult}
 \title{Compute a response probability from COMPASS mcmc samples.}
 \usage{
 Response(x, markers, degree)
+
+\method{Response}{COMPASSResult}(x, markers = NULL, degree = 1)
 }
 \arguments{
 \item{x}{a \code{COMPASSResult} object.}
