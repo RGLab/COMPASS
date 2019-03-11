@@ -50,6 +50,15 @@ Response.COMPASSResult <- function(x, markers = NULL, degree = 1) {
     new_mean_gamma = new_mean_gamma[, reord]
     colnames(new_mean_gamma) = apply(new_categories[, -ncol(new_categories)], 1, function(x)
       paste0(x, collapse = ""))
-    rowMeans(new_mean_gamma[,new_categories[,"Counts"] >= degree, drop = FALSE])
+    include_cols <- new_categories[,"Counts"] >= degree
+    if (sum(include_cols) == 0) {
+      response <- matrix(rep(0,nrow(new_mean_gamma)),nrow=nrow(new_mean_gamma),ncol=1)
+      rownames(response) <- rownames(new_mean_gamma)
+      colnames(response) <- paste0("Pr(response|degree >=",degree,")")
+    }else{
+      response <- rowMeans(new_mean_gamma[,include_cols, drop = FALSE])
+      colnames(response) <- paste0("Pr(response | degree >=",degree,")")
+    }
+    response
 }
 
