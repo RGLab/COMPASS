@@ -56,7 +56,10 @@ Response.COMPASSResult <- function(x, markers = NULL, degree = 1) {
       rownames(response) <- rownames(new_mean_gamma)
       colnames(response) <- paste0("Pr(response|degree >=",degree,")")
     }else{
-      response <- rowMeans(new_mean_gamma[,include_cols, drop = FALSE])
+      response <- new_mean_gamma[,include_cols, drop = FALSE]
+      response <- rowMeans(response)
+      response <- matrix(response, ncol = 1, nrow = length(response))
+      rownames(response) <- rownames(new_mean_gamma)
       colnames(response) <- paste0("Pr(response | degree >=",degree,")")
     }
     response
