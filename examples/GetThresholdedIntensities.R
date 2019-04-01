@@ -1,4 +1,4 @@
-if (require("flowWorkspace")) {
+if (require("flowWorkspace")&require("flowCore")&require("tidyr")) {
 
   ## Generate an example GatingSet that could be used with COMPASS
   ## We then pull out the 'data' and 'counts' components that could
