@@ -5,7 +5,7 @@
 \alias{plot}
 \title{Plot a COMPASSResult}
 \usage{
-\method{plot}{COMPASSResult}(x, y, subset = NULL, threshold = 0.01,
+plot.COMPASSResult(x, y, subset = NULL, threshold = 0.01,
   minimum_dof = 1, maximum_dof = Inf, must_express = NULL,
   row_annotation, palette = colorRampPalette(brewer.pal(10,
   "Purples"))(20), show_rownames = FALSE, show_colnames = FALSE,

@@ -51,7 +51,7 @@ GetThresholdedIntensities <- function(gs, node, map) {
       node <- gsub("(?<!\\\\)\\+", "\\\\+", node, perl=TRUE)
     }
 
-    paths <- flowWorkspace::getNodes(gslist[[1]])
+    paths <- flowWorkspace::gh_get_pop_paths(gslist[[1]])
     path <- paths[ grepl(node, paths, fixed = FALSE) ]
 
     if (length(path) > 1) {
@@ -70,13 +70,13 @@ GetThresholdedIntensities <- function(gs, node, map) {
     # extract all the counts
     message("Extracting cell counts")
     counts <- unlist(lapply(gslist, function(x) {
-      flowWorkspace::getTotal(x, path)
+      flowWorkspace::gh_pop_get_count(x, path)
     }))
 
     # Get the children of that parent and filter out boolean gates Test if
     # children exist, and test if non-empty set returned.
     message("Looking for expected children nodes")
-    child.nodes <- flowWorkspace::getChildren(gs[[1]], node_name)
+    child.nodes <- flowWorkspace::gh_pop_get_children(gs[[1]], node_name)
     child.nodes <- basename(child.nodes)
     if (length(child.nodes) == 0) {
       stop(gettextf("Population %s has no children! Choose a different parent population.",
@@ -84,7 +84,7 @@ GetThresholdedIntensities <- function(gs, node, map) {
     }
 
     child.nodes <- child.nodes[ !sapply(child.nodes, function(x)
-      .isBoolGate(gs[[1]], x))]
+      gh_pop_is_bool_gate(gs[[1]], x))]
 
     if (length(child.nodes) == 0) {
       stop(gettextf("All the children of %s are boolean gates. Choose a population with non-boolean child gates.",
@@ -98,7 +98,7 @@ GetThresholdedIntensities <- function(gs, node, map) {
 
     ## Try to guess whether we should be pulling names from the 'desc'
     ## column or the 'name' column of the flowSets
-    ff <- flowWorkspace::getData(gs[[1]], use.exprs=FALSE)
+    ff <- flowWorkspace::gh_pop_get_data(gs[[1]], use.exprs=FALSE)
     params <- flowCore::parameters(ff)@data
 
     ## First, check for a perfect match using a basic regex
@@ -140,7 +140,7 @@ GetThresholdedIntensities <- function(gs, node, map) {
     ## Extract the intensities
     message("Extracting cell intensities and thresholding...")
     intensities <- lapply(gslist, function(x) {
-      exprs <- flowCore::exprs( flowWorkspace::getData(x, path) )[, expr_nms, drop=FALSE]
+      exprs <- flowCore::exprs( flowWorkspace::gh_pop_get_data(x, path) )[, expr_nms, drop=FALSE]
       for (i in seq_along(node_names)) {
         cNode <- node_names[i]
         cChannel <- channel_names[i]
@@ -151,7 +151,7 @@ GetThresholdedIntensities <- function(gs, node, map) {
           node_path <- file.path(path, cNode)
         }
         ## find out what cells didn't fall into the gate
-        ind <- !flowWorkspace::getIndices(x, node_path)
+        ind <- !flowWorkspace::gh_pop_get_indices(x, node_path)
         exprs[ind, expr_nms[i]] <- 0
       }
       exprs <- exprs[ rowSums(exprs) > 0, , drop=FALSE]

@@ -68,7 +68,7 @@ if (require("flowWorkspace")&require("flowCore")&require("tidyr")) {
   pData(gs) <- meta
 
   gate <- rectangleGate( list(TNFa=c(-Inf,Inf)))
-  add(gs, gate, parent="root", name="dummy")
+  gs_pop_add(gs, gate, parent="root", name="dummy")
 
   ## Add dummy gate
 
@@ -76,7 +76,7 @@ if (require("flowWorkspace")&require("flowCore")&require("tidyr")) {
   invisible(lapply(marker_names, function(marker) {
     .gate <- setNames( list( c( rexp(1, runif(1, 1E-5, 1E-3)), Inf) ), marker )
     gate <- rectangleGate(.gate=.gate)
-    add(gs, gate, parent="dummy", name=paste0(marker, "+"))
+    gs_pop_add(gs, gate, parent="dummy", name=paste0(marker, "+"))
   }))
 
   recompute(gs)
