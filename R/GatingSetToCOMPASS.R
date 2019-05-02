@@ -64,14 +64,14 @@ COMPASSContainerFromGatingSet<-function(gs = NULL, node = NULL, filter.fun = NUL
     message("Extracting cell counts")
     .getOneStat<-function(x,y){
       parent.counts<-flowWorkspace::lapply(x,function(xx,yy=y){
-        flowWorkspace::getTotal(xx,yy)
+        flowWorkspace::gh_pop_get_count(xx,yy)
       })
       parent.counts <- unlist(parent.counts)
       names(parent.counts) <- flowWorkspace::sampleNames(x)
       parent.counts
     }
 
-    nnames <- flowWorkspace::getNodes(gs[[1]], path="full")
+    nnames <- flowWorkspace::gh_get_pop_paths(gs[[1]], path="full")
     parent.pop<-nnames[grepl(node, nnames, fixed = FALSE)]
     if (length(parent.pop) > 1) {
       stop(gettextf("The node expression %s is not unique.", node))
@@ -106,17 +106,17 @@ COMPASSContainerFromGatingSet<-function(gs = NULL, node = NULL, filter.fun = NUL
     # Get the children of that parent and filter out boolean gates Test if
     # children exist, and test if non-empty set returned.
     message("Fetching child nodes")
-    full.child.nodes<-flowWorkspace::getChildren(gs[[1]], unique.node,path="auto")
-    child.nodes <- basename(flowWorkspace::getChildren(gs[[1]], unique.node))
+    full.child.nodes<-flowWorkspace::gh_pop_get_children(gs[[1]], unique.node,path="auto")
+    child.nodes <- basename(flowWorkspace::gh_pop_get_children(gs[[1]], unique.node))
 
     if (length(child.nodes) == 0) {
       stop(gettextf("Population %s has no children! Choose a different parent population.",
                     parent.node))
     }
 
-    child.nodes <- child.nodes[!sapply(full.child.nodes, function(x) .isBoolGate(gs[[1]],
+    child.nodes <- child.nodes[!sapply(full.child.nodes, function(x) flowWorkspace::gh_pop_is_bool_gate(gs[[1]],
                                                                                  x))]
-    full.child.nodes <- full.child.nodes[!sapply(full.child.nodes, function(x) .isBoolGate(gs[[1]],x))]
+    full.child.nodes <- full.child.nodes[!sapply(full.child.nodes, function(x) flowWorkspace::gh_pop_is_bool_gate(gs[[1]],x))]
 
     if (length(child.nodes) == 0) {
       stop(gettextf("All the children of %s are boolean gates. Choose a population with non-boolean child gates.",
@@ -134,14 +134,14 @@ COMPASSContainerFromGatingSet<-function(gs = NULL, node = NULL, filter.fun = NUL
     .checkMarkerConsistency <- function(xx) {
       if (inherits(xx, "GatingSetList")) {
         mlist <- unlist( recursive=FALSE, lapply(xx@data, function(x) {
-          dat <- flowWorkspace::getData(x, use.exprs=FALSE)
+          dat <- flowWorkspace::gs_pop_get_data(x)
           lapply( objects(dat@frames), function(obj) {
             fr <- get(obj, envir=dat@frames)
             return(na.omit( flowCore::parameters(fr)@data$desc ))
           })
         }) )
       } else if (inherits(xx, "GatingSet")) {
-        dat <- flowWorkspace::getData(xx, use.exprs=FALSE)
+        dat <- flowWorkspace::gs_pop_get_data(xx)
         mlist <- lapply( objects(dat@frames), function(obj) {
           fr <- get(obj, envir=dat@frames)
           return(na.omit( flowCore::parameters(fr)@data$desc ))
@@ -149,7 +149,7 @@ COMPASSContainerFromGatingSet<-function(gs = NULL, node = NULL, filter.fun = NUL
       } else {
         stop("Expected object of type 'GatingSetList' or 'GatingSet'")
       }
-      mlist <- flowWorkspace::lapply(xx, function(x) na.omit(flowCore::parameters(flowWorkspace::getData(x,
+      mlist <- flowWorkspace::lapply(xx, function(x) na.omit(flowCore::parameters(flowWorkspace::gh_pop_get_data(x,
                                                                                 use.exprs = FALSE))@data$desc))
       common <- Reduce(intersect, mlist)
       unyn <- Reduce(union, mlist)
@@ -175,7 +175,7 @@ COMPASSContainerFromGatingSet<-function(gs = NULL, node = NULL, filter.fun = NUL
 
     .checkMarkerConsistency(gs)
     if (is.null(mp)) {
-      params <- flowCore::parameters(flowWorkspace::getData(gs[[1]], use.exprs = FALSE))@data
+      params <- flowCore::parameters(flowWorkspace::gh_pop_get_data(gs[[1]], use.exprs = FALSE))@data
       params <- data.table(params[, c("name", "desc")])
       if(swap){
         setnames(params,c("name","desc"),c("desc","name"))
@@ -274,7 +274,7 @@ COMPASSContainerFromGatingSet<-function(gs = NULL, node = NULL, filter.fun = NUL
     ind <- !map.ids %in% children.ids
     if(any(ind))
       stop(paste(expr[ind], collapse = "|"), " are not the children node of ", unique.node)
-    sc_data <- try(flowWorkspace::getSingleCellExpression( x=gs, nodes = expr, map = mp,swap=swap))
+    sc_data <- try(flowWorkspace::gs_get_singlecell_expression( x=gs, nodes = expr, map = mp,swap=swap))
     if(inherits(sc_data,"try-error")){
       message("getData failed. Perhaps the marker list is not unique in the flowFrame.")
       message("All markers and channels:")
