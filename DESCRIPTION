@@ -47,7 +47,7 @@ Imports:
     BiocStyle,
     rmarkdown
 Suggests:
-    flowWorkspace (>= 3.9.66),
+    flowWorkspace (>= 3.33.1),
     flowCore,
     ncdfFlow,
     shiny,
