@@ -5,9 +5,10 @@
 \alias{Response.COMPASSResult}
 \title{Compute a response probability from COMPASS mcmc samples.}
 \usage{
-Response(x, markers, degree)
+Response(x, markers, degree, max.pro)
 
-\method{Response}{COMPASSResult}(x, markers = NULL, degree = 1)
+\method{Response}{COMPASSResult}(x, markers = NULL, degree = 1,
+  max.prob = FALSE)
 }
 \arguments{
 \item{x}{a \code{COMPASSResult} object.}
@@ -15,6 +16,8 @@ Response(x, markers, degree)
 \item{markers}{a \code{vector} of marker names.}
 
 \item{degree}{the \code{numeric} degree of functionality to test.}
+
+\item{max.prob}{\code{logical} Use the max probability rather than the average across subsets. Defaults to FALSE.}
 }
 \value{
 A \code{vector} of response probabilities for each subject.
