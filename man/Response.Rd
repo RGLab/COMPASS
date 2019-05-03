@@ -5,7 +5,7 @@
 \alias{Response.COMPASSResult}
 \title{Compute a response probability from COMPASS mcmc samples.}
 \usage{
-Response(x, markers, degree, max.pro)
+Response(x, markers, degree, max.prob)
 
 \method{Response}{COMPASSResult}(x, markers = NULL, degree = 1,
   max.prob = FALSE)

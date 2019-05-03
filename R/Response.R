@@ -3,6 +3,7 @@
 #' @param x  a \code{COMPASSResult} object.
 #' @param markers a \code{vector} of marker names.
 #' @param degree the \code{numeric} degree of functionality to test.
+#' @param max.prob \code{logical} Use the max probability rather than the average across subsets. Defaults to FALSE.
 #' @description
 #' Compute a response probability based on the selected markers, evaluating the probability
 #' that a subject exhibits a response of size \code{degree} or greater.
@@ -15,13 +16,13 @@
 #'
 #' @examples
 #' Response(CR, markers = c("M1","M2","M3"), degree = 2)
-Response <- function(x, markers, degree){
+Response <- function(x, markers, degree, max.prob){
   UseMethod("Response")
 }
 
 ##' @rdname Response
 ##' @export
-Response.COMPASSResult <- function(x, markers = NULL, degree = 1) {
+Response.COMPASSResult <- function(x, markers = NULL, degree = 1, max.prob = FALSE) {
   ## we drop the last column as it is the 'NULL' category
   if (is.null(markers)) {
     markers <- markers(x)
@@ -57,10 +58,15 @@ Response.COMPASSResult <- function(x, markers = NULL, degree = 1) {
       colnames(response) <- paste0("Pr(response|degree >=",degree,")")
     }else{
       response <- new_mean_gamma[,include_cols, drop = FALSE]
-      response <- rowMeans(response)
-      response <- matrix(response, ncol = 1, nrow = length(response))
-      rownames(response) <- rownames(new_mean_gamma)
-      colnames(response) <- paste0("Pr(response | degree >=",degree,")")
+      if(!max.prob){
+        #polyfunctional response is the average over subsets
+        response <- structure(rowMeans(response), dim = c(nrow(response),1), names = NULL, dimnames = list(rownames(response),paste0("Pr(response | degree >=",degree,")")))
+      }else{
+        response <- structure(apply(response,1,max),dim=c(nrow(response),1), names = NULL, dimnames = list(rownames(response), paste0("Pr(response | degree >=",degree,")")))
+      }
+      # response <- matrix(response, ncol = 1, nrow = length(response))
+      # rownames(response) <- rownames(new_mean_gamma)
+      # colnames(response) <- paste0("Pr(response | degree >=",degree,")")
     }
     response
 }
