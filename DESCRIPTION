@@ -22,8 +22,8 @@ License: Artistic-2.0
 BugReports: https://github.com/RGLab/COMPASS/issues
 VignetteBuilder: knitr
 Depends:
-    R (>= 3.0.3)
-LinkingTo: Rcpp (>= 0.11.0)
+    R  (>= 3.0.3)
+LinkingTo: Rcpp  (>= 0.11.0)
 Maintainer: Greg Finak <gfinak@fhcrc.org>
 Imports:
     methods,
@@ -45,7 +45,8 @@ Imports:
     tidyr,
     rlang,
     BiocStyle,
-    rmarkdown
+    rmarkdown,
+    foreach
 Suggests:
     flowWorkspace (>= 3.33.1),
     flowCore,
@@ -54,9 +55,11 @@ Suggests:
     testthat,
     devtools,
     flowWorkspaceData,
-    ggplot2
+    ggplot2,
+    doMC, 
+    progress 
 LazyLoad: yes
 LazyData: yes
 biocViews: ImmunoOncology, FlowCytometry
 Encoding: UTF-8
-RoxygenNote: 6.1.1
+RoxygenNote: 7.1.0

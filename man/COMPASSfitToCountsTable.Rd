@@ -4,8 +4,13 @@
 \alias{COMPASSfitToCountsTable}
 \title{Extract a table of counts from a COMPASSResult object}
 \usage{
-COMPASSfitToCountsTable(x, idcol = NULL, parent = NULL, drop = NULL,
-  stimName = NULL)
+COMPASSfitToCountsTable(
+  x,
+  idcol = NULL,
+  parent = NULL,
+  drop = NULL,
+  stimName = NULL
+)
 }
 \arguments{
 \item{x}{\code{COMPASSResult}}

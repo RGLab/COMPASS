@@ -5,9 +5,9 @@
 \alias{Response.COMPASSResult}
 \title{Compute a response probability from COMPASS mcmc samples.}
 \usage{
-Response(x, markers, degree)
+Response(x, markers, degree, max.prob, at_least_n)
 
-\method{Response}{COMPASSResult}(x, markers = NULL, degree = 1)
+\method{Response}{COMPASSResult}(x, markers = NULL, degree = 1, max.prob = FALSE, at_least_n = NULL)
 }
 \arguments{
 \item{x}{a \code{COMPASSResult} object.}
@@ -15,6 +15,10 @@ Response(x, markers, degree)
 \item{markers}{a \code{vector} of marker names.}
 
 \item{degree}{the \code{numeric} degree of functionality to test.}
+
+\item{max.prob}{\code{logical} Use the max probability rather than the average across subsets. Defaults to FALSE.}
+
+\item{at_least_n}{\code{logical} response of degree x or greater with at_least_n subsets responding.}
 }
 \value{
 A \code{vector} of response probabilities for each subject.
@@ -28,5 +32,6 @@ i.e., the probability of at least \code{degree} markers exhibiting an antigen sp
 The response is computed from the sampled Gamma matrix, subsetting on the selected markers, and
 }
 \examples{
+
 Response(CR, markers = c("M1","M2","M3"), degree = 2)
 }

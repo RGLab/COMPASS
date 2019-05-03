@@ -8,8 +8,7 @@
 \usage{
 PolyfunctionalityScore(x, degree, n, markers = NULL)
 
-\method{PolyfunctionalityScore}{COMPASSResult}(x, degree, n,
-  markers = NULL)
+\method{PolyfunctionalityScore}{COMPASSResult}(x, degree, n, markers = NULL)
 
 \method{PolyfunctionalityScore}{default}(x, degree, n, markers = NULL)
 }

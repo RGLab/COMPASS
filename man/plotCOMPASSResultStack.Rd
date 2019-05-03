@@ -4,10 +4,17 @@
 \alias{plotCOMPASSResultStack}
 \title{Plot multiple COMPASSResults}
 \usage{
-plotCOMPASSResultStack(x, threshold = 0.01, minimum_dof = 1,
-  maximum_dof = Inf, row_annotation, variable,
+plotCOMPASSResultStack(
+  x,
+  threshold = 0.01,
+  minimum_dof = 1,
+  maximum_dof = Inf,
+  row_annotation,
+  variable,
   palette = colorRampPalette(brewer.pal(9, "Purples"))(20),
-  show_rownames = FALSE, ...)
+  show_rownames = FALSE,
+  ...
+)
 }
 \arguments{
 \item{x}{A named list of objects of class \code{COMPASSResult}. The names are values of type \code{variable}}
