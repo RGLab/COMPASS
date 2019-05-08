@@ -23,6 +23,7 @@ Response <- function(x, markers, degree, max.prob, cond_response){
 }
 
 ##' @rdname Response
+##' @export
 Response.COMPASSResult <- function(x, markers = NULL, degree = 1, max.prob = FALSE, cond_response = FALSE) {
   ## we drop the last column as it is the 'NULL' category
   if (is.null(markers)) {
