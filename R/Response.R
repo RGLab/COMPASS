@@ -84,9 +84,9 @@ Response.COMPASSResult <- function(x, markers = NULL, degree = 1, max.prob = FAL
         response <-
           structure(
             rowSums(exp(log(
-              apply(Gamma(scr), 1:2, mean)
+              apply(Gamma(x), 1:2, mean)
             ) - log(
-              rowSums(apply(Gamma(scr), 1:2, mean)) + 1e-10
+              rowSums(apply(Gamma(x), 1:2, mean)) + 1e-10
             ))[, include_cols, drop = FALSE]),
             dim = c(nrow(response), 1),
             names = NULL,
