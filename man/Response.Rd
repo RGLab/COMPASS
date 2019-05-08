@@ -34,5 +34,6 @@ i.e., the probability of at least \code{degree} markers exhibiting an antigen sp
 The response is computed from the sampled Gamma matrix, subsetting on the selected markers, and
 }
 \examples{
+
 Response(CR, markers = c("M1","M2","M3"), degree = 2)
 }

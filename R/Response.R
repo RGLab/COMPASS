@@ -14,16 +14,15 @@
 #' @details
 #' The response is computed from the sampled Gamma matrix, subsetting on the selected markers, and
 #' @return  A \code{vector} of response probabilities for each subject.
-#' @export
-#'
 #' @examples
+#'
 #' Response(CR, markers = c("M1","M2","M3"), degree = 2)
+#' @export
 Response <- function(x, markers, degree, max.prob, cond_response){
   UseMethod("Response")
 }
 
 ##' @rdname Response
-##' @export
 Response.COMPASSResult <- function(x, markers = NULL, degree = 1, max.prob = FALSE, cond_response = FALSE) {
   ## we drop the last column as it is the 'NULL' category
   if (is.null(markers)) {
@@ -63,7 +62,7 @@ Response.COMPASSResult <- function(x, markers = NULL, degree = 1, max.prob = FAL
       rownames(response) <- rownames(new_mean_gamma)
       colnames(response) <- paste0("Pr(response|degree >=",degree,")")
     }else{
-      #' condition on degree >= x
+      #condition on degree >= x
       response <- new_mean_gamma[,include_cols, drop = FALSE]
       if (!max.prob & !cond_response) {
         # probability of response from total probability
