@@ -5,10 +5,10 @@
 \alias{Response.COMPASSResult}
 \title{Compute a response probability from COMPASS mcmc samples.}
 \usage{
-Response(x, markers, degree, max.prob, cond_response)
+Response(x, markers, degree, max.prob, at_least_n)
 
 \method{Response}{COMPASSResult}(x, markers = NULL, degree = 1,
-  max.prob = FALSE, cond_response = FALSE)
+  max.prob = FALSE, at_least_n = NULL)
 }
 \arguments{
 \item{x}{a \code{COMPASSResult} object.}
@@ -19,8 +19,7 @@ Response(x, markers, degree, max.prob, cond_response)
 
 \item{max.prob}{\code{logical} Use the max probability rather than the average across subsets. Defaults to FALSE.}
 
-\item{cond_response}{\code{logical} Renormalize the probabilities to condition on response. i.e. given that there
-is a response, what's the probability of a response of degree X or greater?}
+\item{at_least_n}{\code{logical} response of degree x or greater with at_least_n subsets responding.}
 }
 \value{
 A \code{vector} of response probabilities for each subject.
