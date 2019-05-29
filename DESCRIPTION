@@ -22,8 +22,8 @@ License: Artistic-2.0
 BugReports: https://github.com/RGLab/COMPASS/issues
 VignetteBuilder: knitr
 Depends:
-    R ( >= 3.0.3)
-LinkingTo: Rcpp ( >= 0.11.0)
+    R  (>= 3.0.3)
+LinkingTo: Rcpp  (>= 0.11.0)
 Maintainer: Greg Finak <gfinak@fhcrc.org>
 Imports:
     methods,
@@ -47,7 +47,7 @@ Imports:
     BiocStyle,
     rmarkdown
 Suggests:
-    flowWorkspace ( >= 3.33.1),
+    flowWorkspace (>= 3.33.1),
     flowCore,
     ncdfFlow,
     shiny,
