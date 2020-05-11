@@ -4,12 +4,22 @@
 \alias{COMPASS}
 \title{Fit the COMPASS Model}
 \usage{
-COMPASS(data, treatment, control, subset = NULL,
+COMPASS(
+  data,
+  treatment,
+  control,
+  subset = NULL,
   category_filter = function(x) colSums(x > 5) > 2,
-  filter_lowest_frequency = 0, filter_specific_markers = NULL,
-  model = "discrete", iterations = 40000, replications = 8,
-  keep_original_data = FALSE, verbose = TRUE, dropDegreeOne = FALSE,
-  ...)
+  filter_lowest_frequency = 0,
+  filter_specific_markers = NULL,
+  model = "discrete",
+  iterations = 40000,
+  replications = 8,
+  keep_original_data = FALSE,
+  verbose = TRUE,
+  dropDegreeOne = FALSE,
+  ...
+)
 }
 \arguments{
 \item{data}{An object of class \code{COMPASSContainer}.}

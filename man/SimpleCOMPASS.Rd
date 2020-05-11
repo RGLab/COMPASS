@@ -4,8 +4,15 @@
 \alias{SimpleCOMPASS}
 \title{Fit the discrete COMPASS Model}
 \usage{
-SimpleCOMPASS(n_s, n_u, meta, individual_id, iterations = 10000,
-  replications = 8, verbose = TRUE)
+SimpleCOMPASS(
+  n_s,
+  n_u,
+  meta,
+  individual_id,
+  iterations = 10000,
+  replications = 8,
+  verbose = TRUE
+)
 }
 \arguments{
 \item{n_s}{The cell counts for stimulated cells.}

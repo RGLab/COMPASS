@@ -8,8 +8,14 @@
 \usage{
 melt_(data, ...)
 
-\method{melt_}{data.frame}(data, id.vars, measure.vars,
-  variable.name = "variable", ..., value.name = "value")
+\method{melt_}{data.frame}(
+  data,
+  id.vars,
+  measure.vars,
+  variable.name = "variable",
+  ...,
+  value.name = "value"
+)
 
 \method{melt_}{matrix}(data, ...)
 }

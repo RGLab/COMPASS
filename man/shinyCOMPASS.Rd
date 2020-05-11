@@ -4,10 +4,18 @@
 \alias{shinyCOMPASS}
 \title{Start a Shiny Application for Visualizing COMPASS Results}
 \usage{
-shinyCOMPASS(x, dir = NULL, meta.vars, facet1 = "None",
-  facet2 = "None", facet3 = "None",
+shinyCOMPASS(
+  x,
+  dir = NULL,
+  meta.vars,
+  facet1 = "None",
+  facet2 = "None",
+  facet3 = "None",
   main = "Heatmap of Ag-Specificity Posterior Probabilities",
-  stimulation = NULL, launch = TRUE, ...)
+  stimulation = NULL,
+  launch = TRUE,
+  ...
+)
 }
 \arguments{
 \item{x}{An object of class \code{COMPASSResult}.}

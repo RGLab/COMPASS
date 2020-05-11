@@ -7,8 +7,7 @@
 \usage{
 Response(x, markers, degree, max.prob, at_least_n)
 
-\method{Response}{COMPASSResult}(x, markers = NULL, degree = 1,
-  max.prob = FALSE, at_least_n = NULL)
+\method{Response}{COMPASSResult}(x, markers = NULL, degree = 1, max.prob = FALSE, at_least_n = NULL)
 }
 \arguments{
 \item{x}{a \code{COMPASSResult} object.}

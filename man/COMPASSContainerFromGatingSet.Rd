@@ -4,10 +4,17 @@
 \alias{COMPASSContainerFromGatingSet}
 \title{Create a COMPASS Container from a GatingSet}
 \usage{
-COMPASSContainerFromGatingSet(gs = NULL, node = NULL,
-  filter.fun = NULL, individual_id = "PTID", mp = NULL,
-  matchmethod = c("Levenshtein", "regex"), markers = NA,
-  swap = FALSE, countFilterThreshold = 5000)
+COMPASSContainerFromGatingSet(
+  gs = NULL,
+  node = NULL,
+  filter.fun = NULL,
+  individual_id = "PTID",
+  mp = NULL,
+  matchmethod = c("Levenshtein", "regex"),
+  markers = NA,
+  swap = FALSE,
+  countFilterThreshold = 5000
+)
 }
 \arguments{
 \item{gs}{a \code{GatingSet} or \code{GatingSetList}}

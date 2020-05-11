@@ -1,7 +1,7 @@
 Package: COMPASS
 Type: Package
 Title: Combinatorial Polyfunctionality Analysis of Single Cells
-Version: 1.23.1
+Version: 1.23.2
 Date: 2014-07-11
 Author: Lynn Lin, Kevin Ushey, Greg Finak, Ravio Kolde (pheatmap)
 Authors@R: c( person("Lynn", "Lin", role="aut", email="llin@fhcrc.org"),
@@ -59,4 +59,4 @@ LazyLoad: yes
 LazyData: yes
 biocViews: ImmunoOncology, FlowCytometry
 Encoding: UTF-8
-RoxygenNote: 6.1.1
+RoxygenNote: 7.1.0

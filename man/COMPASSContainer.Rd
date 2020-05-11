@@ -4,8 +4,14 @@
 \alias{COMPASSContainer}
 \title{Generate the Data Object used by COMPASS}
 \usage{
-COMPASSContainer(data, counts, meta, individual_id, sample_id,
-  countFilterThreshold = 0)
+COMPASSContainer(
+  data,
+  counts,
+  meta,
+  individual_id,
+  sample_id,
+  countFilterThreshold = 0
+)
 }
 \arguments{
 \item{data}{A list of matrices. Each matrix \code{M_i} is made up of
