@@ -54,10 +54,11 @@
 #' @note Uses foreach and doMC, so it won't work on windows.
 #' 
 #' @param mlist A list of COMPASSResult models. Each should be fit to the same data, but with different seeds.
-#'
+#' @param ncores The number of cores to use, if supported on the system.
 #' @return A list of COMPASSResult models that are consistent / have converged. 
 #' @export
-#'
+#' @importFrom utils txtProgressBar setTxtProgressBar
+#' @import foreach
 #' @examples
 #' data(COMPASS)
 #' set.seed(100)
@@ -77,14 +78,25 @@
 #'   iterations=100 ## set higher for a real analysis
 #' )
 #' checkCOMPASSConvergence(list(fit,fit2))
-checkCOMPASSConvergence<-function(mlist){
+checkCOMPASSConvergence<-function(mlist,ncores=1){
   if(!is.list(mlist)){
     stop("mlist should be a list of COMPASSResult fit to the same data with different random seeds.")
   }
-  require(foreach)
-  require(doMC)
-  require(progress)
-  registerDoMC(parallel::detectCores()/2)
+  allok<-TRUE
+  if(!requireNamespace("foreach")){
+	  message("foreach is required to run checkCOMPASSConvergence")
+	  allok<-FALSE
+  }
+  if(requireNamespace("doMC")&allok){
+  	doMC::registerDoMC(ncores)
+  }else{
+	message("You may want to install the doMC package")
+  }
+  if(!requireNamespace("progress")){
+	  message("progress is required to run checkCOMPASSConvergence")
+	  allok<-FALSE
+  }
+  if(allok){
   
   if(length(mlist)<2){
     stop("mlist must be a list of > 2 COMPASS Results fit to the same data.")
@@ -139,5 +151,6 @@ checkCOMPASSConvergence<-function(mlist){
    })
    drop_ind<-unlist(Filter(function(x)!is.null(x),drop_ind))
    mlist[-drop_ind]
+  }
 }
 

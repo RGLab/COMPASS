@@ -4,10 +4,12 @@
 \alias{checkCOMPASSConvergence}
 \title{Check the convergence of multiple COMPASS models fit with different seeds.}
 \usage{
-checkCOMPASSConvergence(mlist)
+checkCOMPASSConvergence(mlist, ncores = 1)
 }
 \arguments{
 \item{mlist}{A list of COMPASSResult models. Each should be fit to the same data, but with different seeds.}
+
+\item{ncores}{The number of cores to use, if supported on the system.}
 }
 \value{
 A list of COMPASSResult models that are consistent / have converged.

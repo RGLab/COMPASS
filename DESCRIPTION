@@ -45,7 +45,8 @@ Imports:
     tidyr,
     rlang,
     BiocStyle,
-    rmarkdown
+    rmarkdown,
+    foreach
 Suggests:
     flowWorkspace (>= 3.33.1),
     flowCore,
@@ -54,7 +55,9 @@ Suggests:
     testthat,
     devtools,
     flowWorkspaceData,
-    ggplot2
+    ggplot2,
+    doMC, 
+    progress 
 LazyLoad: yes
 LazyData: yes
 biocViews: ImmunoOncology, FlowCytometry
