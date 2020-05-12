@@ -83,16 +83,16 @@ checkCOMPASSConvergence<-function(mlist,ncores=1){
     stop("mlist should be a list of COMPASSResult fit to the same data with different random seeds.")
   }
   allok<-TRUE
-  if(!requireNamespace("foreach")){
+ if(!requireNamespace("foreach",quietly=TRUE)){
 	  message("foreach is required to run checkCOMPASSConvergence")
 	  allok<-FALSE
   }
-  if(requireNamespace("doMC")&allok){
+  if(requireNamespace("doMC",quietly=TRUE)&allok){
   	doMC::registerDoMC(ncores)
   }else{
 	message("You may want to install the doMC package")
   }
-  if(!requireNamespace("progress")){
+ if(!requireNamespace("progress",quietly=TRUE)){
 	  message("progress is required to run checkCOMPASSConvergence")
 	  allok<-FALSE
   }

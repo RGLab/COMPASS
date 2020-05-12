@@ -269,8 +269,8 @@ COMPASSContainerFromGatingSet<-function(gs = NULL, node = NULL, filter.fun = NUL
     expr <- do.call(c,strsplit(as.character(expr),"\\|"))
 
     ##validity check on the parent children relationship
-    children.ids <- sapply(full.child.nodes, flowWorkspace:::.getNodeInd, obj = gs[[1]], USE.NAMES = FALSE)
-    map.ids <- sapply(expr, flowWorkspace:::.getNodeInd, obj = gs[[1]], USE.NAMES = FALSE)
+    children.ids <- sapply(full.child.nodes, flowWorkspace::.getNodeInd, obj = gs[[1]], USE.NAMES = FALSE)
+    map.ids <- sapply(expr, flowWorkspace::.getNodeInd, obj = gs[[1]], USE.NAMES = FALSE)
     ind <- !map.ids %in% children.ids
     if(any(ind))
       stop(paste(expr[ind], collapse = "|"), " are not the children node of ", unique.node)
