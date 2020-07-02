@@ -196,7 +196,7 @@ test_that("mergeMatricesForPlotCOMPASSResultStack merges mean_gamma matrices cor
                          "Seed2" = cr5,
                          "Seed3" = cr6)
 
-  mergedMatrices <- COMPASS:::mergeMatricesForPlotCOMPASSResultStack(compassResults,
+  mergedMatrices <- mergeMatricesForPlotCOMPASSResultStack(compassResults,
                                                            row_annotation = c("Seed"),
                                                            variable = "Seed")
 

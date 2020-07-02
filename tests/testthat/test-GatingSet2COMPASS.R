@@ -2,10 +2,12 @@ context("test COMPASSContainerFromGatingSet")
 dataDir <- system.file("extdata/gs_manual",package="flowWorkspaceData")
 library(flowWorkspace)
 gs <- load_gs(dataDir)
-gs1 <- clone(gs)
-gs2 <- clone(gs)
+gs1 <- gs_clone(gs)
+gs2 <- gs_clone(gs)
 sampleNames(gs2) <- "sample2.fcs"
-gs <- rbind2(GatingSetList(list(gs1, gs2)))
+gs <- merge_list_to_gs(list(gs1, gs2))
+cs <- gs_cyto_data(gs)
+cs_lock(cs)#make sure compass code doesn't modify cs/cf object in place
 pd <- pData(gs)
 pd[["name"]] <- rownames(pd)
 pd[["PTID"]] <- 1
