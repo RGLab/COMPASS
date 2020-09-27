@@ -47,6 +47,8 @@
 ##' @param verbose Boolean; if \code{TRUE} we output progress information.
 ##' @param dropDegreeOne Boolean; if \code{TRUE} we drop degree one categories
 ##'   and merge them with the negative subset.
+##' @param init_with_fisher Boolean;initialize from fisher's exact test. Any subset and subject with lower 95% log odds estimate >1 will be initialized as a responder.
+##'  Otherwise initialize very subject and subset as a responder except those where ps <= pu.
 ##' @param ... Other arguments; currently unused.
 ##'
 ##' @seealso
@@ -124,7 +126,7 @@ COMPASS <- function(data, treatment, control, subset=NULL,
                     model="discrete",
                     iterations=40000, replications=8,
                     keep_original_data=FALSE,
-                    verbose=TRUE, dropDegreeOne=FALSE, ...) {
+                    verbose=TRUE, dropDegreeOne=FALSE, init_with_fisher=FALSE,...) {
 
     if (!inherits(data, "COMPASSContainer")) {
         stop("'data' must be an object of class 'COMPASSContainer'; see the ",
@@ -447,7 +449,7 @@ COMPASS <- function(data, treatment, control, subset=NULL,
 
   output <- list(
     fit=.COMPASS.discrete(n_s=n_s, n_u=n_u, categories=categories,
-      iterations=iterations, replications=replications, verbose=verbose, ...),
+      iterations=iterations, replications=replications, verbose=verbose, init_with_fisher=init_with_fisher, ...),
     data=list(n_s=n_s, n_u=n_u, counts_s=counts_s, counts_u=counts_u,
       categories=categories, meta=data$meta, sample_id=data$sample_id,
       individual_id=data$individual_id)

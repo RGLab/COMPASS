@@ -18,6 +18,7 @@ COMPASS(
   keep_original_data = FALSE,
   verbose = TRUE,
   dropDegreeOne = FALSE,
+  init_with_fisher = FALSE,
   ...
 )
 }
@@ -66,6 +67,9 @@ you may set this to \code{FALSE}.}
 
 \item{dropDegreeOne}{Boolean; if \code{TRUE} we drop degree one categories
 and merge them with the negative subset.}
+
+\item{init_with_fisher}{Boolean;initialize from fisher's exact test. Any subset and subject with lower 95% log odds estimate >1 will be initialized as a responder.
+Otherwise initialize very subject and subset as a responder except those where ps <= pu.}
 
 \item{...}{Other arguments; currently unused.}
 }
