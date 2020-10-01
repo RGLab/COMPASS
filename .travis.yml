@@ -67,7 +67,5 @@ env:
 addons:
   apt:
     packages:
-      - libhdf5-7
       - libhdf5-dev
   
-
