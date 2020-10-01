@@ -5,7 +5,7 @@ gs <- load_gs(dataDir)
 gs1 <- clone(gs)
 gs2 <- clone(gs)
 sampleNames(gs2) <- "sample2.fcs"
-gs <- rbind2(GatingSetList(list(gs1, gs2)))
+gs <- merge_list_to_gs(GatingSetList(list(gs1, gs2)))
 pd <- pData(gs)
 pd[["name"]] <- rownames(pd)
 pd[["PTID"]] <- 1
