@@ -1,3 +1,4 @@
+#'@importFrom abind abind
 .MakeComparableTwoCOMPASSResults<-function(x,y){
   nc_x <- ncol(x$fit$gamma)
   M_x <- x$fit$mean_gamma[, -nc_x]

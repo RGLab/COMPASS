@@ -59,6 +59,7 @@
 #' @export
 #' @importFrom utils txtProgressBar setTxtProgressBar
 #' @import foreach
+#' @import coda
 #' @examples
 #' data(COMPASS)
 #' set.seed(100)
@@ -163,10 +164,9 @@ checkCOMPASSConvergence<-function(mlist,ncores=1){
 #' The method returns an average model, by averaging the mean_gamma matrices (equally weighted since each input has the same number of iterations).
 #' This mean model should be better then any of the individual models.
 #' It can be plotted via "plot(result$mean_model)".
+#' @importFrom stats fisher.test
 #' @export
 COMPASSMCMCDiagnosis<-function(x){
-    require(coda)
-    require(abind)
     diag<-list()
     diag$alpha_s<-coda::gelman.diag(Map(function(x)coda::as.mcmc(x$fit$alpha_s),x))
     diag$alpha_u<-coda::gelman.diag(Map(function(x)coda::as.mcmc(x$fit$alpha_u),x))

@@ -8,6 +8,7 @@ data/*.rds
 .Rhistory
 refactor/*.rds
 .cproject
+.vscode
 *~
 *.rds
 shinyTest
