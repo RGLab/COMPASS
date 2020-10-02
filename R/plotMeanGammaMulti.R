@@ -183,8 +183,13 @@ mergeMatricesForPlotCOMPASSResultStack <- function(x,
 
   # Finally remove Counts column from catsMerged after assigning rownames
   rownames(catsMerged) <- catsMerged$name
+  #Note this is not numeric type. needs to be fixed.
   catsMerged <- as.data.frame(catsMerged[,setdiff(names(catsMerged), c("name", "Counts"))])
 
+  cm<-apply(catsMerged,2,as.numeric)
+  cm<-as.data.frame(cm)
+  rownames(cm)<-rownames(catsMerged)
+  catsMerged<-cm
   # MMerged may be a noquote matrix object. Convert to a matrix object that has columns of numeric type (not a list)
   MMerged <- apply(as.matrix(unclass(MMerged)), 2, unlist)
 
