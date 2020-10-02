@@ -144,7 +144,7 @@ mergeMatricesForPlotCOMPASSResultStack <- function(x,
 
   # Now bind together the mean gamma matrices
   # use column names to make sure numbers are under the correct categories
-  MMerged <- as.matrix.noquote(rbindlist(MList, use.names=TRUE))
+  MMerged <- noquote(as.matrix(rbindlist(MList, use.names=TRUE)))
   # And the rowann matrices
   rowannMerged <- as.data.frame(rbindlist(rowannList))
   rownames(rowannMerged) <- unname(unlist(lapply(rowannList, rownames)))
