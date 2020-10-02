@@ -154,7 +154,7 @@ mergeMatricesForPlotCOMPASSResultStack <- function(x,
   #####################
 
   ind <- 1:ncol(MMerged)
-  dof <- as.numeric(as.matrix.noquote(catsMerged[, "Counts"]))
+  dof <- as.numeric(noquote(as.matrix(catsMerged[, "Counts"])))
   # Keep only those categories meeting the min, max dof criteria
   dof_ind <- which(dof >= minimum_dof & dof <= maximum_dof)
   ind <- intersect(ind, dof_ind)
