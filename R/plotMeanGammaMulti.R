@@ -129,7 +129,7 @@ mergeMatricesForPlotCOMPASSResultStack <- function(x,
   catsMerged <- catsMerged[order(catsMerged$Counts),]
   # Make all columns a factor, except for `name`
   catsMergedRowNamesTmp <- catsMerged$name
-  catsMerged <- as.data.frame(sapply(catsMerged, as.factor))
+  catsMerged <- as.data.frame(sapply(catsMerged, as.factor), stringsAsFactors=TRUE)
   catsMerged$name <- catsMergedRowNamesTmp # not a factor
   rownames(catsMerged) <- catsMerged$name
 
