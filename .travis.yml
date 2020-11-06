@@ -42,7 +42,6 @@ r_github_packages:
   - r-lib/vdiffr
   - r-lib/pkgdown
   - rstudio/shinytest
-  - DillonHammill/CytoRSuiteData
   
 use_bioc: true
 
