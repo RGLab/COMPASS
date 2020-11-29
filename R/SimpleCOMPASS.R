@@ -17,6 +17,7 @@
 ##' @param replications The number of 'replications' to perform. In order to
 ##'   conserve memory, we only keep the model estimates from the last replication.
 ##' @param verbose Boolean; if \code{TRUE} we output progress information.
+##' @param seed A seed for the random number generator. Defaults to 100.
 ##' @return A \code{list} with class \code{COMPASSResult} with two components,
 ##'   the \code{fit} containing parameter estimates and parameter acceptance
 ##'   rates, and \code{data} containing the generated data used as input for
@@ -52,7 +53,7 @@
 ##' ## prefer using more iterations for a real fit
 ##' scr = SimpleCOMPASS(n_s, n_u, meta, "iid", iterations=1000)
 SimpleCOMPASS <- function(n_s, n_u, meta, individual_id,
-  iterations=1E4, replications=8, verbose=TRUE) {
+  iterations=1E4, replications=8, verbose=TRUE,seed=100) {
 
 
   # Order, n_s, n_u, and meta (if needed)
@@ -67,7 +68,8 @@ SimpleCOMPASS <- function(n_s, n_u, meta, individual_id,
   message("Ordering meta, n_s and n_u by individual_id since this wasn't done.\n",
           "If you think this is an error, check your data and rerun the code.")
   }
-  set.seed(100);
+  cat("Setting the seed to ",seed,"\n");
+  set.seed(seed)
   if (!all(colnames(n_s) == colnames(n_u))) {
     stop("The column names of 'n_s' and 'n_u' do not match.")
   }
