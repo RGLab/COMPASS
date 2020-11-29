@@ -11,7 +11,8 @@ SimpleCOMPASS(
   individual_id,
   iterations = 10000,
   replications = 8,
-  verbose = TRUE
+  verbose = TRUE,
+  seed = 100
 )
 }
 \arguments{
@@ -33,6 +34,8 @@ individuals from which samples were drawn.}
 conserve memory, we only keep the model estimates from the last replication.}
 
 \item{verbose}{Boolean; if \code{TRUE} we output progress information.}
+
+\item{seed}{A seed for the random number generator. Defaults to 100.}
 }
 \value{
 A \code{list} with class \code{COMPASSResult} with two components,
