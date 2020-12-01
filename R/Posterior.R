@@ -6,13 +6,11 @@
 ##' The posterior items retrieved are described as follows::
 ##'
 ##' \describe{
-##' \item{\code{PosteriorPs}:}{The posterior probability that the samples
-##' subjected to the 'treatment', or 'stimulated', condition responded.}
-##' \item{\code{PosteriorPu:}}{The posterior probability that the samples
-##' subjected to the 'control', or 'unstimulated', condition responded.}
-##' \item{\code{PosteriorDiff}:}{The difference in posterior response rates,
+##' \item{\code{PosteriorPs}:}{The posterior estimate of the proportion of cells in the stimulated sample.}
+##' \item{\code{PosteriorPu:}}{The posterior estimate of the proportio of cells in the unstimulated sample.}
+##' \item{\code{PosteriorDiff}:}{The difference in posterior proportions,
 ##' as described above.}
-##' \item{\code{PosteriorLogDiff}:}{The difference in the log response rates,
+##' \item{\code{PosteriorLogDiff}:}{The difference in the log posterior proportions,
 ##' as described above.}
 ##' }
 ##'
