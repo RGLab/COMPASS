@@ -19,6 +19,7 @@ COMPASS(
   verbose = TRUE,
   dropDegreeOne = FALSE,
   init_with_fisher = FALSE,
+  run_model_or_return_data = "run_model",
   ...
 )
 }
@@ -70,6 +71,8 @@ and merge them with the negative subset.}
 
 \item{init_with_fisher}{Boolean;initialize from fisher's exact test. Any subset and subject with lower 95% log odds estimate >1 will be initialized as a responder.
 Otherwise initialize very subject and subset as a responder except those where ps <= pu.}
+
+\item{run_model_or_return_data}{\code{character} defaults to \code{"run_model"} otherwise set it to \code{"return_data"} in order to not fit the model just return the data set needed for modeling. Useful for extracting the boolean counts.}
 
 \item{...}{Other arguments; currently unused.}
 }
