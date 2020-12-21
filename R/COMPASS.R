@@ -49,6 +49,7 @@
 ##'   and merge them with the negative subset.
 ##' @param init_with_fisher Boolean;initialize from fisher's exact test. Any subset and subject with lower 95% log odds estimate >1 will be initialized as a responder.
 ##'  Otherwise initialize very subject and subset as a responder except those where ps <= pu.
+##' @param run_model_or_return_data \code{character} defaults to \code{"run_model"} otherwise set it to \code{"return_data"} in order to not fit the model just return the data set needed for modeling. Useful for extracting the boolean counts.
 ##' @param ... Other arguments; currently unused.
 ##'
 ##' @seealso
@@ -126,8 +127,10 @@ COMPASS <- function(data, treatment, control, subset=NULL,
                     model="discrete",
                     iterations=40000, replications=8,
                     keep_original_data=FALSE,
-                    verbose=TRUE, dropDegreeOne=FALSE, init_with_fisher=FALSE,...) {
+                    verbose=TRUE, dropDegreeOne=FALSE, init_with_fisher=FALSE,
+		    run_model_or_return_data="run_model",...) {
 
+	run_model_or_return_data=match.arg(run_model_or_return_data,c("run_model","return_data"))
     if (!inherits(data, "COMPASSContainer")) {
         stop("'data' must be an object of class 'COMPASSContainer'; see the ",
              "constructor 'COMPASSContainer' for more details.", call.=FALSE)
@@ -446,7 +449,7 @@ COMPASS <- function(data, treatment, control, subset=NULL,
   model <- match.arg(model)
 
   ## go to the model fitting processes
-
+  if(run_model_or_return_data=="run_model"){
   output <- list(
     fit=.COMPASS.discrete(n_s=n_s, n_u=n_u, categories=categories,
       iterations=iterations, replications=replications, verbose=verbose, init_with_fisher=init_with_fisher, ...),
@@ -454,6 +457,9 @@ COMPASS <- function(data, treatment, control, subset=NULL,
       categories=categories, meta=data$meta, sample_id=data$sample_id,
       individual_id=data$individual_id)
   )
+  }else{
+	output<-list(fit="No model was fitted");
+  }
 
   if (keep_original_data) {
     output$orig <- data
