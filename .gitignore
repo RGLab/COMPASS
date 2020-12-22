@@ -13,3 +13,5 @@ refactor/*.rds
 *.rds
 shinyTest
 \#*
+tests/testthat/Rplots.pdf
+R/SimpleCOMPASS.patch
