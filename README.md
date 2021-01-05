@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/RGLab/COMPASS.png?branch=trunk)](https://travis-ci.org/RGLab/COMPASS)
+[![action](https://github.com/RGLab/COMPASS/workflows/build/badge.svg)
 [![codecov](https://codecov.io/gh/RGLab/COMPASS/branch/trunk/graph/badge.svg)](https://codecov.io/gh/RGLab/COMPASS)
 
 COMPASS
