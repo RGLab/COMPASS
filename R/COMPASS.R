@@ -450,25 +450,26 @@ COMPASS <- function(data, treatment, control, subset=NULL,
 
   ## go to the model fitting processes
   if(run_model_or_return_data=="run_model"){
-  output <- list(
-    fit=.COMPASS.discrete(n_s=n_s, n_u=n_u, categories=categories,
-      iterations=iterations, replications=replications, verbose=verbose, init_with_fisher=init_with_fisher, ...),
-    data=list(n_s=n_s, n_u=n_u, counts_s=counts_s, counts_u=counts_u,
-      categories=categories, meta=data$meta, sample_id=data$sample_id,
-      individual_id=data$individual_id)
-  )
+    output <- list(
+        fit=.COMPASS.discrete(n_s=n_s, n_u=n_u, categories=categories,
+        iterations=iterations, replications=replications, verbose=verbose, init_with_fisher=init_with_fisher, ...),
+        data=list(n_s=n_s, n_u=n_u, counts_s=counts_s, counts_u=counts_u,
+        categories=categories, meta=data$meta, sample_id=data$sample_id,
+        individual_id=data$individual_id)
+    )
   }else{
 	output<-list(fit="No model was fitted");
   }
-
   if (keep_original_data) {
     output$orig <- data
   }
 
+if(run_model_or_return_data == "run_model"){
   ## Compute the posterior ps-pu; log(ps)-log(pu)
   vmessage("Computing the posterior difference in proportions, posterior log ratio...")
   output$fit$posterior <- compute_posterior(output)
   vmessage("Done!")
+}
 
   ## Filter metadata
   ..iid.. <- iid
