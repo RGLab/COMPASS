@@ -1,24 +1,19 @@
+// Copyright [2014] <Fred Hutchinson Cancer Research Center>
+
 #include <Rcpp.h>
 using namespace Rcpp;
 
 // [[register]]
-RcppExport SEXP samplePuPs(SEXP alphau,
-                           SEXP alphas,
-                           SEXP gammat,
-                           SEXP T,
-                           SEXP K,
-                           SEXP nsi,
-                           SEXP nui,
-                           SEXP d,
-                           SEXP M) {
+RcppExport SEXP samplePuPs(SEXP alphau, SEXP alphas, SEXP gammat, SEXP T,
+                           SEXP K, SEXP nsi, SEXP nui, SEXP d, SEXP M) {
   BEGIN_RCPP
 
-  IntegerVector xnsi(nsi);        // n_s[i,]
-  IntegerVector xnui(nui);        // n_u[i,]
-  NumericMatrix xalphau(alphau);  // posterior samples for alpha_u
-  NumericMatrix xalphas(alphas);  // posterior samples for alpha_s
-  IntegerMatrix xgammat(gammat);  // posterior samples for gamma_i
-  IntegerMatrix xd(d);            // cytokine combination indicator matrix
+  IntegerVector xnsi(nsi);        //  n_s[i,]
+  IntegerVector xnui(nui);        //  n_u[i,]
+  NumericMatrix xalphau(alphau);  //  posterior samples for alpha_u
+  NumericMatrix xalphas(alphas);  //  posterior samples for alpha_s
+  IntegerMatrix xgammat(gammat);  //  posterior samples for gamma_i
+  IntegerMatrix xd(d);            //  cytokine combination indicator matrix
 
   // int xM = as<int>(M); // # markers
   int xT = as<int>(T);  // # MCMC iterations used
@@ -94,7 +89,6 @@ RcppExport SEXP samplePuPs(SEXP alphau,
       std::vector<double> as(sum);
       sass = 0.;
       for (int j = 0; j < sum; j++) {
-
         as[j] = alpha_s[place1[j]];
         sass += as[j];
       }
@@ -119,8 +113,8 @@ RcppExport SEXP samplePuPs(SEXP alphau,
   p_s = p_s[seq(0, p_s.size() - 2)];
   p_u = p_u[seq(0, p_u.size() - 2)];
 
-  return List::create(
-      _["p_s"] = p_s, _["p_u"] = p_u, _["diff"] = DIFF, _["logd"] = LogD);
+  return List::create(_["p_s"] = p_s, _["p_u"] = p_u, _["diff"] = DIFF,
+                      _["logd"] = LogD);
 
   END_RCPP
 }

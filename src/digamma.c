@@ -1,3 +1,4 @@
+// Copyright [2014] <Fred Hutchinson Cancer Research Center>
 #include <math.h>
 
 double digamma(double x) {

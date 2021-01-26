@@ -1,13 +1,12 @@
+// Copyright [2014] <Fred Hutchinson Cancer Research Center>
 // [[Rcpp::interfaces(r)]]
 
 #include <Rcpp.h>
 using namespace Rcpp;
-
 extern "C" SEXP mat2vec(SEXP);
 
 // [[Rcpp::export]]
 IntegerMatrix CellCounts_character(List data, List combinations) {
-
   Function list2env("list2env");
 
   int m = data.size();          // rows
@@ -16,7 +15,6 @@ IntegerMatrix CellCounts_character(List data, List combinations) {
 
   // loop over data
   for (int i = 0; i < m; ++i) {
-
     SEXP m = PROTECT(mat2vec(as<LogicalMatrix>(data[i])));
     Environment env = list2env(m);
 

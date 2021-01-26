@@ -1,18 +1,12 @@
+// Copyright [2014] <Fred Hutchinson Cancer Research Center>
 #include <Rcpp.h>
 
 extern "C" double digamma(double);
 
 // [[register]]
-RcppExport SEXP updatealphas_Exp(SEXP alphast,
-                                 SEXP n_s,
-                                 SEXP K,
-                                 SEXP I,
-                                 SEXP lambda_s,
-                                 SEXP gammat,
-                                 SEXP var_1,
-                                 SEXP var_2,
-                                 SEXP p_var,
-                                 SEXP ttt) {
+RcppExport SEXP updatealphas_Exp(SEXP alphast, SEXP n_s, SEXP K, SEXP I,
+                                 SEXP lambda_s, SEXP gammat, SEXP var_1,
+                                 SEXP var_2, SEXP p_var, SEXP ttt) {
   BEGIN_RCPP
   Rcpp::NumericVector xalphast(alphast);
 

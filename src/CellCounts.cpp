@@ -1,13 +1,13 @@
+// Copyright [2014] <Fred Hutchinson Cancer Research Center>
 // [[Rcpp::interfaces(r)]]
 
 #include <Rcpp.h>
 using namespace Rcpp;
 
 template <typename T>
-T my_abs( const T& x){
-	return ::abs(x) ;
+T my_abs(const T& x) {
+  return ::abs(x);
 }
-
 
 #define rownames(x) as<CharacterVector>(VECTOR_ELT(x.attr("dimnames"), 0))
 #define colnames(x) as<CharacterVector>(VECTOR_ELT(x.attr("dimnames"), 1))
@@ -28,7 +28,6 @@ T my_abs( const T& x){
 
 // [[Rcpp::export(.CellCounts)]]
 IntegerMatrix CellCounts(List x, List combos) {
-
   int x_n = x.size();
   int combos_n = combos.size();
   IntegerMatrix output(x_n, combos_n);
@@ -38,22 +37,20 @@ IntegerMatrix CellCounts(List x, List combos) {
     LogicalMatrix mat = as<LogicalMatrix>(x[i]);
     int nrows = mat.nrow();
     for (int k = 0; k < combos_n; ++k) {
-
       int num = 0;
       IntegerVector c_combo = as<IntegerVector>(combos[k]);
       int n_c = c_combo.size();
-      IntegerVector c_combo_abs = sapply(c_combo,my_abs<int>);
+      IntegerVector c_combo_abs = sapply(c_combo, my_abs<int>);
 
       for (int j = 0; j < nrows; ++j) {
-
         LogicalMatrix::Row row = mat(j, _);
 
-// checking algorithm:
-// we loop through each entry in 'c_combo' => p
-// we check the element in 'row' at 'abs(c_combo[p])'
-// if 'abs(c_combo[p])' is > 0 and row[ c_combo[p] ] is true; continue
-// if 'abs(c_combo[p])' is <= 0 and row[ c_combo[p] ] is false; continue
-// else, 'false_case'
+        // checking algorithm:
+        // we loop through each entry in 'c_combo' => p
+        // we check the element in 'row' at 'abs(c_combo[p])'
+        // if 'abs(c_combo[p])' is > 0 and row[ c_combo[p] ] is true; continue
+        // if 'abs(c_combo[p])' is <= 0 and row[ c_combo[p] ] is false; continue
+        // else, 'false_case'
 
 #define c (c_combo[p])
 #define abs_c (c_combo_abs[p])
@@ -86,8 +83,8 @@ IntegerMatrix CellCounts(List x, List combos) {
   }
 
   if (!Rf_isNull(combos.attr("names"))) {
-    SET_VECTOR_ELT(
-        output.attr("dimnames"), 1, Rf_duplicate(combos.attr("names")));
+    SET_VECTOR_ELT(output.attr("dimnames"), 1,
+                   Rf_duplicate(combos.attr("names")));
   }
 
   return output;

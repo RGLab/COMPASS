@@ -1,16 +1,11 @@
+// Copyright [2014] <Fred Hutchinson Cancer Research Center>
 #include <Rcpp.h>
 extern "C" double digamma(double);
 
 // [[register]]
-RcppExport SEXP updatealphau_noPu_Exp(SEXP alphaut,
-                                      SEXP n_s,
-                                      SEXP n_u,
-                                      SEXP I,
-                                      SEXP K,
-                                      SEXP lambda_u,
-                                      SEXP var_p,
-                                      SEXP ttt,
-                                      SEXP gammat) {
+RcppExport SEXP updatealphau_noPu_Exp(SEXP alphaut, SEXP n_s, SEXP n_u, SEXP I,
+                                      SEXP K, SEXP lambda_u, SEXP var_p,
+                                      SEXP ttt, SEXP gammat) {
   BEGIN_RCPP
   Rcpp::IntegerMatrix xgammat(gammat);
   Rcpp::NumericVector xalphaut(alphaut);

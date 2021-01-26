@@ -1,25 +1,14 @@
-#include <Rcpp.h>
+// Copyright [2014] <Fred Hutchinson Cancer Research Center>
 
 #include <R_ext/Utils.h>
+#include <Rcpp.h>
 #include <stdlib.h>
 
 // [[register]]
-RcppExport SEXP updategammak_noPu(SEXP n_s,
-                                  SEXP n_u,
-                                  SEXP gammat,
-                                  SEXP I,
-                                  SEXP K,
-                                  SEXP SS,
-                                  SEXP alphau,
-                                  SEXP alphas,
-                                  SEXP alpha,
-                                  SEXP mk,
-                                  SEXP Istar,
-                                  SEXP mKstar,
-                                  SEXP pp,
-                                  SEXP pb1,
-                                  SEXP pb2,
-                                  SEXP indi) {
+RcppExport SEXP updategammak_noPu(SEXP n_s, SEXP n_u, SEXP gammat, SEXP I,
+                                  SEXP K, SEXP SS, SEXP alphau, SEXP alphas,
+                                  SEXP alpha, SEXP mk, SEXP Istar, SEXP mKstar,
+                                  SEXP pp, SEXP pb1, SEXP pb2, SEXP indi) {
   BEGIN_RCPP
 
   Rcpp::IntegerMatrix xn_s(n_s);
@@ -358,11 +347,10 @@ RcppExport SEXP updategammak_noPu(SEXP n_s,
     }
   }
 
-  return Rcpp::List::create(Rcpp::Named("gamma_tt") = gamma_tt,
-                            Rcpp::Named("Ag") = xAg,
-                            Rcpp::Named("mKstar") = xmKstar,
-                            Rcpp::Named("xmk") = xmk,
-                            Rcpp::Named("xIstar") = xIstar);
+  return Rcpp::List::create(
+      Rcpp::Named("gamma_tt") = gamma_tt, Rcpp::Named("Ag") = xAg,
+      Rcpp::Named("mKstar") = xmKstar, Rcpp::Named("xmk") = xmk,
+      Rcpp::Named("xIstar") = xIstar);
 
   END_RCPP
 }

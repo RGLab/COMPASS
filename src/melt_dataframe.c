@@ -1,3 +1,4 @@
+// Copyright [2014] <Fred Hutchinson Cancer Research Center>
 #define USE_RINTERNALS
 
 #include <R.h>
