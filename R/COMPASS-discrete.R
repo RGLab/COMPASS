@@ -48,29 +48,30 @@
   alpha_u = array(0, dim = c(N, K));
   alpha_s = array(0, dim = c(N, K));
 
-  varp_s1 = array(sqrt(3), dim = c(K, 1));
+  varp_s1 = array(sqrt(5), dim = c(K, 1)); # variance of the proposal distribution 1 for alpha_s
   # sqrt(var)
-  varp_s2 = array(sqrt(10), dim = c(K, 1));
+  varp_s2 = array(sqrt(15), dim = c(K, 1)); #variance of the proposal distribution 2 for alpha_s
   # sqrt(var)
-  varp_s2[K] = sqrt(20);
-  varp_s1[K] = sqrt(10);
+  varp_s2[K] = sqrt(25);
+  varp_s1[K] = sqrt(15);
+  # alpha_s is proposed using a mixture distribution
 
-  pvar_s = array(0.8, dim = c(K, 1));
+  pvar_s = array(0.8, dim = c(K, 1)); # mixing for the mixture proposal distribution
   pvar_s[K] = 0.6;
-  varp_u = array(sqrt(8), dim = c(K, 1));
+  varp_u = array(sqrt(10), dim = c(K, 1)); #variance of the proposal distribution for alpha_u
 
   pp = array(0.65, dim = c(I, 1))
   pb1 <- clamp(1.5 / median(indi[, K]), 0, 0.9)
   pb2 <- clamp(5.0 / median(indi[, K]), 0, 0.9)
-  lambda_s = rep(0, K);
+  lambda_s = rep(0, K);  
   lambda_s[1:K1] = (10 ^ -2) * max(N_s, N_u)
   lambda_s[K] = max(N_s, N_u) - sum(lambda_s[1:K1])
   lambda_u = lambda_s
 
-  alpha_u[1, 1:(K - 1)] = 10
+  alpha_u[1, 1:(K - 1)] = 10 #initializaion 
   alpha_u[1, K] = 150
 
-  alpha_s[1, 1:(K - 1)] = 10
+  alpha_s[1, 1:(K - 1)] = 10 #initialization 
   alpha_s[1, K] = 100
 
   #################### acceptance rate ###########################
@@ -84,7 +85,8 @@
     if (tt %% 1000 == 0) vmessage("Iteration ", tt, " of ", N, ".")
 
     # update alphau
-    res2 <- .Call(C_updatealphau_noPu_Exp, alphaut = alpha_u[tt - 1,], n_s = n_s, n_u = n_u, I = I, K = K, lambda_u = lambda_u, var_p = varp_u, ttt = ttt, gammat = gamma[,, tt - 1])
+    #res2 <- .Call(C_updatealphau_noPu_Exp, alphaut = alpha_u[tt - 1,], n_s = n_s, n_u = n_u, I = I, K = K, lambda_u = lambda_u, var_p = varp_u, ttt = ttt, gammat = gamma[,, tt - 1])
+    res2 <- .Call(C_updatealphau_noPu_Exp_MH, alphaut = alpha_u[tt - 1,], n_s = n_s, n_u = n_u, I = I, K = K, lambda_u = lambda_u, var_p = varp_u, gammat = gamma[,, tt - 1])
     if (length(alpha_u[tt, ]) != length(res2$alphau_tt)) {
       vmessage("res2 alphau_tt length:", length(res2$alphau_tt), "\n")
       vmessage("alpha_u[tt,] length: ", length(alpha_u[tt,]), "\n")
@@ -95,6 +97,7 @@
     #update gamma
     res1 <- .Call(C_updategammak_noPu, n_s = n_s, n_u = n_u, gammat = gamma[,, tt - 1], I = I, K = K, SS = SS, alphau = alpha_u[tt,], alphas = alpha_s[tt - 1,], alpha = 1, mk = mk, Istar = Istar,
       mKstar = mKstar, pp = pp, pb1 = pb1, pb2 = pb2, indi = indi)
+    
     gamma[,, tt] = res1$gamma_tt;
     if (length(A_gm[, tt]) != length(res1$Ag)) {
       vmessage("res1 Ag length: ", length(res1$Ag), "\n")
@@ -107,7 +110,8 @@
     mKstar = res1$mKstar;
 
     # update alphas
-    res3 <- .Call(C_updatealphas_Exp, alphast = alpha_s[tt - 1,], n_s = n_s, K = K, I = I, lambda_s = lambda_s, gammat = gamma[,, tt], var_1 = varp_s1, var_2 = varp_s2, p_var = pvar_s, ttt = ttt)
+    # res3 <- .Call(C_updatealphas_Exp, alphast = alpha_s[tt - 1,], n_s = n_s, K = K, I = I, lambda_s = lambda_s, gammat = gamma[,, tt], var_1 = varp_s1, var_2 = varp_s2, p_var = pvar_s, ttt = ttt)
+    res3 <- .Call(C_updatealphas_Exp_MH, alphast = alpha_s[tt - 1,], n_s = n_s, K = K, I = I, lambda_s = lambda_s, gammat = gamma[,, tt], var_1 = varp_s1, var_2 = varp_s2, p_var = pvar_s)
     if (length(alpha_s[tt, ]) != length(res3$alphas_tt)) {
       vmessage("res3 alphas_tt length:", length(res3$alphas_tt), "\n")
       vmessage("alpha_s[tt,] length: ", length(alpha_s[tt,]), "\n")
