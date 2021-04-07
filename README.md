@@ -1,4 +1,4 @@
-[![action](https://github.com/RGLab/COMPASS/workflows/build/badge.svg)
+[![action](https://github.com/RGLab/COMPASS/workflows/build/badge.svg)](https://github.com/RGLab/COMPASS/actions)
 [![codecov](https://codecov.io/gh/RGLab/COMPASS/branch/trunk/graph/badge.svg)](https://codecov.io/gh/RGLab/COMPASS)
 
 COMPASS
