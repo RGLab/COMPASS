@@ -269,6 +269,8 @@ COMPASS <- function(data, treatment, control, subset=NULL,
     .generate_categories <- function(data) {
         ## i'm sorry
         tmp <- unique( as.data.table( lapply( lapply( as.data.table( do.call( rbind, data ) ), as.logical ), as.integer ) ) )
+        # Remove any rows containing NA
+        tmp <- na.omit(tmp)
         tmp[, c("Counts") := apply(.SD, 1, sum)]
         setkeyv(tmp, c("Counts", rev(names(tmp))))
         output <- as.matrix(tmp)
