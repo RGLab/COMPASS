@@ -135,6 +135,9 @@ COMPASSContainerFromGatingSet<-function(gs = NULL, node = NULL, filter.fun = NUL
       if (inherits(xx, "GatingSetList")) {
         mlist <- unlist( recursive=FALSE, lapply(xx@data, function(x) {
           dat <- flowWorkspace::gs_pop_get_data(x)
+          if (inherits(dat, "cytoset")) {
+            dat <- flowWorkspace::cytoset_to_flowSet(dat)
+          }
           lapply( objects(dat@frames), function(obj) {
             fr <- get(obj, envir=dat@frames)
             return(na.omit( flowCore::parameters(fr)@data$desc ))
@@ -142,6 +145,9 @@ COMPASSContainerFromGatingSet<-function(gs = NULL, node = NULL, filter.fun = NUL
         }) )
       } else if (inherits(xx, "GatingSet")) {
         dat <- flowWorkspace::gs_pop_get_data(xx)
+        if (inherits(dat, "cytoset")) {
+          dat <- flowWorkspace::cytoset_to_flowSet(dat)
+        }
         mlist <- lapply( objects(dat@frames), function(obj) {
           fr <- get(obj, envir=dat@frames)
           return(na.omit( flowCore::parameters(fr)@data$desc ))
